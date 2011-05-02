@@ -7,24 +7,22 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
-namespace DirectEve
+namespace PythonBrowser
 {
-    using PyS = global::DirectEve.PySharp.PySharp;
+    using System;
+    using System.Windows.Forms;
 
-    public class DirectCharacter : DirectObject
+    internal static class Program
     {
-        internal DirectCharacter(DirectEve directEve) : base(directEve)
+        /// <summary>
+        ///   The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        private static void Main()
         {
-        }
-
-        public long CharacterId { get; internal set; }
-        public long CorporationId { get; internal set; }
-        public long AllianceId { get; internal set; }
-        public long WarFactionId { get; internal set; }
-
-        public string Name
-        {
-            get { return DirectEve.GetOwner(CharacterId).Name; }
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new frmMain());
         }
     }
 }

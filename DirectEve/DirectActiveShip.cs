@@ -28,10 +28,12 @@ namespace DirectEve
         /// <summary>
         ///   Maximum locked targets
         /// </summary>
-        /// <remarks>Skills may cause you to lock less targets!</remarks>
+        /// <remarks>
+        ///   Skills may cause you to lock less targets!
+        /// </remarks>
         public int MaxLockedTargets
         {
-            get { return (int)Attributes.TryGet<double>("maxLockedTargets"); }
+            get { return (int) Attributes.TryGet<double>("maxLockedTargets"); }
         }
 
         /// <summary>
@@ -87,7 +89,7 @@ namespace DirectEve
         /// </summary>
         public double ArmorPercentage
         {
-            get { return (Armor / MaxArmor) * 100; }
+            get { return (Armor/MaxArmor)*100; }
         }
 
         /// <summary>
@@ -111,7 +113,7 @@ namespace DirectEve
         /// </summary>
         public double StructurePercentage
         {
-            get { return (Structure / MaxStructure) * 100; }
+            get { return (Structure/MaxStructure)*100; }
         }
 
         /// <summary>
@@ -135,7 +137,7 @@ namespace DirectEve
         /// </summary>
         public double CapacitorPercentage
         {
-            get { return (Capacitor / MaxCapacitor) * 100; }
+            get { return (Capacitor/MaxCapacitor)*100; }
         }
 
         /// <summary>
@@ -149,7 +151,9 @@ namespace DirectEve
         /// <summary>
         ///   The entity associated with your ship
         /// </summary>
-        /// <remarks>Only works in space, return's null if no entity can be found</remarks>
+        /// <remarks>
+        ///   Only works in space, return's null if no entity can be found
+        /// </remarks>
         public DirectEntity Entity
         {
             get { return _entity ?? (_entity = DirectEve.GetEntityById(DirectEve.Session.ShipId ?? -1)); }
@@ -159,7 +163,9 @@ namespace DirectEve
         ///   Launch all drones
         /// </summary>
         /// <returns></returns>
-        /// <remarks>Only works in space</remarks>
+        /// <remarks>
+        ///   Only works in space
+        /// </remarks>
         public bool LaunchAllDrones()
         {
             var droneBay = DirectEve.GetShipsDroneBay();
@@ -173,7 +179,9 @@ namespace DirectEve
         ///   Launch a specific list of drones
         /// </summary>
         /// <returns></returns>
-        /// <remarks>Only works in space</remarks>
+        /// <remarks>
+        ///   Only works in space
+        /// </remarks>
         public bool LaunchDrones(IEnumerable<DirectItem> drones)
         {
             var invItems = drones.Where(d => d.PyItem.IsValid).Select(d => d.PyItem);

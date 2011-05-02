@@ -61,7 +61,9 @@ namespace DirectEve
         /// <summary>
         ///   The entity associated with this bookmark
         /// </summary>
-        /// <remarks>This property will be null if no entity can be found</remarks>
+        /// <remarks>
+        ///   This property will be null if no entity can be found
+        /// </remarks>
         public DirectEntity Entity
         {
             get { return _entity ?? (_entity = DirectEve.GetEntityById(ItemId ?? -1)); }

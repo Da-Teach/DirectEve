@@ -51,7 +51,7 @@ namespace DirectEve
             if (!IsReady)
                 return 0;
 
-            return (float)AddressBook.Attribute("corporateContacts").Call("get", id, global::DirectEve.PySharp.PySharp.PyNone).Attribute("relationshipID");
+            return (float) AddressBook.Attribute("corporateContacts").Call("get", id, global::DirectEve.PySharp.PySharp.PyNone).Attribute("relationshipID");
         }
 
         public float GetAllianceRelationship(long id)
@@ -59,7 +59,7 @@ namespace DirectEve
             if (!IsReady)
                 return 0;
 
-            return (float)AddressBook.Attribute("allianceContacts").Call("get", id, global::DirectEve.PySharp.PySharp.PyNone).Attribute("relationshipID");
+            return (float) AddressBook.Attribute("allianceContacts").Call("get", id, global::DirectEve.PySharp.PySharp.PyNone).Attribute("relationshipID");
         }
     }
 }

@@ -75,7 +75,7 @@ namespace DirectEve
                 return _members;
             }
         }
-        
+
         public bool Speak(string message)
         {
             return DirectEve.ThreadedCall(PyWindow.Attribute("Speak"), message, PySharp.Import("__builtin__").Attribute("eve").Attribute("session").Attribute("charid"), true);

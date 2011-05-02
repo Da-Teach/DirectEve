@@ -418,7 +418,7 @@ namespace DirectEve
                 entity.IsAttacking = true;
 
                 var attacks = attacker.Value.ToList();
-                foreach (var attack in attacks.Select(a => (string)a.Item(1)))
+                foreach (var attack in attacks.Select(a => (string) a.Item(1)))
                 {
                     entity.IsWarpScramblingMe |= attack == "effects.WarpScramble";
                     entity.IsWebbingMe |= attack == "effects.ModifyTargetSpeed";

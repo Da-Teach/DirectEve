@@ -18,9 +18,19 @@ namespace DirectEve
     public class DirectEve : IDisposable
     {
         /// <summary>
-        ///   Info on when a certain target was last targeted
+        ///   ActiveShip cache
         /// </summary>
-        private Dictionary<long, DateTime> _lastKnownTargets;
+        private DirectActiveShip _activeShip;
+
+        /// <summary>
+        ///   Cache the Agent Missions
+        /// </summary>
+        private List<DirectAgentMission> _agentMissions;
+
+        /// <summary>
+        ///   Cache the Bookmarks
+        /// </summary>
+        private List<DirectBookmark> _bookmarks;
 
         /// <summary>
         ///   Const cache
@@ -37,20 +47,17 @@ namespace DirectEve
         /// </summary>
         private Dictionary<long, DirectEntity> _entitiesById;
 
-        /// <summary>
-        ///   Cache the Bookmarks
-        /// </summary>
-        private List<DirectBookmark> _bookmarks;
-
-        /// <summary>
-        ///   Cache the Agent Missions
-        /// </summary>
-        private List<DirectAgentMission> _agentMissions;
+        private uint _innerspaceOnFrameId;
 
         /// <summary>
         ///   Item Hangar container cache
         /// </summary>
         private DirectContainer _itemHangar;
+
+        /// <summary>
+        ///   Info on when a certain target was last targeted
+        /// </summary>
+        private Dictionary<long, DateTime> _lastKnownTargets;
 
         /// <summary>
         ///   Cache the LocalSvc objects
@@ -61,6 +68,11 @@ namespace DirectEve
         ///   Login cache
         /// </summary>
         private DirectLogin _login;
+
+        /// <summary>
+        ///   Me cache
+        /// </summary>
+        private DirectMe _me;
 
         /// <summary>
         ///   Cache the Windows
@@ -78,21 +90,6 @@ namespace DirectEve
         private DirectSession _session;
 
         /// <summary>
-        ///   Me cache
-        /// </summary>
-        private DirectMe _me;
-        
-        /// <summary>
-        ///   ActiveShip cache
-        /// </summary>
-        private DirectActiveShip _activeShip;
-
-        /// <summary>
-        ///   Standings cache
-        /// </summary>
-        private DirectStandings _standings;
-
-        /// <summary>
         ///   Ship Hangar container cache
         /// </summary>
         private DirectContainer _shipHangar;
@@ -108,11 +105,14 @@ namespace DirectEve
         private DirectContainer _shipsDroneBay;
 
         /// <summary>
+        ///   Standings cache
+        /// </summary>
+        private DirectStandings _standings;
+
+        /// <summary>
         ///   Cache the GetWindows call
         /// </summary>
         private List<DirectWindow> _windows;
-
-        private uint _innerspaceOnFrameId;
 
         /// <summary>
         ///   Create a DirectEve object
@@ -233,6 +233,133 @@ namespace DirectEve
         /// </remarks>
         internal PySharp.PySharp PySharp { get; private set; }
 
+        /// <summary>
+        ///   Return a list of entities
+        /// </summary>
+        /// <value></value>
+        /// <remarks>
+        ///   Only works in space
+        /// </remarks>
+        public List<DirectEntity> Entities
+        {
+            get { return EntitiesById.Values.ToList(); }
+        }
+
+        /// <summary>
+        ///   Return a dictonairy of entities by id
+        /// </summary>
+        /// <value></value>
+        /// <remarks>
+        ///   Only works in space
+        /// </remarks>
+        public Dictionary<long, DirectEntity> EntitiesById
+        {
+            get
+            {
+                if (_entitiesById == null)
+                    _entitiesById = DirectEntity.GetEntities(this);
+
+                return _entitiesById;
+            }
+        }
+
+        /// <summary>
+        ///   Return a list of bookmarks
+        /// </summary>
+        /// <value></value>
+        public List<DirectBookmark> Bookmarks
+        {
+            get
+            {
+                if (_bookmarks == null)
+                    _bookmarks = DirectBookmark.GetBookmarks(this);
+
+                return _bookmarks;
+            }
+        }
+
+        /// <summary>
+        ///   Return a list of agent missions
+        /// </summary>
+        /// <value></value>
+        public List<DirectAgentMission> AgentMissions
+        {
+            get
+            {
+                if (_agentMissions == null)
+                    _agentMissions = DirectAgentMission.GetAgentMissions(this);
+
+                return _agentMissions;
+            }
+        }
+
+        /// <summary>
+        ///   Return a list of all open windows
+        /// </summary>
+        /// <value></value>
+        public List<DirectWindow> Windows
+        {
+            get
+            {
+                if (_windows == null)
+                    _windows = DirectWindow.GetWindows(this);
+
+                return _windows;
+            }
+        }
+
+        /// <summary>
+        ///   Return a list of all modules
+        /// </summary>
+        /// <value></value>
+        /// <remarks>
+        ///   Only works inspace and does not return hidden modules
+        /// </remarks>
+        public List<DirectModule> Modules
+        {
+            get
+            {
+                if (_modules == null)
+                    _modules = DirectModule.GetModules(this);
+
+                return _modules;
+            }
+        }
+
+        /// <summary>
+        ///   Return active drone id's
+        /// </summary>
+        /// <value></value>
+        public List<DirectEntity> ActiveDrones
+        {
+            get
+            {
+                var droneIds = GetLocalSvc("michelle").Call("GetDrones").Attribute("items").ToDictionary<long>().Keys;
+                return Entities.Where(e => droneIds.Any(d => d == e.Id)).ToList();
+            }
+        }
+
+        /// <summary>
+        ///   Is EVE rendering 3D, you can enable/disable rendering by setting this value to true or false
+        /// </summary>
+        /// <remarks>
+        ///   Only works in space!
+        /// </remarks>
+        public bool Rendering3D
+        {
+            get
+            {
+                var rendering1 = (bool) GetLocalSvc("sceneManager").Attribute("registeredScenes").DictionaryItem("default").Attribute("display");
+                var rendering2 = (bool) GetLocalSvc("sceneManager").Attribute("registeredScenes2").DictionaryItem("default").Attribute("display");
+                return rendering1 && rendering2;
+            }
+            set
+            {
+                GetLocalSvc("sceneManager").Attribute("registeredScenes").DictionaryItem("default").SetAttribute("display", value);
+                GetLocalSvc("sceneManager").Attribute("registeredScenes2").DictionaryItem("default").SetAttribute("display", value);
+            }
+        }
+
         #region IDisposable Members
 
         /// <summary>
@@ -268,7 +395,7 @@ namespace DirectEve
                 // Update currently locked targets
                 targets.ForEach(t => _lastKnownTargets[t] = DateTime.Now);
                 // Remove all targets that have not been locked for 3 seconds
-                foreach(var t in _lastKnownTargets.Keys.ToArray())
+                foreach (var t in _lastKnownTargets.Keys.ToArray())
                 {
                     if (DateTime.Now.AddSeconds(-3) < _lastKnownTargets[t])
                         continue;
@@ -434,39 +561,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a list of entities
-        /// </summary>
-        /// <value></value>
-        /// <remarks>
-        ///   Only works in space
-        /// </remarks>
-        public List<DirectEntity> Entities
-        {
-            get { return EntitiesById.Values.ToList(); }
-        }
-
-        /// <summary>
-        ///   Return a dictonairy of entities by id
-        /// </summary>
-        /// <value></value>
-        /// <remarks>
-        ///   Only works in space
-        /// </remarks>
-        public Dictionary<long, DirectEntity> EntitiesById
-        {
-            get
-            {
-                if (_entitiesById == null)
-                    _entitiesById = DirectEntity.GetEntities(this);
-
-                return _entitiesById;
-            }
-        }
-
-        /// <summary>
         ///   Return the entity by it's id
         /// </summary>
-        /// <param name="entityId"></param>
+        /// <param name = "entityId"></param>
         /// <returns></returns>
         public DirectEntity GetEntityById(long entityId)
         {
@@ -479,25 +576,10 @@ namespace DirectEve
 
 
         /// <summary>
-        ///   Return a list of bookmarks
-        /// </summary>
-        /// <value></value>
-        public List<DirectBookmark> Bookmarks
-        {
-            get
-            {
-                if (_bookmarks == null)
-                    _bookmarks = DirectBookmark.GetBookmarks(this);
-
-                return _bookmarks;
-            }
-        }
-
-        /// <summary>
         ///   Bookmark the current location
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="comment"></param>
+        /// <param name = "name"></param>
+        /// <param name = "comment"></param>
         /// <returns></returns>
         public bool BookmarkCurrentLocation(string name, string comment)
         {
@@ -507,7 +589,7 @@ namespace DirectEve
                 if (!station.IsValid)
                     return false;
 
-                return DirectBookmark.BookmarkLocation(this, (long)station.Attribute("stationID"), name, comment, (int)station.Attribute("stationTypeID"), (long?)station.Attribute("solarSystemID"));
+                return DirectBookmark.BookmarkLocation(this, (long) station.Attribute("stationID"), name, comment, (int) station.Attribute("stationTypeID"), (long?) station.Attribute("solarSystemID"));
             }
 
             if (ActiveShip.Entity.IsValid && Session.SolarSystemId.HasValue)
@@ -519,9 +601,9 @@ namespace DirectEve
         /// <summary>
         ///   Bookmark an entity
         /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="name"></param>
-        /// <param name="comment"></param>
+        /// <param name = "entity"></param>
+        /// <param name = "name"></param>
+        /// <param name = "comment"></param>
         /// <returns></returns>
         public bool BookmarkEntity(DirectEntity entity, string name, string comment)
         {
@@ -534,59 +616,11 @@ namespace DirectEve
         /// <summary>
         ///   Drop bookmarks into people & places
         /// </summary>
-        /// <param name="bookmarks"></param>
+        /// <param name = "bookmarks"></param>
         /// <returns></returns>
         public bool DropInPeopleAndPlaces(IEnumerable<DirectItem> bookmarks)
         {
             return DirectItem.DropInPlaces(this, bookmarks);
-        }
-
-        /// <summary>
-        ///   Return a list of agent missions
-        /// </summary>
-        /// <value></value>
-        public List<DirectAgentMission> AgentMissions
-        {
-            get
-            {
-                if (_agentMissions == null)
-                    _agentMissions = DirectAgentMission.GetAgentMissions(this);
-
-                return _agentMissions;
-            }
-        }
-
-        /// <summary>
-        ///   Return a list of all open windows
-        /// </summary>
-        /// <value></value>
-        public List<DirectWindow> Windows
-        {
-            get
-            {
-                if (_windows == null)
-                    _windows = DirectWindow.GetWindows(this);
-
-                return _windows;
-            }
-        }
-
-        /// <summary>
-        ///   Return a list of all modules
-        /// </summary>
-        /// <value></value>
-        /// <remarks>
-        ///   Only works inspace and does not return hidden modules
-        /// </remarks>
-        public List<DirectModule> Modules
-        {
-            get
-            {
-                if (_modules == null)
-                    _modules = DirectModule.GetModules(this);
-
-                return _modules;
-            }
         }
 
         /// <summary>
@@ -602,7 +636,7 @@ namespace DirectEve
         /// <summary>
         ///   Return a location
         /// </summary>
-        /// <param name="locationId"></param>
+        /// <param name = "locationId"></param>
         /// <returns></returns>
         public DirectLocation GetLocation(long locationId)
         {
@@ -612,7 +646,7 @@ namespace DirectEve
         /// <summary>
         ///   Return the name of a location
         /// </summary>
-        /// <param name="locationId"></param>
+        /// <param name = "locationId"></param>
         /// <returns></returns>
         public string GetLocationName(long locationId)
         {
@@ -622,7 +656,7 @@ namespace DirectEve
         /// <summary>
         ///   Return the agent by id
         /// </summary>
-        /// <param name="agentId"></param>
+        /// <param name = "agentId"></param>
         /// <returns></returns>
         public DirectAgent GetAgentById(long agentId)
         {
@@ -632,45 +666,11 @@ namespace DirectEve
         /// <summary>
         ///   Return the agent by name
         /// </summary>
-        /// <param name="agentName"></param>
+        /// <param name = "agentName"></param>
         /// <returns></returns>
         public DirectAgent GetAgentByName(string agentName)
         {
             return DirectAgent.GetAgentByName(this, agentName);
-        }
-
-        /// <summary>
-        ///   Return active drone id's
-        /// </summary>
-        /// <value></value>
-        public List<DirectEntity> ActiveDrones
-        {
-            get
-            {
-                var droneIds = GetLocalSvc("michelle").Call("GetDrones").Attribute("items").ToDictionary<long>().Keys;
-                return Entities.Where(e => droneIds.Any(d => d == e.Id)).ToList();
-            }
-        }
-
-        /// <summary>
-        ///   Is EVE rendering 3D, you can enable/disable rendering by setting this value to true or false
-        /// </summary>
-        /// <remarks>
-        ///   Only works in space!
-        /// </remarks>
-        public bool Rendering3D
-        {
-            get
-            {
-                var rendering1 = (bool)GetLocalSvc("sceneManager").Attribute("registeredScenes").DictionaryItem("default").Attribute("display");
-                var rendering2 = (bool)GetLocalSvc("sceneManager").Attribute("registeredScenes2").DictionaryItem("default").Attribute("display");
-                return rendering1 && rendering2;
-            }
-            set
-            {
-                GetLocalSvc("sceneManager").Attribute("registeredScenes").DictionaryItem("default").SetAttribute("display", value);
-                GetLocalSvc("sceneManager").Attribute("registeredScenes2").DictionaryItem("default").SetAttribute("display", value);
-            }
         }
 
         /// <summary>
@@ -727,7 +727,7 @@ namespace DirectEve
             if (!pyCall.IsValid)
                 return false;
 
-            return !PySharp.Import("uthread").CallWithKeywords("new", keywords, (new object[] { pyCall }).Concat(parms).ToArray()).IsNull;
+            return !PySharp.Import("uthread").CallWithKeywords("new", keywords, (new object[] {pyCall}).Concat(parms).ToArray()).IsNull;
         }
 
         /// <summary>
@@ -746,7 +746,7 @@ namespace DirectEve
         /// <summary>
         ///   Return's true if the entity has not been a target in the last 3 seconds
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name = "id"></param>
         /// <returns></returns>
         internal bool CanTarget(long id)
         {
@@ -756,7 +756,7 @@ namespace DirectEve
         /// <summary>
         ///   Remove's the target from the last known targets
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name = "id"></param>
         internal void ClearTargetTimer(long id)
         {
             _lastKnownTargets.Remove(id);
@@ -765,7 +765,7 @@ namespace DirectEve
         /// <summary>
         ///   Set the target's last target time
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name = "id"></param>
         internal void SetTargetTimer(long id)
         {
             _lastKnownTargets[id] = DateTime.Now;

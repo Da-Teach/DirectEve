@@ -53,7 +53,7 @@ namespace DirectEve
             {
                 if (!_loyaltyPoints.HasValue)
                 {
-                    if ((bool)DirectEve.GetLocalSvc("journal").Attribute("outdatedCorpLP"))
+                    if ((bool) DirectEve.GetLocalSvc("journal").Attribute("outdatedCorpLP"))
                     {
                         // Update loyalty points if their outdated
                         DirectEve.ThreadedLocalSvcCall("journal", "GetMyLoyaltyPoints");

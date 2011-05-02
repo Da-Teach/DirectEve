@@ -1,4 +1,13 @@
-﻿namespace DirectEve
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
+namespace DirectEve
 {
     using System;
     using global::DirectEve.PySharp;
@@ -10,27 +19,27 @@
         internal DirectOrder(DirectEve directEve, PyObject pyOrder) : base(directEve)
         {
             PyOrder = pyOrder;
-            Price = (double)pyOrder.Attribute("price");
-            VolumeRemaining = (int)pyOrder.Attribute("volRemaining");
-            TypeId = (int)pyOrder.Attribute("typeID");
-            if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeSolarSystem)
+            Price = (double) pyOrder.Attribute("price");
+            VolumeRemaining = (int) pyOrder.Attribute("volRemaining");
+            TypeId = (int) pyOrder.Attribute("typeID");
+            if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeSolarSystem)
                 Range = DirectOrderRange.SolarSystem;
-            else if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeConstellation)
+            else if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeConstellation)
                 Range = DirectOrderRange.Constellation;
-            else if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeRegion)
+            else if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeRegion)
                 Range = DirectOrderRange.Region;
-            else 
+            else
                 Range = DirectOrderRange.Station;
-            OrderId = (long)pyOrder.Attribute("orderID");
-            VolumeEntered = (int)pyOrder.Attribute("volEntered");
-            MinimumVolume = (int)pyOrder.Attribute("minVolume");
-            IsBid =(bool)pyOrder.Attribute("bid");
-            IssuedOn = (DateTime)pyOrder.Attribute("issued");
-            Duration = (int)pyOrder.Attribute("duration");
-            StationId = (int)pyOrder.Attribute("stationID");
-            RegionId = (int)pyOrder.Attribute("regionID");
-            SolarSystemId =(int)pyOrder.Attribute("solarSystemID");
-            Jumps = (int)pyOrder.Attribute("jumps");
+            OrderId = (long) pyOrder.Attribute("orderID");
+            VolumeEntered = (int) pyOrder.Attribute("volEntered");
+            MinimumVolume = (int) pyOrder.Attribute("minVolume");
+            IsBid = (bool) pyOrder.Attribute("bid");
+            IssuedOn = (DateTime) pyOrder.Attribute("issued");
+            Duration = (int) pyOrder.Attribute("duration");
+            StationId = (int) pyOrder.Attribute("stationID");
+            RegionId = (int) pyOrder.Attribute("regionID");
+            SolarSystemId = (int) pyOrder.Attribute("solarSystemID");
+            Jumps = (int) pyOrder.Attribute("jumps");
         }
 
         public int Jumps { get; set; }

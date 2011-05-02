@@ -17,12 +17,12 @@ namespace DirectEve
         internal DirectChatMessage(DirectEve directEve, PyObject message) : base(directEve)
         {
             Name = (string) message.Item(0);
-            Message = (string)message.Item(1);
+            Message = (string) message.Item(1);
             CharacterId = -1;
             if (message.Item(2).GetPyType() == PyType.IntType)
-                CharacterId = (long)message.Item(2);
-            Time = (DateTime)message.Item(3);
-            ColorKey = (int)message.Item(4);
+                CharacterId = (long) message.Item(2);
+            Time = (DateTime) message.Item(3);
+            ColorKey = (int) message.Item(4);
         }
 
         public string Name { get; internal set; }

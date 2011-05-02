@@ -1,4 +1,13 @@
-﻿namespace DirectEve
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
+namespace DirectEve
 {
     using System;
     using System.Collections.Generic;
@@ -6,11 +15,12 @@
 
     public class DirectItemAttributes : DirectObject
     {
+        private Dictionary<string, PyObject> _attributes;
+
         /// <summary>
         ///   Attribute cache
         /// </summary>
         private Dictionary<string, PyObject> _chargedAttributes;
-        private Dictionary<string, PyObject> _attributes;
 
         internal DirectItemAttributes(DirectEve directEve, long itemId)
             : this(directEve, directEve.PySharp.From(itemId))
@@ -28,31 +38,33 @@
         ///   Returns a list of all the attributes associated with the item
         /// </summary>
         /// <returns></returns>
-        /// <remarks>object-types are unknown types</remarks>
+        /// <remarks>
+        ///   object-types are unknown types
+        /// </remarks>
         public Dictionary<string, Type> GetAttributes()
         {
             var result = new Dictionary<string, Type>();
-            foreach(var attribute in _attributes)
+            foreach (var attribute in _attributes)
             {
                 var type = typeof (object);
 
-                switch(attribute.Value.GetPyType())
+                switch (attribute.Value.GetPyType())
                 {
                     case PyType.BoolType:
-                        type = typeof(bool);
+                        type = typeof (bool);
                         break;
                     case PyType.IntType:
                         type = typeof (int);
                         break;
                     case PyType.LongType:
-                        type = typeof(long);
+                        type = typeof (long);
                         break;
                     case PyType.FloatType:
-                        type = typeof(double);
+                        type = typeof (double);
                         break;
                     case PyType.StringType:
                     case PyType.UnicodeType:
-                        type = typeof(string);
+                        type = typeof (string);
                         break;
                 }
 
@@ -65,8 +77,8 @@
         /// <summary>
         ///   Get an attribute
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="key"></param>
+        /// <typeparam name = "T"></typeparam>
+        /// <param name = "key"></param>
         /// <returns></returns>
         public T TryGet<T>(string key)
         {
@@ -74,38 +86,38 @@
             {
                 var value = _chargedAttributes[key];
                 var charge = DirectEve.GetLocalSvc("godma").Attribute("stateManager").Call("GetChargeValue", value.Item(0), value.Item(1), value.Item(2), value.Item(3));
-                if (typeof(T) == typeof(bool))
-                    return (T)(object)charge.ToBool();
-                if (typeof(T) == typeof(string))
-                    return (T)(object)charge.ToUnicodeString();
-                if (typeof(T) == typeof(int))
-                    return (T)(object)charge.ToInt();
-                if (typeof(T) == typeof(long))
-                    return (T)(object)charge.ToLong();
-                if (typeof(T) == typeof(float))
-                    return (T)(object)charge.ToFloat();
-                if (typeof(T) == typeof(double))
-                    return (T)(object)charge.ToDouble();
-                if (typeof(T) == typeof(DateTime))
-                    return (T)(object)charge.ToDateTime();
+                if (typeof (T) == typeof (bool))
+                    return (T) (object) charge.ToBool();
+                if (typeof (T) == typeof (string))
+                    return (T) (object) charge.ToUnicodeString();
+                if (typeof (T) == typeof (int))
+                    return (T) (object) charge.ToInt();
+                if (typeof (T) == typeof (long))
+                    return (T) (object) charge.ToLong();
+                if (typeof (T) == typeof (float))
+                    return (T) (object) charge.ToFloat();
+                if (typeof (T) == typeof (double))
+                    return (T) (object) charge.ToDouble();
+                if (typeof (T) == typeof (DateTime))
+                    return (T) (object) charge.ToDateTime();
             }
 
             if (_attributes.ContainsKey(key))
             {
-                if (typeof(T) == typeof(bool))
-                    return (T)(object)_attributes[key].ToBool();
-                if (typeof(T) == typeof(string))
-                    return (T)(object)_attributes[key].ToUnicodeString();
-                if (typeof(T) == typeof(int))
-                    return (T)(object)_attributes[key].ToInt();
-                if (typeof(T) == typeof(long))
-                    return (T)(object)_attributes[key].ToLong();
-                if (typeof(T) == typeof(float))
-                    return (T)(object)_attributes[key].ToFloat(); 
-                if (typeof(T) == typeof(double))
-                    return (T)(object)_attributes[key].ToDouble();
-                if (typeof(T) == typeof(DateTime))
-                    return (T)(object)_attributes[key].ToDateTime();
+                if (typeof (T) == typeof (bool))
+                    return (T) (object) _attributes[key].ToBool();
+                if (typeof (T) == typeof (string))
+                    return (T) (object) _attributes[key].ToUnicodeString();
+                if (typeof (T) == typeof (int))
+                    return (T) (object) _attributes[key].ToInt();
+                if (typeof (T) == typeof (long))
+                    return (T) (object) _attributes[key].ToLong();
+                if (typeof (T) == typeof (float))
+                    return (T) (object) _attributes[key].ToFloat();
+                if (typeof (T) == typeof (double))
+                    return (T) (object) _attributes[key].ToDouble();
+                if (typeof (T) == typeof (DateTime))
+                    return (T) (object) _attributes[key].ToDateTime();
             }
             return default(T);
         }

@@ -7,7 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
-namespace DirectEve.PySharp
+namespace PythonBrowser.PySharp
 {
     using System;
     using System.Collections.Generic;

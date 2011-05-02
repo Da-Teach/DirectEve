@@ -9,9 +9,7 @@
 // -------------------------------------------------------------------------------
 namespace DirectEve
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using global::DirectEve.PySharp;
 
     public class DirectModule : DirectItem
@@ -49,7 +47,7 @@ namespace DirectEve
                     return 0;
 
                 if (Charge != null && Charge.Volume > 0)
-                    return (int)(Capacity/Charge.Volume);
+                    return (int) (Capacity/Charge.Volume);
 
                 if (MatchingAmmo.Count > 0)
                     return (int) (Capacity/MatchingAmmo[0].Volume);
@@ -60,7 +58,7 @@ namespace DirectEve
 
         public long? TargetId { get; internal set; }
 
-        public double? OptimalRange 
+        public double? OptimalRange
         {
             get { return Attributes.TryGet<double>("maxRange"); }
         }
@@ -99,7 +97,7 @@ namespace DirectEve
                 var module = new DirectModule(directEve, pyModule.Value);
                 module.PyItem = pyModule.Value.Attribute("sr").Attribute("moduleInfo");
                 module.ItemId = pyModule.Key;
-                module.IsOnline = (bool)pyModule.Value.Attribute("online");
+                module.IsOnline = (bool) pyModule.Value.Attribute("online");
                 module.IsGoingOnline = (bool) pyModule.Value.Attribute("goingOnline");
                 module.IsReloadingAmmo = (bool) pyModule.Value.Attribute("reloadingAmmo");
                 module.IsChangingAmmo = (bool) pyModule.Value.Attribute("changingAmmo");
