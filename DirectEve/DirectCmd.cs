@@ -29,6 +29,7 @@ namespace DirectEve
         CmdResetMonitor,
         CmdToggleAudio,
         CmdQuitGame,
+        CmdLogOff,
         CmdActivateHighPowerSlot1,
         CmdActivateHighPowerSlot2,
         CmdActivateHighPowerSlot3,
