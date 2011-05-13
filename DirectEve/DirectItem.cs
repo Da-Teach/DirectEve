@@ -475,5 +475,23 @@ namespace DirectEve
 
             return DirectEve.ThreadedLocalSvcCall("station", "TryLeaveShip", PyItem);
         }
+        
+        /// <summary>
+        /// Fit this item to your ship
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        ///   Fails if the selected item is not of CategoryModule
+        /// </remarks>
+        public bool FitToActiveShip()
+        {
+            if (CategoryId != (int)DirectEve.Const.CategoryModule)
+                return false;
+
+            var data = new List<PyObject>();
+            data.Add(PyItem);
+
+            return DirectEve.ThreadedLocalSvcCall("menu", "TryFit", data);
+        }
     }
 }

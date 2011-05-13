@@ -77,6 +77,11 @@ namespace DirectEve
             get { return Const.Attribute("categoryShip"); }
         }
 
+        public PyObject CategoryModule
+        {
+            get { return Const.Attribute("categoryModule"); }
+        }
+
         public PyObject RangeRegion
         {
             get { return Const.Attribute("rangeRegion"); }
