@@ -771,8 +771,9 @@ namespace DirectEve
             _lastKnownTargets[id] = DateTime.Now;
         }
 
-        // put fitting stuff here for now
-
+        /// <summary>
+        ///   Open the fitting management window
+        /// </summary>
         public void OpenFitingManager()
         {
             var dict = new Dictionary<string,object>();
@@ -780,23 +781,29 @@ namespace DirectEve
             ThreadedCallWithKeywords(GetLocalSvc("window").Attribute("GetWindow"), dict, "FittingMgmt");
         }
 
+        /// <summary>
+        ///   Fit the saved fitting to your active ship
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public bool FitFitting(string name)
         {
             var fittingSvc = GetLocalSvc("fittingSvc");
             if (!fittingSvc.IsValid)
                 return false;
 
-            var fittings = fittingSvc.Attribute("fittings").DictionaryItem((long)Session.CharacterId);
+            if (Session.CharacterId == null)
+                return false;
+
+            var fittings = fittingSvc.Attribute("fittings").DictionaryItem(Session.CharacterId.Value);
             if (!fittings.IsValid)
                 return false;
             
-            var fitting = fittings.ToDictionary<int>().FirstOrDefault(v => (string)v.Value.Attribute("name") == name).Value;
-            if (!fitting.IsValid)
+            var fitting = fittings.ToDictionary<int>().Values.FirstOrDefault(v => (string)v.Attribute("name") == name);
+            if (fitting == null || !fitting.IsValid)
                 return false;
 
-            ThreadedCall(fittingSvc.Attribute("LoadFitting"), Session.CharacterId, fitting.Attribute("fittingID"));
-
-            return true;
+            return ThreadedCall(fittingSvc.Attribute("LoadFitting"), Session.CharacterId, fitting.Attribute("fittingID"));
         }
     }
 }
