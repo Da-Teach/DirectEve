@@ -770,5 +770,33 @@ namespace DirectEve
         {
             _lastKnownTargets[id] = DateTime.Now;
         }
+
+        // put fitting stuff here for now
+
+        public void OpenFitingManager()
+        {
+            var dict = new Dictionary<string,object>();
+            dict.Add("create", 1);
+            ThreadedCallWithKeywords(GetLocalSvc("window").Attribute("GetWindow"), dict, "FittingMgmt");
+        }
+
+        public bool FitFitting(string name)
+        {
+            var fittingSvc = GetLocalSvc("fittingSvc");
+            if (!fittingSvc.IsValid)
+                return false;
+
+            var fittings = fittingSvc.Attribute("fittings").DictionaryItem((long)Session.CharacterId);
+            if (!fittings.IsValid)
+                return false;
+            
+            var fitting = fittings.ToDictionary<int>().FirstOrDefault(v => (string)v.Value.Attribute("name") == name).Value;
+            if (!fitting.IsValid)
+                return false;
+
+            ThreadedCall(fittingSvc.Attribute("LoadFitting"), Session.CharacterId, fitting.Attribute("fittingID"));
+
+            return true;
+        }
     }
 }

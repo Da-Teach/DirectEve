@@ -19,6 +19,7 @@ namespace DirectEveTester
     {
         private static bool _done;
         private static DirectEve _directEve;
+        private static long _frameCount = 0;
 
         /// <summary>
         ///   The main entry point for the application.
@@ -26,6 +27,7 @@ namespace DirectEveTester
         [STAThread]
         private static void Main()
         {
+            Log("Starting test...");
             _directEve = new DirectEve();
             _directEve.OnFrame += OnFrame;
 
@@ -34,38 +36,65 @@ namespace DirectEveTester
                 Thread.Sleep(50);
 
             _directEve.Dispose();
+            Log("Test finished.");
         }
 
         private static void Log(string line)
         {
-            InnerSpace.Echo(string.Format("{0:HH:mm:ss} {1}", DateTime.Now, line));
+            InnerSpace.Echo(string.Format("{0:D} {1:HH:mm:ss} {2}", _frameCount, DateTime.Now, line));
         }
 
         private static void OnFrame(object sender, EventArgs eventArgs)
         {
+            _frameCount++;
+
             if (_done)
                 return;
 
             try
             {
-                foreach (var module in _directEve.Modules)
+                if ( _directEve.Windows.FirstOrDefault(w => (string)w.Type == "form.FittingMgmt") != null )
                 {
-                    Log("Module " + module.TypeName + " - " + module.GroupId);
-                    if (module.GroupId != 53)
-                        continue;
-
-                    var typeId = module.Charge != null ? module.Charge.TypeId : 0;
-                    var typeName = module.Charge != null ? module.Charge.TypeName : "";
-                    var ammo = module.MatchingAmmo.FirstOrDefault(a => a.TypeId != typeId);
-                    if (ammo == null)
-                    {
-                        Log("No matching ammo found");
-                        continue;
-                    }
-
-                    module.ChangeAmmo(ammo);
-                    Log("Changing ammo from " + typeName + " to " + ammo.TypeName);
+                    Log("Swapping fit...");
+                    if ( _directEve.FitFitting("phantaztik") )
+                        _done = true;
                 }
+                else
+                {
+                    Log("Opening fitting manager...");
+                    _directEve.OpenFitingManager();
+                }
+
+                
+                //var hangar = _directEve.GetItemHangar();
+
+                //foreach (var item in hangar.Items)
+                //{
+                //    item.FitToActiveShip();
+                //}
+
+                //Log("Logging off...");
+                //_directEve.ExecuteCommand(DirectCmd.CmdLogOff);
+                //Log("Done.");
+
+                //foreach (var module in _directEve.Modules)
+                //{
+                //    Log("Module " + module.TypeName + " - " + module.GroupId);
+                //    if (module.GroupId != 53)
+                //        continue;
+
+                //    var typeId = module.Charge != null ? module.Charge.TypeId : 0;
+                //    var typeName = module.Charge != null ? module.Charge.TypeName : "";
+                //    var ammo = module.MatchingAmmo.FirstOrDefault(a => a.TypeId != typeId);
+                //    if (ammo == null)
+                //    {
+                //        Log("No matching ammo found");
+                //        continue;
+                //    }
+
+                //    module.ChangeAmmo(ammo);
+                //    Log("Changing ammo from " + typeName + " to " + ammo.TypeName);
+                //}
 
                 //var hangar = _directEve.GetItemHangar();
                 //var cargo = _directEve.GetShipsCargo();
@@ -163,10 +192,14 @@ namespace DirectEveTester
                 //var metal = cargo.Items.FirstOrDefault(i => i.Name == "Metal Scraps");
                 //cargo.Jettison(metal.ItemId);
             }
-            finally
+            catch
             {
-                _done = true;
+                Log("Caught exception!!");
             }
+            //finally
+            //{
+            //    _done = true;
+            //}
         }
     }
 }
