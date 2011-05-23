@@ -83,7 +83,7 @@ namespace DirectEve
 
                 return _typeId.Value;
             }
-            private set { _typeId = value; }
+            internal set { _typeId = value; }
         }
 
         public int OwnerId

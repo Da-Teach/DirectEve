@@ -53,19 +53,60 @@ namespace DirectEveTester
 
             try
             {
-                if ( _directEve.Windows.FirstOrDefault(w => (string)w.Type == "form.FittingMgmt") != null )
+                var fittingMgr = _directEve.Windows.OfType<DirectFittingManagerWindow>().FirstOrDefault();
+                if (fittingMgr == null)
                 {
-                    Log("Swapping fit...");
-                    if ( _directEve.FitFitting("phantaztik") )
-                        _done = true;
-                }
-                else
-                {
-                    Log("Opening fitting manager...");
                     _directEve.OpenFitingManager();
+                    return;
                 }
 
-                
+                if (!fittingMgr.IsReady)
+                {
+                    // Wait for it to become ready
+                    return;
+                }
+
+                foreach (var fitting in fittingMgr.Fittings)
+                {
+                    Log(fitting.Name);
+                    foreach (var module in fitting.Modules)
+                    {
+                        Log(" - " + module.TypeName);
+                    }
+                }
+
+                if (fittingMgr.Fittings.Any())
+                    fittingMgr.Fittings.FirstOrDefault().Fit();
+
+                _done = true;
+                //var hangar = _directEve.GetItemHangar();
+
+                //foreach(var item in _directEve.GetShipsModules().Items)
+                //{
+                //    Log(item.ItemId + " - " + item.TypeName + " - " + item.FlagId + " - " + item.LocationId);
+
+                //    if (item.TypeName == "Cap Recharger II")
+                //        hangar.Add(item);
+                //}
+
+                //foreach(var item in hangar.Items)
+                //{
+                //    if (item.TypeName == "Cap Recharger II")
+                //        item.FitToActiveShip();
+                //}
+
+                //if ( _directEve.Windows.FirstOrDefault(w => (string)w.Type == "form.FittingMgmt") != null )
+                //{
+                //    Log("Swapping fit...");
+                //    if ( _directEve.FitFitting("phantaztik") )
+                //        _done = true;
+                //}
+                //else
+                //{
+                //    Log("Opening fitting manager...");
+                //    _directEve.OpenFitingManager();
+                //}
+
                 //var hangar = _directEve.GetItemHangar();
 
                 //foreach (var item in hangar.Items)

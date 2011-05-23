@@ -22,6 +22,11 @@ namespace DirectEve
             get { return PySharp.Import("__builtin__").Attribute("const"); }
         }
 
+        public PyObject this[string flag]
+        {
+            get { return Const.Attribute(flag); }
+        }
+
         public PyObject ContainerHangar
         {
             get { return Const.Attribute("containerHangar"); }

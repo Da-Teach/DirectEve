@@ -9,6 +9,7 @@
 // -------------------------------------------------------------------------------
 namespace DirectEve
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using global::DirectEve.PySharp;
@@ -41,6 +42,11 @@ namespace DirectEve
         private string _windowName;
 
         /// <summary>
+        ///   Is this the ship's modules 'container'
+        /// </summary>
+        private bool _shipModules;
+
+        /// <summary>
         ///   DirectContainer
         /// </summary>
         /// <param name = "directEve"></param>
@@ -53,6 +59,25 @@ namespace DirectEve
             _pyFlag = pyFlag;
             _windowName = windowName;
         }
+
+        /// <summary>
+        ///   DirectContainer
+        /// </summary>
+        /// <param name = "directEve"></param>
+        /// <param name = "pyInventory"></param>
+        /// <param name = "shipModules"></param>
+        internal DirectContainer(DirectEve directEve, PyObject pyInventory, bool shipModules) : base(directEve)
+        {
+            // You can't build a DirectContainer with these parameters if its not shipModules
+            if (!shipModules)
+                throw new Exception("Invalid container");
+
+            _pyInventory = pyInventory;
+            _pyFlag = global::DirectEve.PySharp.PySharp.PyNone;
+            _windowName = string.Empty;
+            _shipModules = true;
+        }
+
 
         /// <summary>
         ///   Get the items from the container
@@ -71,6 +96,20 @@ namespace DirectEve
                         _items.RemoveAll(i => i.CategoryId == categoryShip);
                     if (_windowName == "shipHangar")
                         _items.RemoveAll(i => i.CategoryId != categoryShip);
+
+                    // Special case #2 (filter out hi/med/low slots)
+                    if (_shipModules)
+                    {
+                        List<int> flags = new List<int>();
+                        for (var i = 0; i < 8; i ++)
+                        {
+                            flags.Add((int)DirectEve.Const["flagHiSlot" + i]);
+                            flags.Add((int)DirectEve.Const["flagMedSlot" + i]);
+                            flags.Add((int)DirectEve.Const["flagLoSlot" + i]);
+                        }
+
+                        _items.RemoveAll(i => !flags.Any(f => f == i.FlagId));
+                    }
                 }
 
                 return _items;
@@ -84,6 +123,9 @@ namespace DirectEve
         {
             get
             {
+                if (_shipModules)
+                    return null;
+
                 if (_window == null)
                     _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name == _windowName);
 
@@ -112,6 +154,9 @@ namespace DirectEve
         {
             get
             {
+                if (_shipModules)
+                    return true;
+
                 if (Window == null)
                     return false;
 
@@ -125,7 +170,13 @@ namespace DirectEve
         /// <returns></returns>
         public double Capacity
         {
-            get { return (double) (_pyFlag.IsValid ? _pyInventory.Call("GetCapacity", _pyFlag) : _pyInventory.Call("GetCapacity")).Attribute("capacity"); }
+            get
+            {
+                if (_shipModules)
+                    return 0;
+
+                return (double) (_pyFlag.IsValid ? _pyInventory.Call("GetCapacity", _pyFlag) : _pyInventory.Call("GetCapacity")).Attribute("capacity");
+            }
         }
 
         /// <summary>
@@ -134,7 +185,13 @@ namespace DirectEve
         /// <returns></returns>
         public double UsedCapacity
         {
-            get { return (double) (_pyFlag.IsValid ? _pyInventory.Call("GetCapacity", _pyFlag) : _pyInventory.Call("GetCapacity")).Attribute("used"); }
+            get
+            {
+                if (_shipModules)
+                    return 0;
+
+                return (double) (_pyFlag.IsValid ? _pyInventory.Call("GetCapacity", _pyFlag) : _pyInventory.Call("GetCapacity")).Attribute("used");
+            }
         }
 
         /// <summary>
@@ -246,6 +303,20 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Get the ship's modules 'container'
+        /// </summary>
+        /// <param name = "directEve"></param>
+        /// <returns></returns>
+        internal static DirectContainer GetShipsModules(DirectEve directEve)
+        {
+            if (!directEve.Session.ShipId.HasValue)
+                return new DirectContainer(directEve, global::DirectEve.PySharp.PySharp.PyZero, global::DirectEve.PySharp.PySharp.PyZero, string.Empty);
+
+            var inventory = GetInventory(directEve, "GetInventoryFromId", directEve.Session.ShipId.Value);
+            return new DirectContainer(directEve, inventory, true);
+        }
+
+        /// <summary>
         ///   Get the ship's drone container
         /// </summary>
         /// <param name = "directEve"></param>
@@ -277,6 +348,10 @@ namespace DirectEve
         /// <returns></returns>
         public bool StackAll()
         {
+            // You can't stack modules
+            if (_shipModules)
+                return false;
+
             return _pyFlag.IsValid ? DirectEve.ThreadedCall(_pyInventory.Attribute("StackAll"), _pyFlag) : DirectEve.ThreadedCall(_pyInventory.Attribute("StackAll"));
         }
 
@@ -298,6 +373,10 @@ namespace DirectEve
         /// <returns></returns>
         public bool Add(DirectItem item, int quantity)
         {
+            // You can't fit modules like this
+            if (_shipModules)
+                return false; 
+            
             if (item.LocationId == -1 || quantity < 1)
                 return false;
 
@@ -315,6 +394,10 @@ namespace DirectEve
         /// <returns></returns>
         public bool Add(IEnumerable<DirectItem> items)
         {
+            // You can't fit modules like this
+            if (_shipModules)
+                return false; 
+            
             if (items.Count() == 0)
                 return true;
 
@@ -350,7 +433,7 @@ namespace DirectEve
         /// </remarks>
         public bool Jettison(long itemId)
         {
-            return Jettison(new[] {itemId});
+            return Jettison(new[] { itemId });
         }
 
         /// <summary>
@@ -363,6 +446,10 @@ namespace DirectEve
         /// </remarks>
         public bool Jettison(IEnumerable<long> itemIds)
         {
+            // You can't jettison modules
+            if (_shipModules)
+                return false;
+            
             if (itemIds.Count() == 0)
                 return true;
 

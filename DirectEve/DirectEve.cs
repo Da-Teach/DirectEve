@@ -100,6 +100,11 @@ namespace DirectEve
         private DirectContainer _shipsCargo;
 
         /// <summary>
+        ///   Ship's modules container cache
+        /// </summary>
+        private DirectContainer _shipsModules;
+
+        /// <summary>
         ///   Ship's drone bay cache
         /// </summary>
         private DirectContainer _shipsDroneBay;
@@ -419,6 +424,7 @@ namespace DirectEve
                 _itemHangar = null;
                 _shipHangar = null;
                 _shipsCargo = null;
+                _shipsModules = null;
                 _shipsDroneBay = null;
                 _me = null;
                 _activeShip = null;
@@ -512,6 +518,18 @@ namespace DirectEve
                 _shipsCargo = DirectContainer.GetShipsCargo(this);
 
             return _shipsCargo;
+        }
+
+        /// <summary>
+        ///   Ship's modules container
+        /// </summary>
+        /// <returns></returns>
+        public DirectContainer GetShipsModules()
+        {
+            if (_shipsModules == null)
+                _shipsModules = DirectContainer.GetShipsModules(this);
+
+            return _shipsModules;
         }
 
 
@@ -779,31 +797,6 @@ namespace DirectEve
             var dict = new Dictionary<string,object>();
             dict.Add("create", 1);
             ThreadedCallWithKeywords(GetLocalSvc("window").Attribute("GetWindow"), dict, "FittingMgmt");
-        }
-
-        /// <summary>
-        ///   Fit the saved fitting to your active ship
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public bool FitFitting(string name)
-        {
-            var fittingSvc = GetLocalSvc("fittingSvc");
-            if (!fittingSvc.IsValid)
-                return false;
-
-            if (Session.CharacterId == null)
-                return false;
-
-            var fittings = fittingSvc.Attribute("fittings").DictionaryItem(Session.CharacterId.Value);
-            if (!fittings.IsValid)
-                return false;
-            
-            var fitting = fittings.ToDictionary<int>().Values.FirstOrDefault(v => (string)v.Attribute("name") == name);
-            if (fitting == null || !fitting.IsValid)
-                return false;
-
-            return ThreadedCall(fittingSvc.Attribute("LoadFitting"), Session.CharacterId, fitting.Attribute("fittingID"));
         }
     }
 }

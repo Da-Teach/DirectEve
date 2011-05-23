@@ -59,6 +59,8 @@
     <Compile Include="DirectEve.cs" />
     <Compile Include="DirectContainer.cs" />
     <Compile Include="DirectChatWindow.cs" />
+    <Compile Include="DirectFitting.cs" />
+    <Compile Include="DirectFittingManagerWindow.cs" />
     <Compile Include="DirectItem.cs" />
     <Compile Include="DirectItemAttributes.cs" />
     <Compile Include="DirectLocation.cs" />
