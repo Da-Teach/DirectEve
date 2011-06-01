@@ -9,6 +9,7 @@
 // -------------------------------------------------------------------------------
 namespace DirectEve
 {
+    using System.Text.RegularExpressions;
     using global::DirectEve.PySharp;
 
     public class DirectLoginSlot : DirectObject
@@ -33,7 +34,11 @@ namespace DirectEve
         /// </summary>
         public string CharName
         {
-            get { return (string) _pySlot.Attribute("sr").Attribute("smallcaption").Attribute("text"); }
+            get
+            {
+                var strip = new Regex(@"<(.|\n)*?>");
+                return strip.Replace((string) _pySlot.Attribute("sr").Attribute("smallcaption").Attribute("text"), string.Empty);
+            }
         }
 
         /// <summary>
@@ -42,7 +47,7 @@ namespace DirectEve
         /// <returns></returns>
         public bool Activate()
         {
-            return DirectEve.ThreadedCall(_pySlot.Attribute("Click"), _pySlot);
+            return DirectEve.ThreadedCall(_pySlot.Attribute("OnClick"), _pySlot);
         }
     }
 }

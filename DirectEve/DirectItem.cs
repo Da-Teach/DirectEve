@@ -383,6 +383,12 @@ namespace DirectEve
             }
         }
 
+        internal static bool RefreshItems(DirectEve directEve, PyObject inventory, PyObject flag)
+        {
+            var list = inventory.Attribute("List");
+            return flag.IsValid ? directEve.ThreadedCall(list, flag) : directEve.ThreadedCall(list);
+        }
+
         internal static List<DirectItem> GetItems(DirectEve directEve, PyObject inventory, PyObject flag)
         {
             var list = inventory.Attribute("List");

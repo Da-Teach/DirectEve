@@ -58,6 +58,9 @@ namespace DirectEve
             _pyInventory = pyInventory;
             _pyFlag = pyFlag;
             _windowName = windowName;
+
+            if (!pyInventory.Attribute("listed").IsValid)
+                DirectItem.RefreshItems(directEve, pyInventory, pyFlag);
         }
 
         /// <summary>
@@ -141,7 +144,7 @@ namespace DirectEve
         /// </remarks>
         public bool IsValid
         {
-            get { return _pyInventory.IsValid; }
+            get { return _pyInventory.IsValid && _pyInventory.Attribute("listed").IsValid; }
         }
 
         /// <summary>
@@ -203,7 +206,20 @@ namespace DirectEve
         /// <returns></returns>
         private static PyObject GetInventory(DirectEve directEve, string method, long id)
         {
-            return directEve.PySharp.Import("__builtin__").Attribute("eve").Call(method, id);
+            var inventories = directEve.GetLocalSvc("invCache").Attribute("inventories").ToDictionary();
+            foreach(var inventory in inventories)
+            {
+                var keyid = (long)inventory.Key.Item(0);
+                if (keyid != id)
+                    continue;
+
+                return inventory.Value;
+            }
+
+            // Do a threaded call and consider this failed (for now)
+            directEve.ThreadedLocalSvcCall("invCache", method, id);
+            // Return none
+            return global::DirectEve.PySharp.PySharp.PyNone;
         }
 
         /// <summary>
