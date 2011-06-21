@@ -53,32 +53,51 @@ namespace DirectEveTester
 
             try
             {
-                var fittingMgr = _directEve.Windows.OfType<DirectFittingManagerWindow>().FirstOrDefault();
-                if (fittingMgr == null)
-                {
-                    _directEve.OpenFitingManager();
-                    return;
-                }
-
-                if (!fittingMgr.IsReady)
-                {
-                    // Wait for it to become ready
-                    return;
-                }
-
-                foreach (var fitting in fittingMgr.Fittings)
-                {
-                    Log(fitting.Name);
-                    foreach (var module in fitting.Modules)
-                    {
-                        Log(" - " + module.TypeName);
-                    }
-                }
-
-                if (fittingMgr.Fittings.Any())
-                    fittingMgr.Fittings.FirstOrDefault().Fit();
-
                 _done = true;
+                var cargo = _directEve.GetShipsCargo();
+                Log("--------- CARGO --------");
+                foreach(var item in cargo.Items)
+                {
+                    Log(item.ItemId + " - " + item.TypeName + " - " + item.FlagId + " - " + item.LocationId);
+                }
+
+                Log("--------- HANGAR --------");
+                var hangar = _directEve.GetItemHangar();
+                foreach (var item in hangar.Items)
+                {
+                    Log(item.ItemId + " - " + item.TypeName + " - " + item.FlagId + " - " + item.LocationId + " - " + item.Stacksize);
+                }
+
+                foreach(var entity in _directEve.Entities)
+                {
+                    Log(entity.Name + " " + entity.IsNpc + " " + entity.CategoryId + " " + entity.GroupId);
+                }
+
+                //var fittingMgr = _directEve.Windows.OfType<DirectFittingManagerWindow>().FirstOrDefault();
+                //if (fittingMgr == null)
+                //{
+                //    _directEve.OpenFitingManager();
+                //    return;
+                //}
+
+                //if (!fittingMgr.IsReady)
+                //{
+                //    // Wait for it to become ready
+                //    return;
+                //}
+
+                //foreach (var fitting in fittingMgr.Fittings)
+                //{
+                //    Log(fitting.Name);
+                //    foreach (var module in fitting.Modules)
+                //    {
+                //        Log(" - " + module.TypeName);
+                //    }
+                //}
+
+                //if (fittingMgr.Fittings.Any())
+                //    fittingMgr.Fittings.FirstOrDefault().Fit();
+
                 //var hangar = _directEve.GetItemHangar();
 
                 //foreach(var item in _directEve.GetShipsModules().Items)

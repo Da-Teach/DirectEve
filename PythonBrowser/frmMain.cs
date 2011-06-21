@@ -121,6 +121,13 @@ namespace PythonBrowser
                     if (_doTest)
                     {
                         _doTest = false;
+
+                        //pyObject = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("invCache").Attribute("inventories").Call("keys");
+
+                        //var shipid = (long)pySharp.Import("__builtin__").Attribute("eve").Attribute("session").Attribute("shipid");
+                        //pyObject = pySharp.Import("__builtin__").Attribute("eve").Call("GetInventoryFromId", shipid);
+
+                        //pySharp.Import("uthread").Call("new", pySharp.Import("__builtin__").Attribute("eve").Attribute("GetInventoryFromId"), shipid);
                         //pyObject = pySharp.Import("blue").Attribute("os").Call("GetTime");
                         /*var shipid = (long)pySharp.Import("__builtin__").Attribute("eve").Attribute("session").Attribute("shipid");
                         pyObject = pySharp.Import("__builtin__").Attribute("eve").Call("GetInventoryFromId", shipid);

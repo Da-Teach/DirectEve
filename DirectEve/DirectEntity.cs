@@ -167,7 +167,7 @@ namespace DirectEve
 
         public bool IsNpc
         {
-            get { return OwnerId > 10000 && OwnerId < 100000000; }
+            get { return OwnerId > 10000 && OwnerId < 90000000; }
         }
 
         public bool IsPc
