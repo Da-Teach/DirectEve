@@ -47,7 +47,8 @@ namespace DirectEve
         /// <returns></returns>
         public bool Activate()
         {
-            return DirectEve.ThreadedCall(_pySlot.Attribute("OnClick"), _pySlot);
+            var selectSlot = PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("charsel").Attribute("SelectSlot");
+            return DirectEve.ThreadedCall(selectSlot, _pySlot);
         }
     }
 }
