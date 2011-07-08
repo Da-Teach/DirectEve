@@ -69,5 +69,15 @@ namespace DirectEve
         {
             return (int) PyWindow.Attribute("sr").Attribute("tabs").Call("GetSelectedIdx");
         }
+
+        /// <summary>
+        ///   Performs a directional scan
+        /// </summary>
+        /// <returns>true if sucessfull, false otherwise</returns>
+        public bool DirectionSearch()
+        {
+            return DirectEve.ThreadedCall(PyWindow.Attribute("DirectionSearch"));
+        }
+
     }
 }
