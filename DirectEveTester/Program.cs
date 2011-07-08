@@ -53,25 +53,75 @@ namespace DirectEveTester
 
             try
             {
-                _done = true;
-                var cargo = _directEve.GetShipsCargo();
-                Log("--------- CARGO --------");
-                foreach(var item in cargo.Items)
+                //_done = true;
+
+                var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+                if (scanner == null)
                 {
-                    Log(item.ItemId + " - " + item.TypeName + " - " + item.FlagId + " - " + item.LocationId);
+                    _directEve.ExecuteCommand(DirectCmd.OpenScanner);
+                    return;
                 }
 
-                Log("--------- HANGAR --------");
-                var hangar = _directEve.GetItemHangar();
-                foreach (var item in hangar.Items)
+                if (!scanner.IsReady)
                 {
-                    Log(item.ItemId + " - " + item.TypeName + " - " + item.FlagId + " - " + item.LocationId + " - " + item.Stacksize);
+                    // Wait for it to become ready
+                    return;
                 }
 
-                foreach(var entity in _directEve.Entities)
+                //if (_frameCount % 8 == 7)
+                //{
+                //    scanner.NextTab();
+                //}
+                //if (_frameCount % 8 == 7)
+                //{
+                //    scanner.PrevTab();
+                //}
+                //if (_frameCount % 8 == 7)
+                //{
+                //    scanner.SelectByIdx((int)_frameCount % 3);
+                //}
+
+                if (scanner.GetSelectedIdx() != 1)
                 {
-                    Log(entity.Name + " " + entity.IsNpc + " " + entity.CategoryId + " " + entity.GroupId);
+                    scanner.SelectByIdx(1);  // select dscan tab
                 }
+
+                if (_frameCount > 75)
+                {
+                    scanner.Close();
+                    _done = true;
+                }
+
+                //foreach (var fitting in fittingMgr.Fittings)
+                //{
+                //    Log(fitting.Name);
+                //    foreach (var module in fitting.Modules)
+                //    {
+                //        Log(" - " + module.TypeName);
+                //    }
+                //}
+
+                //if (fittingMgr.Fittings.Any())
+                //    fittingMgr.Fittings.FirstOrDefault().Fit();
+
+                //var cargo = _directEve.GetShipsCargo();
+                //Log("--------- CARGO --------");
+                //foreach(var item in cargo.Items)
+                //{
+                //    Log(item.ItemId + " - " + item.TypeName + " - " + item.FlagId + " - " + item.LocationId);
+                //}
+
+                //Log("--------- HANGAR --------");
+                //var hangar = _directEve.GetItemHangar();
+                //foreach (var item in hangar.Items)
+                //{
+                //    Log(item.ItemId + " - " + item.TypeName + " - " + item.FlagId + " - " + item.LocationId + " - " + item.Stacksize);
+                //}
+
+                //foreach(var entity in _directEve.Entities)
+                //{
+                //    Log(entity.Name + " " + entity.IsNpc + " " + entity.CategoryId + " " + entity.GroupId);
+                //}
 
                 //var fittingMgr = _directEve.Windows.OfType<DirectFittingManagerWindow>().FirstOrDefault();
                 //if (fittingMgr == null)

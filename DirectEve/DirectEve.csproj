@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectScannerWindow.cs" />
     <Compile Include="DirectActiveShip.cs" />
     <Compile Include="DirectAgent.cs" />
     <Compile Include="DirectAgentMission.cs" />

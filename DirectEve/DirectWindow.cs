@@ -38,6 +38,7 @@ namespace DirectEve
                                                        new WindowType("__guid__", "form.LSCChannel", (directEve, pyWindow) => new DirectChatWindow(directEve, pyWindow)),
                                                        new WindowType("name", "telecom", (directEve, pyWindow) => new DirectTelecomWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.FittingMgmt", (directEve, pyWindow) => new DirectFittingManagerWindow(directEve, pyWindow)),
+                                                       new WindowType("__guid__", "form.Scanner", (directEve, pyWindow) => new DirectScannerWindow(directEve, pyWindow)),
                                                    };
 
         internal PyObject PyWindow;
