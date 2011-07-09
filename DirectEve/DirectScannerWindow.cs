@@ -34,6 +34,8 @@ namespace DirectEve
 
         public bool IsReady { get; internal set; }
 
+        private List<DirectScanResult> _scanResults;
+
         /// <summary>
         ///   Selects the next tab
         /// </summary>
@@ -76,8 +78,34 @@ namespace DirectEve
         /// <returns>true if sucessfull, false otherwise</returns>
         public bool DirectionSearch()
         {
+            _scanResults = null;    // free old results
             return DirectEve.ThreadedCall(PyWindow.Attribute("DirectionSearch"));
         }
 
+        /// <summary>
+        ///   List all the scan results
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        public List<DirectScanResult> ScanResults
+        {
+            get
+            {
+                var charId = DirectEve.Session.CharacterId;
+                if (_scanResults == null && charId != null)
+                {
+                    _scanResults = new List<DirectScanResult>();
+                    foreach (var result in PyWindow.Attribute("scanresult").ToList())
+                    {
+                        // scan result is a list of tuples
+                        var resultAsList =result.ToList();
+                        _scanResults.Add(new DirectScanResult(DirectEve, resultAsList[0],
+                            resultAsList[1], resultAsList[2]));
+                    }
+                }
+
+                return _scanResults;
+            }
+        }
     }
 }

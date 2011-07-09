@@ -86,9 +86,17 @@ namespace DirectEveTester
                     scanner.SelectByIdx(1);  // select dscan tab
                 }
 
-                if (scanner.IsReady && _frameCount % 300 == 299)
+                if (_frameCount % 300 == 199)
                 {
                     scanner.DirectionSearch();
+                }
+
+                if (_frameCount % 300 == 299)
+                {
+                    foreach (var result in scanner.ScanResults)
+                    {
+                        Log("SR: " + result.ToString());
+                    }
                 }
 
                 if (_frameCount > 750)
