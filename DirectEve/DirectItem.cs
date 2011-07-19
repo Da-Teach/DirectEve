@@ -43,6 +43,7 @@ namespace DirectEve
         private int? _typeId;
         private string _typeName;
         private double? _volume;
+        private List<DirectItem> _materials;
 
         public DirectItem(DirectEve directEve) : base(directEve)
         {
@@ -59,6 +60,32 @@ namespace DirectEve
                     _pyInvType = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypes").Call("Get", TypeId);
 
                 return _pyInvType;
+            }
+        }
+
+        public List<DirectItem> Materials
+        {
+            get
+            {
+                if (_materials == null)
+                {
+                    _materials = new List<DirectItem>();
+                    foreach (var pyMaterial in PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypematerials").DictionaryItem(TypeId).ToList())
+                    {
+                        var material = new DirectItem(DirectEve);
+                        material.ItemId = -1;
+                        material.Stacksize = -1;
+                        material.OwnerId = -1;
+                        material.LocationId = -1;
+                        material.FlagId = 0;
+                        material.IsSingleton = false;
+                        material.TypeId = (int) pyMaterial.Attribute("materialTypeID");
+                        material.Quantity = (int) pyMaterial.Attribute("quantity");
+                        _materials.Add(material);
+                    }
+                }
+
+                return _materials;
             }
         }
 
