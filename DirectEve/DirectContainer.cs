@@ -132,6 +132,10 @@ namespace DirectEve
                 if (_window == null)
                     _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name == _windowName);
 
+                // Bug in incarna 1.1 clientpatch 1
+                if (_window == null && _windowName.StartsWith("shipCargo_"))
+                    _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name == _windowName.Replace("_", "e"));
+
                 return _window;
             }
         }

@@ -57,7 +57,7 @@ namespace DirectEve
             get
             {
                 if (_pyInvType == null)
-                    _pyInvType = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypes").Call("Get", TypeId);
+                    _pyInvType = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypes").Call("GetIfExists", TypeId);
 
                 return _pyInvType;
             }
