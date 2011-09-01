@@ -167,7 +167,8 @@ namespace DirectEve
 
         public bool IsNpc
         {
-            get { return OwnerId > 10000 && OwnerId < 90000000; }
+            //get { return OwnerId > 10000 && OwnerId < 90000000; }
+            get { return (bool?)PySharp.Import("util").Call("IsNPC", OwnerId) ?? false; }
         }
 
         public bool IsPc

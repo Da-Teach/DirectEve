@@ -22,7 +22,7 @@ namespace DirectEve
         internal DirectActiveShip(DirectEve directEve)
             : base(directEve)
         {
-            PyItem = directEve.GetLocalSvc("godma").Attribute("stateManager").Attribute("invitems").DictionaryItem(directEve.Session.ShipId ?? -1);
+            PyItem = directEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation").Call("GetShip");
         }
 
         /// <summary>

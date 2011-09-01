@@ -32,6 +32,26 @@ namespace DirectEve
         {
             _chargedAttributes = directEve.GetLocalSvc("godma").Attribute("stateManager").Attribute("chargedAttributesByItemAttribute").DictionaryItem(itemId).ToDictionary<string>();
             _attributes = directEve.GetLocalSvc("godma").Attribute("stateManager").Attribute("attributesByItemAttribute").DictionaryItem(itemId).ToDictionary<string>();
+
+            if (_attributes.Keys.Count > 0)
+                return;
+
+            // Apparently we did not find any attributes, try through dogmaLocation.dogmaItems
+            var dogmaLocation = directEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation");
+            var dogmaItem = dogmaLocation.Attribute("dogmaItems").DictionaryItem(itemId);
+            if (!dogmaItem.IsValid)
+                return;
+
+            // Get the attribute-names dictionary
+            var attributeNames = dogmaLocation.Attribute("dogmaStaticMgr").Attribute("attributes");
+
+            // Convert new-style to old-style attributes
+            foreach (var item in dogmaItem.Attribute("attributes").ToDictionary<int>())
+            {
+                var attributeName = (string)attributeNames.DictionaryItem(item.Key).Attribute("attributeName");
+                var cachedValue = dogmaItem.Attribute("attributeCache").DictionaryItem(item.Key);
+                _attributes.Add(attributeName, cachedValue.IsValid ? cachedValue : item.Value);
+            }
         }
 
         /// <summary>

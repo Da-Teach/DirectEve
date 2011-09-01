@@ -21,7 +21,7 @@ namespace DirectEve
 
         internal static DirectOwner GetOwner(DirectEve directEve, long ownerId)
         {
-            var pyOwner = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("eveowners").Attribute("data").DictionaryItem(ownerId);
+            var pyOwner = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("eveowners").Call("GetIfExists", ownerId);
 
             var owner = new DirectOwner(directEve);
             owner.OwnerId = (long) pyOwner.Attribute("ownerID");

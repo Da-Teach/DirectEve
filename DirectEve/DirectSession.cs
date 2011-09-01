@@ -46,7 +46,14 @@ namespace DirectEve
 
         public long? ShipId
         {
-            get { return (long?) Session.Attribute("shipid"); }
+            get
+            {
+                return (long?)DirectEve.PySharp.Import("util").Call("GetActiveShip");
+                //if (Session.Attribute("stationid2").IsValid)
+                //    return (long?) DirectEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation").Attribute("shipID");
+
+                //return (long?) Session.Attribute("shipid");
+            }
         }
 
         public long? StationId
