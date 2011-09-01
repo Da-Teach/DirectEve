@@ -24,9 +24,9 @@ namespace DirectEve
             var pyOwner = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("eveowners").Attribute("data").DictionaryItem(ownerId);
 
             var owner = new DirectOwner(directEve);
-            owner.OwnerId = (long) pyOwner.Item(0);
-            owner.Name = (string) pyOwner.Item(1);
-            owner.TypeId = (int) pyOwner.Item(2);
+            owner.OwnerId = (long) pyOwner.Attribute("ownerID");
+            owner.Name = (string) pyOwner.Attribute("ownerName");
+            owner.TypeId = (int) pyOwner.Attribute("typeID");
             return owner;
         }
     }
