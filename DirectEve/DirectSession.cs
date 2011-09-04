@@ -99,6 +99,9 @@ namespace DirectEve
         {
             get
             {
+                if (ShipId == null)
+                    return false;
+
                 if (!Session.Attribute("locationid").IsValid)
                     return false;
 
