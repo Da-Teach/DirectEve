@@ -10,12 +10,13 @@
 namespace DirectEve
 {
     using System.Collections.Generic;
-    using System.Linq;
     using global::DirectEve.PySharp;
 
     public class DirectFittingManagerWindow : DirectWindow
     {
-        internal DirectFittingManagerWindow(DirectEve directEve, PyObject pyWindow) 
+        private List<DirectFitting> _fittings;
+
+        internal DirectFittingManagerWindow(DirectEve directEve, PyObject pyWindow)
             : base(directEve, pyWindow)
         {
             var charId = DirectEve.Session.CharacterId;
@@ -24,8 +25,6 @@ namespace DirectEve
 
         public bool IsReady { get; internal set; }
 
-        private List<DirectFitting> _fittings;
-        
         /// <summary>
         ///   List all your saved fittings
         /// </summary>

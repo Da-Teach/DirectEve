@@ -48,7 +48,7 @@ namespace DirectEve
             // Convert new-style to old-style attributes
             foreach (var item in dogmaItem.Attribute("attributes").ToDictionary<int>())
             {
-                var attributeName = (string)attributeNames.DictionaryItem(item.Key).Attribute("attributeName");
+                var attributeName = (string) attributeNames.DictionaryItem(item.Key).Attribute("attributeName");
                 var cachedValue = dogmaItem.Attribute("attributeCache").DictionaryItem(item.Key);
                 _attributes.Add(attributeName, cachedValue.IsValid ? cachedValue : item.Value);
             }

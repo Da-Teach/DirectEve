@@ -32,6 +32,11 @@ namespace DirectEve
         private PyObject _pyInventory;
 
         /// <summary>
+        ///   Is this the ship's modules 'container'
+        /// </summary>
+        private bool _shipModules;
+
+        /// <summary>
         ///   Associated window cache
         /// </summary>
         private DirectContainerWindow _window;
@@ -40,11 +45,6 @@ namespace DirectEve
         ///   Window name
         /// </summary>
         private string _windowName;
-
-        /// <summary>
-        ///   Is this the ship's modules 'container'
-        /// </summary>
-        private bool _shipModules;
 
         /// <summary>
         ///   DirectContainer
@@ -103,12 +103,12 @@ namespace DirectEve
                     // Special case #2 (filter out hi/med/low slots)
                     if (_shipModules)
                     {
-                        List<int> flags = new List<int>();
+                        var flags = new List<int>();
                         for (var i = 0; i < 8; i ++)
                         {
-                            flags.Add((int)DirectEve.Const["flagHiSlot" + i]);
-                            flags.Add((int)DirectEve.Const["flagMedSlot" + i]);
-                            flags.Add((int)DirectEve.Const["flagLoSlot" + i]);
+                            flags.Add((int) DirectEve.Const["flagHiSlot" + i]);
+                            flags.Add((int) DirectEve.Const["flagMedSlot" + i]);
+                            flags.Add((int) DirectEve.Const["flagLoSlot" + i]);
                         }
 
                         _items.RemoveAll(i => !flags.Any(f => f == i.FlagId));
@@ -211,9 +211,9 @@ namespace DirectEve
         private static PyObject GetInventory(DirectEve directEve, string method, long id)
         {
             var inventories = directEve.GetLocalSvc("invCache").Attribute("inventories").ToDictionary();
-            foreach(var inventory in inventories)
+            foreach (var inventory in inventories)
             {
-                var keyid = (long)inventory.Key.Item(0);
+                var keyid = (long) inventory.Key.Item(0);
                 if (keyid != id)
                     continue;
 
@@ -395,8 +395,8 @@ namespace DirectEve
         {
             // You can't fit modules like this
             if (_shipModules)
-                return false; 
-            
+                return false;
+
             if (item.LocationId == -1 || quantity < 1)
                 return false;
 
@@ -416,8 +416,8 @@ namespace DirectEve
         {
             // You can't fit modules like this
             if (_shipModules)
-                return false; 
-            
+                return false;
+
             if (items.Count() == 0)
                 return true;
 
@@ -453,7 +453,7 @@ namespace DirectEve
         /// </remarks>
         public bool Jettison(long itemId)
         {
-            return Jettison(new[] { itemId });
+            return Jettison(new[] {itemId});
         }
 
         /// <summary>
@@ -469,7 +469,7 @@ namespace DirectEve
             // You can't jettison modules
             if (_shipModules)
                 return false;
-            
+
             if (itemIds.Count() == 0)
                 return true;
 

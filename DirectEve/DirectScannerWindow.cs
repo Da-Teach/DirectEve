@@ -9,24 +9,20 @@
 // -------------------------------------------------------------------------------
 namespace DirectEve
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using global::DirectEve.PySharp;
     using System;
+    using System.Collections.Generic;
+    using global::DirectEve.PySharp;
     using InnerSpaceAPI;
 
     public class DirectScannerWindow : DirectWindow
     {
-        private static void Log(string line)
-        {
-            InnerSpace.Echo(string.Format("{0:D} {1:HH:mm:ss} {2}", -1, DateTime.Now, line));
-        }
+        private List<DirectScanResult> _scanResults;
 
-        internal DirectScannerWindow(DirectEve directEve, PyObject pyWindow) 
+        internal DirectScannerWindow(DirectEve directEve, PyObject pyWindow)
             : base(directEve, pyWindow)
         {
             var charId = DirectEve.Session.CharacterId;
-            PyObject obj = PyWindow.Attribute("busy");
+            var obj = PyWindow.Attribute("busy");
             //Log("obj type = " + obj.GetPyType().ToString());
             //Log("obj value = " + ((bool) obj).ToString());
             IsReady = charId != null && obj.IsValid && (bool) obj == false;
@@ -34,7 +30,36 @@ namespace DirectEve
 
         public bool IsReady { get; internal set; }
 
-        private List<DirectScanResult> _scanResults;
+        /// <summary>
+        ///   List all the scan results
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        public List<DirectScanResult> ScanResults
+        {
+            get
+            {
+                var charId = DirectEve.Session.CharacterId;
+                if (_scanResults == null && charId != null)
+                {
+                    _scanResults = new List<DirectScanResult>();
+                    foreach (var result in PyWindow.Attribute("scanresult").ToList())
+                    {
+                        // scan result is a list of tuples
+                        var resultAsList = result.ToList();
+                        _scanResults.Add(new DirectScanResult(DirectEve, resultAsList[0],
+                                                              resultAsList[1], resultAsList[2]));
+                    }
+                }
+
+                return _scanResults;
+            }
+        }
+
+        private static void Log(string line)
+        {
+            InnerSpace.Echo(string.Format("{0:D} {1:HH:mm:ss} {2}", -1, DateTime.Now, line));
+        }
 
         /// <summary>
         ///   Selects the next tab
@@ -60,7 +85,7 @@ namespace DirectEve
         /// <returns>true if sucessfull, false otherwise</returns>
         public bool SelectByIdx(int tab)
         {
-            return DirectEve.ThreadedCall(PyWindow.Attribute("sr").Attribute("tabs").Attribute("SelectByIdx"),tab);
+            return DirectEve.ThreadedCall(PyWindow.Attribute("sr").Attribute("tabs").Attribute("SelectByIdx"), tab);
         }
 
         /// <summary>
@@ -78,34 +103,8 @@ namespace DirectEve
         /// <returns>true if sucessfull, false otherwise</returns>
         public bool DirectionSearch()
         {
-            _scanResults = null;    // free old results
+            _scanResults = null; // free old results
             return DirectEve.ThreadedCall(PyWindow.Attribute("DirectionSearch"));
-        }
-
-        /// <summary>
-        ///   List all the scan results
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        public List<DirectScanResult> ScanResults
-        {
-            get
-            {
-                var charId = DirectEve.Session.CharacterId;
-                if (_scanResults == null && charId != null)
-                {
-                    _scanResults = new List<DirectScanResult>();
-                    foreach (var result in PyWindow.Attribute("scanresult").ToList())
-                    {
-                        // scan result is a list of tuples
-                        var resultAsList =result.ToList();
-                        _scanResults.Add(new DirectScanResult(DirectEve, resultAsList[0],
-                            resultAsList[1], resultAsList[2]));
-                    }
-                }
-
-                return _scanResults;
-            }
         }
     }
 }

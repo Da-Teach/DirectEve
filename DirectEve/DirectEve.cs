@@ -100,14 +100,14 @@ namespace DirectEve
         private DirectContainer _shipsCargo;
 
         /// <summary>
-        ///   Ship's modules container cache
-        /// </summary>
-        private DirectContainer _shipsModules;
-
-        /// <summary>
         ///   Ship's drone bay cache
         /// </summary>
         private DirectContainer _shipsDroneBay;
+
+        /// <summary>
+        ///   Ship's modules container cache
+        /// </summary>
+        private DirectContainer _shipsModules;
 
         /// <summary>
         ///   Standings cache
@@ -642,6 +642,28 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Refine items from the hangar floor
+        /// </summary>
+        /// <param name = "items"></param>
+        /// <returns></returns>
+        public bool ReprocessStationItems(IEnumerable<DirectItem> items)
+        {
+            if (items == null)
+                return false;
+
+            if (items.Any(i => !i.PyItem.IsValid))
+                return false;
+
+            if (!Session.IsInStation)
+                return false;
+
+            if (items.Any(i => i.LocationId != Session.StationId))
+                return false;
+
+            return ThreadedLocalSvcCall("menu", "Refine", items.Select(i => i.PyItem));
+        }
+
+        /// <summary>
         ///   Return an owner
         /// </summary>
         /// <param name = "ownerId"></param>
@@ -794,7 +816,7 @@ namespace DirectEve
         /// </summary>
         public void OpenFitingManager()
         {
-            var dict = new Dictionary<string,object>();
+            var dict = new Dictionary<string, object>();
             dict.Add("create", 1);
             ThreadedCallWithKeywords(GetLocalSvc("window").Attribute("GetWindow"), dict, "FittingMgmt");
         }

@@ -33,7 +33,7 @@ namespace DirectEve
         /// <returns></returns>
         internal static string GetLocationName(DirectEve directEve, long locationId)
         {
-            return (string)directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("GetIfExists", locationId).Attribute("name");
+            return (string) directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("GetIfExists", locationId).Attribute("name");
         }
 
         /// <summary>

@@ -9,14 +9,13 @@
 // -------------------------------------------------------------------------------
 namespace DirectEve
 {
-    using System.Collections.Generic;
     using global::DirectEve.PySharp;
 
     public class DirectScanResult : DirectObject
     {
-        private PyObject _slimItem;
         private PyObject _ball;
         private PyObject _celestialRec;
+        private PyObject _slimItem;
 
         internal DirectScanResult(DirectEve directEve, PyObject slimItem, PyObject ball, PyObject celestialRec)
             : base(directEve)
@@ -25,6 +24,5 @@ namespace DirectEve
             _ball = ball;
             _celestialRec = celestialRec;
         }
-
     }
 }
