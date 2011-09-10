@@ -23,6 +23,7 @@ namespace DirectEve
         PrintScreen,
         OpenMonitor,
         OpenFpsMonitor,
+        OpenLpstore,
         OpenFitting,
         CmdToggleMap,
         WinCmdToggleWindowed,

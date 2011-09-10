@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DirectInvType.cs" />
+    <Compile Include="DirectLoyaltyPointOffer.cs" />
+    <Compile Include="DirectLoyaltyPointOfferRequiredItem.cs" />
+    <Compile Include="DirectLoyaltyPointStoreWindow.cs" />
     <Compile Include="DirectReprocessingQuote.cs" />
     <Compile Include="DirectReprocessingQuoteRecoverable.cs" />
     <Compile Include="DirectReprocessingWindow.cs" />
