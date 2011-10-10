@@ -220,7 +220,7 @@ namespace DirectEve
             foreach (var bookmark in bookmarks)
                 data.Add(directEve.PySharp.Import("uix").Call("GetItemData", bookmark.PyItem, "list"));
 
-            return directEve.ThreadedLocalSvcCall("addressbook", "DropInPlaces", data);
+            return directEve.ThreadedLocalSvcCall("addressbook", "DropInPlaces", global::DirectEve.PySharp.PySharp.PyNone, data);
         }
 
         /// <summary>
