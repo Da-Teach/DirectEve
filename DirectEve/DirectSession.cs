@@ -79,7 +79,7 @@ namespace DirectEve
             get
             {
                 if (!_now.HasValue)
-                    _now = (DateTime) PySharp.Import("blue").Attribute("os").Call("GetTime");
+                    _now = (DateTime)PySharp.Import("blue").Attribute("os").Call("GetWallclockTime");
 
                 return _now.Value;
             }

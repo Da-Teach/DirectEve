@@ -269,7 +269,7 @@ namespace DirectEve
             get
             {
                 if (_velocity == null)
-                    _velocity = (double) _ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetTime")).Call("Length");
+                    _velocity = (double)_ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetWallclockTime")).Call("Length");
 
                 return _velocity.Value;
             }
