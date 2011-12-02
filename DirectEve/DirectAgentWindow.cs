@@ -14,32 +14,64 @@ namespace DirectEve
 
     public class DirectAgentWindow : DirectWindow
     {
-        internal DirectAgentWindow(DirectEve directEve, PyObject pyWindow) : base(directEve, pyWindow)
+
+
+        internal DirectAgentWindow(DirectEve directEve, PyObject pyWindow)
+            : base(directEve, pyWindow)
         {
             var loading = pyWindow.Attribute("sr").Attribute("briefingBrowser").Attribute("_loading");
-            IsReady = loading.IsValid && !(bool) loading;
+            IsReady = loading.IsValid && !(bool)loading;
 
             if (pyWindow.Attribute("sr").Attribute("briefingBrowser").IsValid)
             {
                 loading = pyWindow.Attribute("sr").Attribute("objectiveBrowser").Attribute("_loading");
-                IsReady &= loading.IsValid && !(bool) loading;
+                IsReady &= loading.IsValid && !(bool)loading;
             }
 
-            AgentId = (int) pyWindow.Attribute("sr").Attribute("agentID");
-            AgentSays = (string) pyWindow.Attribute("sr").Attribute("agentSays");
+            AgentId = (int)pyWindow.Attribute("sr").Attribute("agentID");
+            AgentSays = (string)pyWindow.Attribute("sr").Attribute("agentSays");
 
-            AgentResponses = new List<DirectAgentResponse>();
-            foreach (var response in pyWindow.Attribute("sr").Attribute("dialogue").ToList())
+            AgentResponses = new List<DirectAgentResponse>();            
+
+            string[] responseButtonsPathRight = { "__maincontainer", "main", "rightPane", "rightPaneBottom", "btnsmainparent", "btns" };
+            string[] responseButtonsPathLeft = { "__maincontainer", "main", "rightPaneBottom", "btnsmainparent", "btns" };
+
+            string viewMode = (string)pyWindow.Attribute("viewMode");
+
+            if (viewMode != "SinglePaneView")
             {
-                var directResponse = new DirectAgentResponse(directEve);
-                directResponse.AgentId = AgentId;
-                directResponse.ActionId = (int) response.Item(0);
-                directResponse.Text = (string) response.Item(1);
-                AgentResponses.Add(directResponse);
-            }
+                var buttonsRight = DirectEve.findChildWithPath(pyWindow, responseButtonsPathRight).Attribute("children").Attribute("_childrenObjects").ToList();
+                
 
-            Briefing = (string) pyWindow.Attribute("sr").Attribute("briefingBrowser").Attribute("sr").Attribute("currentTXT");
-            Objective = (string) pyWindow.Attribute("sr").Attribute("objectiveBrowser").Attribute("sr").Attribute("currentTXT");
+                foreach (var response in buttonsRight)
+                {
+                    var directResponse = new DirectAgentResponse(directEve, pyWindow);
+                    directResponse.AgentId = AgentId;
+                    //directResponse.ActionId = (int)response.Item(0);
+                    directResponse.Text = (string)response.Attribute("text");
+                    directResponse.button = (string)response.Attribute("name");
+                    directResponse.right = true;
+                    AgentResponses.Add(directResponse);
+                }
+            }
+            else
+            {
+                var buttonsLeft = DirectEve.findChildWithPath(pyWindow, responseButtonsPathLeft).Attribute("children").Attribute("_childrenObjects").ToList();                
+
+                foreach (var response in buttonsLeft)
+                {
+                    var directResponse = new DirectAgentResponse(directEve, pyWindow);
+                    directResponse.AgentId = AgentId;
+                    //directResponse.ActionId = (int)response.Item(0);
+                    directResponse.Text = (string)response.Attribute("text");
+                    directResponse.button = (string)response.Attribute("name");
+                    directResponse.right = false;
+                    AgentResponses.Add(directResponse);
+                }
+            }            
+
+            Briefing = (string)pyWindow.Attribute("sr").Attribute("briefingBrowser").Attribute("sr").Attribute("currentTXT");
+            Objective = (string)pyWindow.Attribute("sr").Attribute("objectiveBrowser").Attribute("sr").Attribute("currentTXT");
         }
 
         public bool IsReady { get; internal set; }

@@ -816,9 +816,33 @@ namespace DirectEve
         /// </summary>
         public void OpenFitingManager()
         {
-            var dict = new Dictionary<string, object>();
-            dict.Add("create", 1);
-            ThreadedCallWithKeywords(GetLocalSvc("window").Attribute("GetWindow"), dict, "FittingMgmt");
+            var pySharp = this.PySharp;
+            var form = pySharp.Import("form");
+            ThreadedCall(form.Attribute("FittingMgmt").Attribute("Open"));
+        }
+
+
+        internal static PyObject findChild(PyObject container, string name)
+        {
+            //InnerSpace.Echo("findChild called container: "+container+" name: "+name);
+            var childs = container.Attribute("children").Attribute("_childrenObjects").ToList();
+            /*foreach (var child in childs)
+            {
+                InnerSpace.Echo("child found with name: " + (string)child.Attribute("_name"));
+            }*/
+            PyObject ret = childs.Find(c => ((string)c.Attribute("_name")).Equals(name));
+            //InnerSpace.Echo("return value is" + ret);
+            return ret;
+        }
+        internal static PyObject findChildWithPath(PyObject container, string[] path)
+        {
+
+            PyObject result = container;
+            for (int i = 0; i < path.Length; i++)
+            {
+                result = findChild(result, path[i]);
+            }
+            return result;
         }
     }
 }

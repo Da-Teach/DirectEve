@@ -57,7 +57,15 @@ namespace DirectEve
             IsModal = (bool) pyWindow.Attribute("isModal");
             Caption = (string) pyWindow.Call("GetCaption");
 
-            var html = (string) pyWindow.Attribute("sr").Attribute("browser").Attribute("sr").Attribute("htmlstr");
+            var paragraphs = pyWindow.Attribute("edit").Attribute("sr").Attribute("paragraphs").ToList();
+            string html = "";
+
+            foreach (var paragraph in paragraphs)
+            {
+                html += (string)paragraph.Attribute("text");
+            }
+
+            //var html = (string) pyWindow.Attribute("sr").Attribute("browser").Attribute("sr").Attribute("htmlstr");
             if (string.IsNullOrEmpty(html))
                 html = (string) pyWindow.Attribute("edit").Attribute("sr").Attribute("currentTXT");
             if (string.IsNullOrEmpty(html))
@@ -84,7 +92,7 @@ namespace DirectEve
 
             var pySharp = directEve.PySharp;
             var builtin = pySharp.Import("__builtin__");
-            var pyWindows = builtin.Attribute("eve").Call("LocalSvc", "window").Call("GetWindows").ToList();
+            var pyWindows = builtin.Attribute("uicore").Attribute("registry").Call("GetWindows").ToList();
             foreach (var pyWindow in pyWindows)
             {
                 // Ignore destroyed windows
@@ -114,7 +122,7 @@ namespace DirectEve
             if (!IsKillable)
                 return false;
 
-            return DirectEve.ThreadedCall(PyWindow.Attribute("CloseX"));
+            return DirectEve.ThreadedCall(PyWindow.Attribute("CloseByUser"));
         }
 
         #region Nested type: WindowType

@@ -268,10 +268,11 @@ namespace DirectEve
         {
             get
             {
-                if (_velocity == null)
+                /*if (_velocity == null)
                     _velocity = (double)_ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetWallclockTime")).Call("Length");
 
-                return _velocity.Value;
+                return _velocity.Value;*/
+                return 0;
             }
         }
 
@@ -531,23 +532,26 @@ namespace DirectEve
             return DirectEve.ThreadedLocalSvcCall("menu", "WarpToItem", Id);
         }
 
+
         /// <summary>
-        ///   Warp to target
+        ///   Warp to target and dock
         /// </summary>
         /// <returns></returns>
         public bool WarpToAndDock()
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "WarpDock", Id);
+            return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
         }
 
         /// <summary>
-        ///   Warp to target
+        ///   Warp to target and dock
         /// </summary>
         /// <returns></returns>
         public bool Dock()
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "Dock", Id);
+            return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
         }
+
+        
 
         /// <summary>
         ///   Warp to target

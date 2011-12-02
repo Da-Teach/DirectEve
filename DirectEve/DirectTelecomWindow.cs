@@ -19,7 +19,17 @@ namespace DirectEve
 
         public override bool Close()
         {
-            return DirectEve.ThreadedCall(PyWindow.Attribute("SelfDestruct"));
+            //try to find the close button
+            string[] closeButtonPath = { "__maincontainer", "bottom", "btnsmainparent", "btns", "Close_Btn" };
+            PyObject btn = DirectEve.findChildWithPath(PyWindow, closeButtonPath);
+            if (btn != null)
+                return DirectEve.ThreadedCall(btn.Attribute("OnClick"));
+            else
+            {
+                return false;
+            }
+
+            //return DirectEve.ThreadedCall(PyWindow.Attribute("SelfDestruct"));
         }
     }
 }

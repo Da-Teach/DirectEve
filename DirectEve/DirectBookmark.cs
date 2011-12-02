@@ -71,7 +71,7 @@ namespace DirectEve
 
         internal static List<DirectBookmark> GetBookmarks(DirectEve directEve)
         {
-            var pyBookmarks = directEve.GetLocalSvc("addressbook").Call("GetBookmarks").ToDictionary<long>();
+            var pyBookmarks = directEve.GetLocalSvc("bookmarkSvc").Call("GetBookmarks").ToDictionary<long>();
             return pyBookmarks.Values.Select(pyBookmark => new DirectBookmark(directEve, pyBookmark)).ToList();
         }
 

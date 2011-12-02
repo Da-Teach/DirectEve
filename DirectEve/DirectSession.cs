@@ -79,7 +79,7 @@ namespace DirectEve
             get
             {
                 if (!_now.HasValue)
-                    _now = (DateTime)PySharp.Import("blue").Attribute("os").Call("GetWallclockTime");
+                    _now = DateTime.UtcNow;//(DateTime)PySharp.Import("blue").Attribute("os").Call("GetWallclockTime");
 
                 return _now.Value;
             }
@@ -136,8 +136,8 @@ namespace DirectEve
                         return false;
                 }
 
-                if (!DirectEve.Windows.Any(w => w.Name == "chatchannel_solarsystemid2"))
-                    return false;
+                /*if (!DirectEve.Windows.Any(w => w.Name == "chatchannel_solarsystemid2"))
+                    return false;*/
 
                 return true;
             }
