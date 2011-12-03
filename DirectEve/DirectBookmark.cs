@@ -96,10 +96,15 @@ namespace DirectEve
             return folders.Values.Select(pyFolder => new DirectBookmarkFolder(directEve, pyFolder)).ToList();
         }
 
-        internal static bool BookmarkLocation(DirectEve directEve, long itemId, string name, string comment, int typeId, long? locationId)
+        internal static bool BookmarkLocation(DirectEve directEve, long itemId, string name, string comment, int typeId, long? locationId, long? folderId)
         {
-            var pyLocation = locationId.HasValue ? directEve.PySharp.From(locationId.Value) : global::DirectEve.PySharp.PySharp.PyNone;
-            return directEve.ThreadedLocalSvcCall("addressbook", "BookmarkLocation", itemId, name, comment, typeId, pyLocation);
+            var bookmarkLocation = directEve.GetLocalSvc("bookmarkSvc").Attribute("BookmarkLocation");
+            var keywords = new Dictionary<string, object>();
+            if (locationId.HasValue)
+                keywords.Add("locationID", locationId.Value);
+            if (folderId.HasValue)
+                keywords.Add("folderID", folderId.Value);
+            return directEve.ThreadedCallWithKeywords(bookmarkLocation, keywords, itemId, name, comment, typeId);
         }
 
         public bool WarpTo()

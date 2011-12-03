@@ -540,8 +540,9 @@ namespace DirectEve
         /// </summary>
         /// <param name = "name"></param>
         /// <param name = "comment"></param>
+        /// <param name = "folderId"></param>
         /// <returns></returns>
-        public bool BookmarkCurrentLocation(string name, string comment)
+        public bool BookmarkCurrentLocation(string name, string comment, long? folderId)
         {
             if (Session.StationId.HasValue)
             {
@@ -549,11 +550,11 @@ namespace DirectEve
                 if (!station.IsValid)
                     return false;
 
-                return DirectBookmark.BookmarkLocation(this, (long) station.Attribute("stationID"), name, comment, (int) station.Attribute("stationTypeID"), (long?) station.Attribute("solarSystemID"));
+                return DirectBookmark.BookmarkLocation(this, (long) station.Attribute("stationID"), name, comment, (int) station.Attribute("stationTypeID"), (long?) station.Attribute("solarSystemID"), folderId);
             }
 
             if (ActiveShip.Entity.IsValid && Session.SolarSystemId.HasValue)
-                return DirectBookmark.BookmarkLocation(this, ActiveShip.Entity.Id, name, comment, ActiveShip.Entity.TypeId, Session.SolarSystemId);
+                return DirectBookmark.BookmarkLocation(this, ActiveShip.Entity.Id, name, comment, ActiveShip.Entity.TypeId, Session.SolarSystemId, folderId);
 
             return false;
         }
@@ -564,13 +565,14 @@ namespace DirectEve
         /// <param name = "entity"></param>
         /// <param name = "name"></param>
         /// <param name = "comment"></param>
+        /// <param name = "folderId"></param>
         /// <returns></returns>
-        public bool BookmarkEntity(DirectEntity entity, string name, string comment)
+        public bool BookmarkEntity(DirectEntity entity, string name, string comment, long? folderId)
         {
             if (!entity.IsValid)
                 return false;
 
-            return DirectBookmark.BookmarkLocation(this, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId);
+            return DirectBookmark.BookmarkLocation(this, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId, folderId);
         }
 
         /// <summary>

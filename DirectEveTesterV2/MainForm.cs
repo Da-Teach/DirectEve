@@ -1,6 +1,7 @@
 ﻿namespace DirectEveTesterV2
 {
     using System;
+    using System.Linq;
     using DirectEve;
     using System.Windows.Forms;
     using InnerSpaceAPI;
@@ -19,8 +20,10 @@
             ActiveShip,
             LaunchDrones,
             RecallDrones,
-            ListBookmarks,
             RefreshBookmarks,
+            ListBookmarks,
+            BookmarkCurrentLocation,
+            DeleteBookmark,
 
             Done
         }
@@ -78,12 +81,45 @@
                     case TestState.RefreshBookmarks:
                         RefreshBookmarksTest();
                         break;
+
+                    case TestState.BookmarkCurrentLocation:
+                        BookmarkCurrentLocationTest();
+                        break;
+
+                    case TestState.DeleteBookmark:
+                        DeleteBookmarkTest();
+                        break;
                 }
             }
             catch (Exception ex)
             {
                 Log("Exception: {0}", ex);
             }
+        }
+
+        private void DeleteBookmarkTest()
+        {
+            _state = TestState.Idle;
+
+            var bookmark = _directEve.Bookmarks.FirstOrDefault(b => b.Title == "Wassup");
+            if (bookmark == null)
+            {
+                Log("No Test Bookmark to delete");
+                return;
+            }
+
+            bookmark.Delete();
+        }
+
+        private void BookmarkCurrentLocationTest()
+        {
+            _state = TestState.Idle;
+
+            long? folderId = null;
+            if (_directEve.BookmarkFolders.Count > 0)
+                folderId = _directEve.BookmarkFolders[0].Id;
+
+            _directEve.BookmarkCurrentLocation("Wassup", "This is the drinking bar", folderId);
         }
 
         private void RefreshBookmarksTest()
