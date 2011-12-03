@@ -33,40 +33,22 @@ namespace DirectEve
 
             AgentResponses = new List<DirectAgentResponse>();            
 
-            string[] responseButtonsPathRight = { "__maincontainer", "main", "rightPane", "rightPaneBottom", "btnsmainparent", "btns" };
-            string[] responseButtonsPathLeft = { "__maincontainer", "main", "rightPaneBottom", "btnsmainparent", "btns" };
+            var buttonPathRight = new [] { "__maincontainer", "main", "rightPane", "rightPaneBottom", "btnsmainparent", "btns" };
+            var buttonPathLeft = new [] { "__maincontainer", "main", "rightPaneBottom", "btnsmainparent", "btns" };
 
-            string viewMode = (string)pyWindow.Attribute("viewMode");
-
-            if (viewMode != "SinglePaneView")
+            var viewMode = (string)pyWindow.Attribute("viewMode");
+            var isRight = viewMode != "SinglePaneView";
+            var buttonPath = isRight ? buttonPathRight : buttonPathLeft;
+            var buttons = FindChildWithPath(pyWindow, buttonPath).Attribute("children").Attribute("_childrenObjects").ToList();
+            foreach (var response in buttons)
             {
-                var buttonsRight = FindChildWithPath(pyWindow, responseButtonsPathRight).Attribute("children").Attribute("_childrenObjects").ToList();
-                
-
-                foreach (var response in buttonsRight)
-                {
-                    var directResponse = new DirectAgentResponse(directEve, pyWindow);
-                    directResponse.AgentId = AgentId;
-                    directResponse.Text = (string)response.Attribute("text");
-                    directResponse.Button = (string)response.Attribute("name");
-                    directResponse.Right = true;
-                    AgentResponses.Add(directResponse);
-                }
+                var directResponse = new DirectAgentResponse(directEve, pyWindow);
+                directResponse.AgentId = AgentId;
+                directResponse.Text = (string)response.Attribute("text");
+                directResponse.Button = (string)response.Attribute("name");
+                directResponse.Right = isRight;
+                AgentResponses.Add(directResponse);
             }
-            else
-            {
-                var buttonsLeft = FindChildWithPath(pyWindow, responseButtonsPathLeft).Attribute("children").Attribute("_childrenObjects").ToList();                
-
-                foreach (var response in buttonsLeft)
-                {
-                    var directResponse = new DirectAgentResponse(directEve, pyWindow);
-                    directResponse.AgentId = AgentId;
-                    directResponse.Text = (string)response.Attribute("text");
-                    directResponse.Button = (string)response.Attribute("name");
-                    directResponse.Right = false;
-                    AgentResponses.Add(directResponse);
-                }
-            }            
 
             Briefing = (string)pyWindow.Attribute("sr").Attribute("briefingBrowser").Attribute("sr").Attribute("currentTXT");
             Objective = (string)pyWindow.Attribute("sr").Attribute("objectiveBrowser").Attribute("sr").Attribute("currentTXT");

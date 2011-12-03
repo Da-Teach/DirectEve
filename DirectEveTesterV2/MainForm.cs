@@ -18,6 +18,8 @@
             Session,
             Me,
             ActiveShip,
+            ListWindows,
+            ListEntities,
             LaunchDrones,
             RecallDrones,
             RefreshBookmarks,
@@ -64,8 +66,16 @@
                         MeTests();
                         break;
 
+                    case TestState.ListWindows:
+                        ListWindowsTest();
+                        break;
+
                     case TestState.ActiveShip:
                         ActiveShipTests();
+                        break;
+                    
+                    case TestState.ListEntities:
+                        ListEntitiesTests();
                         break;
 
                     case TestState.LaunchDrones:
@@ -244,9 +254,18 @@
             _directEve.ActiveShip.LaunchDrones(drones);
         }
 
+        private void ListEntitiesTests()
+        {
+            _state = TestState.Idle;
+
+            foreach(var entity in _directEve.Entities)
+                LogEntity("Entity[" + entity.Id + "].{0}: {1}", entity);
+        }
+
         private void ActiveShipTests()
         {
-            Log("--- ACTIVESHIP TESTS ---");
+            _state = TestState.Idle;
+
             Log("ActiveShip.Shield: {0}", _directEve.ActiveShip.Shield);
             Log("ActiveShip.MaxShield: {0}", _directEve.ActiveShip.MaxShield);
             Log("ActiveShip.ShieldPercentage: {0}", _directEve.ActiveShip.ShieldPercentage);
@@ -260,24 +279,43 @@
             Log("ActiveShip.MaxCapacitor: {0}", _directEve.ActiveShip.MaxCapacitor);
             Log("ActiveShip.CapacitorPercentage: {0}", _directEve.ActiveShip.CapacitorPercentage);
             LogEntity("ActiveShip.Entity.{0}: {1}", _directEve.ActiveShip.Entity);
+        }
 
+        private void ListWindowsTest()
+        {
             _state = TestState.Idle;
+
+            for (int i = 0; i < _directEve.Windows.Count; i++)
+            {
+                var window = _directEve.Windows[i];
+                Log("Window[" + i + "].Id: {0}", window.Id);
+                Log("Window[" + i + "].Type: {0}", window.Type);
+                Log("Window[" + i + "].Caption: {0}", window.Caption);
+                Log("Window[" + i + "].Name: {0}", window.Name);
+                Log("Window[" + i + "].ClassName: {0}", window.GetType().Name);
+
+                if (window is DirectContainerWindow)
+                {
+                    var cargoWindow = window as DirectContainerWindow;
+                    Log("Window[" + i + "].IsReady: {0}", cargoWindow.IsReady);
+                }
+            }
         }
 
         private void MeTests()
         {
-            Log("--- ME TESTS ---");
+            _state = TestState.Idle;
+
             Log("Me.MaxActiveDrones: {0}", _directEve.Me.MaxActiveDrones);
             Log("Me.MaxLockedTargets: {0}", _directEve.Me.MaxLockedTargets);
             Log("Me.Name: {0}", _directEve.Me.Name);
             Log("Me.Wealth: {0}", _directEve.Me.Wealth);
-
-            _state = TestState.Idle;
         }
 
         private void SessionTests()
         {
-            Log("--- SESSION TESTS ---");
+            _state = TestState.Idle;
+
             Log("Session.Now: {0}", _directEve.Session.Now);
 
             Log("Session.Character.Name: {0}", _directEve.Session.Character.Name);
@@ -298,8 +336,6 @@
             Log("Session.IsInSpace: {0}", _directEve.Session.IsInSpace);
             Log("Session.IsInStation: {0}", _directEve.Session.IsInStation);
             Log("Session.IsReady: {0}", _directEve.Session.IsReady);
-
-            _state = TestState.Idle;
         }
 
         private void LogItem(string format, DirectItem item)
@@ -333,6 +369,7 @@
             Log(format, "IsPc", entity.IsPc);
 
             Log(format, "TypeId", entity.TypeId);
+            Log(format, "GroupId", entity.GroupId);
             Log(format, "TypeName", entity.TypeName);
             Log(format, "Name", entity.Name);
             Log(format, "GivenName", entity.GivenName);

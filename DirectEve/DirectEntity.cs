@@ -47,7 +47,7 @@ namespace DirectEve
             _slimItem = slimItem;
 
             Id = id;
-            TypeId = (int) _ball.Attribute("typeID");
+            TypeId = (int) slimItem.Attribute("typeID");
 
             Attacks = new List<string>();
             ElectronicWarfare = new List<string>();

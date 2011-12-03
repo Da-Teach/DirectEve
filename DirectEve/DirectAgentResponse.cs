@@ -32,7 +32,7 @@ namespace DirectEve
 
         public bool Say()
         {
-            var btn = DirectWindow.FindChildWithPath(_container, Right ? _responseButtonsPathRight.Concat(new [] { Button }) : _responseButtonsPathLeft.Concat(new[] { Button }));
+            var btn = DirectWindow.FindChildWithPath(_container, (Right ? _responseButtonsPathRight : _responseButtonsPathLeft).Concat(new[] { Button }));
             return DirectEve.ThreadedCall(btn.Attribute("OnClick"));
         }
     }

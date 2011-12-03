@@ -147,8 +147,7 @@ namespace DirectEve
         internal static PyObject FindChild(PyObject container, string name)
         {
             var childs = container.Attribute("children").Attribute("_childrenObjects").ToList();
-            var ret = childs.Find(c => String.Compare((string)c.Attribute("_name"), name) == 0);
-            return ret;
+            return childs.Find(c => String.Compare((string)c.Attribute("_name"), name) == 0) ?? global::DirectEve.PySharp.PySharp.PyZero;
         }
 
         /// <summary>
