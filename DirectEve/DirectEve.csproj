@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectBookmarkFolder.cs" />
     <Compile Include="DirectInvType.cs" />
     <Compile Include="DirectLoyaltyPointOffer.cs" />
     <Compile Include="DirectLoyaltyPointOfferRequiredItem.cs" />

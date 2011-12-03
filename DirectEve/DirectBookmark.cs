@@ -14,7 +14,7 @@ namespace DirectEve
     using System.Linq;
     using global::DirectEve.PySharp;
 
-    public class DirectBookmark : DirectObject
+    public class DirectBookmark : DirectInvType
     {
         /// <summary>
         ///   Entity cache
@@ -38,7 +38,7 @@ namespace DirectEve
             }
             Note = (string) pyBookmark.Attribute("note");
             OwnerId = (int?) pyBookmark.Attribute("ownerID");
-            TypeId = (int?) pyBookmark.Attribute("typeID");
+            TypeId = (int) pyBookmark.Attribute("typeID");
             X = (double?) pyBookmark.Attribute("x");
             Y = (double?) pyBookmark.Attribute("y");
             Z = (double?) pyBookmark.Attribute("z");
@@ -55,7 +55,6 @@ namespace DirectEve
         public string Memo { get; internal set; }
         public string Note { get; internal set; }
         public int? OwnerId { get; internal set; }
-        public int? TypeId { get; internal set; }
         public double? X { get; internal set; }
         public double? Y { get; internal set; }
         public double? Z { get; internal set; }

@@ -33,6 +33,11 @@ namespace DirectEve
         private List<DirectBookmark> _bookmarks;
 
         /// <summary>
+        ///   Cache the Bookmark Folders
+        /// </summary>
+        private List<DirectBookmarkFolder> _bookmarkFolders;
+
+        /// <summary>
         ///   Const cache
         /// </summary>
         private DirectConst _const;
@@ -220,11 +225,18 @@ namespace DirectEve
             get { return _entitiesById ?? (_entitiesById = DirectEntity.GetEntities(this)); }
         }
 
+        /// <summary>
+        ///   Refresh the bookmark cache (if needed)
+        /// </summary>
+        /// <returns></returns>
         public bool RefreshBookmarks()
         {
             return DirectBookmark.RefreshBookmarks(this);
         }
 
+        /// <summary>
+        ///   The last bookmark update
+        /// </summary>
         public DateTime LastBookmarksUpdate
         {
             get { return DirectBookmark.GetLastBookmarksUpdate(this) ?? new DateTime(0, 0, 0); }
@@ -237,6 +249,15 @@ namespace DirectEve
         public List<DirectBookmark> Bookmarks
         {
             get { return _bookmarks ?? (_bookmarks = DirectBookmark.GetBookmarks(this)); }
+        }
+
+        /// <summary>
+        ///   Return a list of bookmark folders
+        /// </summary>
+        /// <value></value>
+        public List<DirectBookmarkFolder> BookmarkFolders
+        {
+            get { return _bookmarkFolders ?? (_bookmarkFolders = DirectBookmarkFolder.GetFolders(this)); }
         }
 
         /// <summary>

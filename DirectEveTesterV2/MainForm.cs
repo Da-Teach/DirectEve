@@ -20,6 +20,7 @@
             LaunchDrones,
             RecallDrones,
             ListBookmarks,
+            RefreshBookmarks,
 
             Done
         }
@@ -73,6 +74,10 @@
                     case TestState.ListBookmarks:
                         ListBookmarksTest();
                         break;
+
+                    case TestState.RefreshBookmarks:
+                        RefreshBookmarksTest();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -81,11 +86,29 @@
             }
         }
 
+        private void RefreshBookmarksTest()
+        {
+            _state = TestState.Idle;
+
+            Log("Last bookmarks update: {0}", _directEve.LastBookmarksUpdate);
+            _directEve.RefreshBookmarks();
+        }
+
         private void ListBookmarksTest()
         {
             _state = TestState.Idle;
 
-            for(var i = 0; i < _directEve.Bookmarks.Count; i ++)
+            Log("Last bookmarks update: {0}", _directEve.LastBookmarksUpdate);
+            for (var i = 0; i < _directEve.BookmarkFolders.Count; i++)
+            {
+                var folder = _directEve.BookmarkFolders[i];
+                Log("BookmarkFolder[{0}].Id: {1}", i, folder.Id);
+                Log("BookmarkFolder[{0}].Name: {1}", i, folder.Name);
+                Log("BookmarkFolder[{0}].OwnerId: {1}", i, folder.OwnerId);
+                Log("BookmarkFolder[{0}].CreatorId: {1}", i, folder.CreatorId);
+            }    
+                
+            for (var i = 0; i < _directEve.Bookmarks.Count; i++)
             {
                 var bookmark = _directEve.Bookmarks[i];
                 Log("Bookmark[{0}].BookmarkId: {1}", i, bookmark.BookmarkId);
