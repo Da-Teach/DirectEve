@@ -22,8 +22,10 @@
             RecallDrones,
             RefreshBookmarks,
             ListBookmarks,
+            CreateBookmarkFolder,
             BookmarkCurrentLocation,
             DeleteBookmark,
+            DeleteBookmarkFolder,
 
             Done
         }
@@ -82,6 +84,10 @@
                         RefreshBookmarksTest();
                         break;
 
+                    case TestState.CreateBookmarkFolder:
+                        CreateBookmarkFolderTest();
+                        break;
+
                     case TestState.BookmarkCurrentLocation:
                         BookmarkCurrentLocationTest();
                         break;
@@ -89,12 +95,37 @@
                     case TestState.DeleteBookmark:
                         DeleteBookmarkTest();
                         break;
+
+                    case TestState.DeleteBookmarkFolder:
+                        DeleteBookmarkFolderTest();
+                        break;
                 }
             }
             catch (Exception ex)
             {
                 Log("Exception: {0}", ex);
             }
+        }
+
+        private void DeleteBookmarkFolderTest()
+        {
+            _state = TestState.Idle;
+
+            var folder = _directEve.BookmarkFolders.FirstOrDefault(f => f.Name == "Wassup Folder");
+            if (folder == null)
+            {
+                Log("No Test Bookmark Folder to delete");
+                return;
+            }
+
+            folder.Delete();
+        }
+
+        private void CreateBookmarkFolderTest()
+        {
+            _state = TestState.Idle;
+
+            _directEve.CreateBookmarkFolder("Wassup Folder");
         }
 
         private void DeleteBookmarkTest()
@@ -115,11 +146,9 @@
         {
             _state = TestState.Idle;
 
-            long? folderId = null;
-            if (_directEve.BookmarkFolders.Count > 0)
-                folderId = _directEve.BookmarkFolders[0].Id;
+            var folder = _directEve.BookmarkFolders.FirstOrDefault(f => f.Name == "Wassup Folder");
 
-            _directEve.BookmarkCurrentLocation("Wassup", "This is the drinking bar", folderId);
+            _directEve.BookmarkCurrentLocation("Wassup", "This is the drinking bar", folder != null ? folder.Id : (long?)null);
         }
 
         private void RefreshBookmarksTest()

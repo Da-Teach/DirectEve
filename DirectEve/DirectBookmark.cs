@@ -96,6 +96,11 @@ namespace DirectEve
             return folders.Values.Select(pyFolder => new DirectBookmarkFolder(directEve, pyFolder)).ToList();
         }
 
+        internal static bool CreateBookmarkFolder(DirectEve directEve, string name)
+        {
+            return directEve.ThreadedLocalSvcCall("bookmarkSvc", "CreateFolder", directEve.Session.CharacterId, name);
+        }
+
         internal static bool BookmarkLocation(DirectEve directEve, long itemId, string name, string comment, int typeId, long? locationId, long? folderId)
         {
             var bookmarkLocation = directEve.GetLocalSvc("bookmarkSvc").Attribute("BookmarkLocation");

@@ -576,6 +576,16 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Create a bookmark folder
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool CreateBookmarkFolder(string name)
+        {
+            return DirectBookmark.CreateBookmarkFolder(this, name);
+        }
+
+        /// <summary>
         ///   Drop bookmarks into people & places
         /// </summary>
         /// <param name = "bookmarks"></param>
