@@ -11,6 +11,7 @@ namespace DirectEve
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using global::DirectEve.PySharp;
 
     public class DirectWindow : DirectObject
@@ -58,18 +59,12 @@ namespace DirectEve
             Caption = (string) pyWindow.Call("GetCaption");
 
             var paragraphs = pyWindow.Attribute("edit").Attribute("sr").Attribute("paragraphs").ToList();
-            string html = "";
-
-            foreach (var paragraph in paragraphs)
-            {
-                html += (string)paragraph.Attribute("text");
-            }
-
-            //var html = (string) pyWindow.Attribute("sr").Attribute("browser").Attribute("sr").Attribute("htmlstr");
-            if (string.IsNullOrEmpty(html))
+            var html = paragraphs.Aggregate("", (current, paragraph) => current + (string) paragraph.Attribute("text"));
+            if (String.IsNullOrEmpty(html))
                 html = (string) pyWindow.Attribute("edit").Attribute("sr").Attribute("currentTXT");
-            if (string.IsNullOrEmpty(html))
+            if (String.IsNullOrEmpty(html))
                 html = (string) pyWindow.Attribute("sr").Attribute("messageArea").Attribute("sr").Attribute("currentTXT");
+
             Html = html;
 
             ViewMode = (string) pyWindow.Attribute("viewMode");
@@ -142,5 +137,29 @@ namespace DirectEve
         }
 
         #endregion
+
+        /// <summary>
+        ///   Find a child object (usually button)
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal static PyObject FindChild(PyObject container, string name)
+        {
+            var childs = container.Attribute("children").Attribute("_childrenObjects").ToList();
+            var ret = childs.Find(c => String.Compare((string)c.Attribute("_name"), name) == 0);
+            return ret;
+        }
+
+        /// <summary>
+        ///   Find a child object (using the supplied path)
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        internal static PyObject FindChildWithPath(PyObject container, IEnumerable<string> path)
+        {
+            return path.Aggregate(container, FindChild);
+        }
     }
 }

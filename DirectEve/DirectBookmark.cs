@@ -28,7 +28,8 @@ namespace DirectEve
             BookmarkId = (long?) pyBookmark.Attribute("bookmarkID");
             CreatedOn = (DateTime?) pyBookmark.Attribute("created");
             ItemId = (long?) pyBookmark.Attribute("itemID");
-            LocationId = (long?) pyBookmark.Attribute("locationID");
+            LocationId = (long?)pyBookmark.Attribute("locationID");
+            FolderId = (long?)pyBookmark.Attribute("folderID");
             Title = (string) pyBookmark.Attribute("memo");
             if (!string.IsNullOrEmpty(Title) && Title.Contains("\t"))
             {
@@ -49,6 +50,7 @@ namespace DirectEve
         public DateTime? CreatedOn { get; internal set; }
         public long? ItemId { get; internal set; }
         public long? LocationId { get; internal set; }
+        public long? FolderId { get; internal set; }
         public string Title { get; internal set; }
         public string Memo { get; internal set; }
         public string Note { get; internal set; }
@@ -69,10 +71,23 @@ namespace DirectEve
             get { return _entity ?? (_entity = DirectEve.GetEntityById(ItemId ?? -1)); }
         }
 
+        internal static bool RefreshBookmarks(DirectEve directEve)
+        {
+            // If the bookmarks need to be refreshed, then this will do it
+            return directEve.ThreadedLocalSvcCall("bookmarkSvc", "GetBookmarks");
+        }
+
+        internal static DateTime? GetLastBookmarksUpdate(DirectEve directEve)
+        {
+            // Get the bookmark-last-update-time
+            return (DateTime?) directEve.GetLocalSvc("bookmarkSvc").Attribute("lastUpdateTime");
+        }
+
         internal static List<DirectBookmark> GetBookmarks(DirectEve directEve)
         {
-            var pyBookmarks = directEve.GetLocalSvc("bookmarkSvc").Call("GetBookmarks").ToDictionary<long>();
-            return pyBookmarks.Values.Select(pyBookmark => new DirectBookmark(directEve, pyBookmark)).ToList();
+            // List the bookmarks from cache
+            var bookmarks = directEve.GetLocalSvc("bookmarkSvc").Attribute("bookmarkCache").ToDictionary<long>();
+            return bookmarks.Values.Select(pyBookmark => new DirectBookmark(directEve, pyBookmark)).ToList();
         }
 
         internal static bool BookmarkLocation(DirectEve directEve, long itemId, string name, string comment, int typeId, long? locationId)

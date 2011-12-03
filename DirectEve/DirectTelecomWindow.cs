@@ -19,9 +19,9 @@ namespace DirectEve
 
         public override bool Close()
         {
-            //try to find the close button
+            //try to find the close Button
             string[] closeButtonPath = { "__maincontainer", "bottom", "btnsmainparent", "btns", "Close_Btn" };
-            PyObject btn = DirectEve.findChildWithPath(PyWindow, closeButtonPath);
+            PyObject btn = FindChildWithPath(PyWindow, closeButtonPath);
             if (btn != null)
                 return DirectEve.ThreadedCall(btn.Attribute("OnClick"));
             else

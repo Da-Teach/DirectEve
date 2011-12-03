@@ -9,7 +9,7 @@
 // -------------------------------------------------------------------------------
 namespace DirectEve
 {
-    public class DirectOwner : DirectObject
+    public class DirectOwner : DirectInvType
     {
         internal DirectOwner(DirectEve directEve) : base(directEve)
         {
@@ -17,7 +17,6 @@ namespace DirectEve
 
         public long OwnerId { get; private set; }
         public string Name { get; private set; }
-        public int TypeId { get; private set; }
 
         internal static DirectOwner GetOwner(DirectEve directEve, long ownerId)
         {

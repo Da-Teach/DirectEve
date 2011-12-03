@@ -10,43 +10,29 @@
 using global::DirectEve.PySharp;
 namespace DirectEve
 {
+    using System.Linq;
+
     public class DirectAgentResponse : DirectObject
     {
-        private PyObject container;
-        internal DirectAgentResponse(DirectEve directEve, PyObject _container)
+        private PyObject _container;
+
+        internal DirectAgentResponse(DirectEve directEve, PyObject container)
             : base(directEve)
         {
-            container = _container;
+            _container = container;
         }        
 
-        string[] responseButtonsPathRight = { "__maincontainer", "main", "rightPane", "rightPaneBottom", "btnsmainparent", "btns", "" };
-        string[] responseButtonsPathLeft = { "__maincontainer", "main", "rightPaneBottom", "btnsmainparent", "btns", "" };
+        private string[] _responseButtonsPathRight = { "__maincontainer", "main", "rightPane", "rightPaneBottom", "btnsmainparent", "btns" };
+        private string[] _responseButtonsPathLeft = { "__maincontainer", "main", "rightPaneBottom", "btnsmainparent", "btns" };
 
         public long AgentId { get; internal set; }
-        //public int ActionId { get; internal set; }
         public string Text { get; internal set; }
-        public string button;
-        public bool right;
+        public string Button { get; internal set; }
+        public bool Right { get; internal set; }
 
         public bool Say()
         {
-            /*InnerSpace.Echo("doing say, agentId is "+AgentId+"actionId is "+ActionId);
-            return DirectEve.ThreadedLocalSvcCall("agents", "DoAction", AgentId, ActionId);*/
-            //InnerSpace.Echo("doing say, button is"+button);
-            string[] responseButtonsPath;
-            if (right)
-            {
-                responseButtonsPath = responseButtonsPathRight;
-                responseButtonsPath[6] = button;
-            }
-            else
-            {
-                responseButtonsPath = responseButtonsPathLeft;
-                responseButtonsPath[5] = button;
-            }
-
-            var btn = DirectEve.findChildWithPath(container, responseButtonsPath);
-            //InnerSpace.Echo("btn name is"+btn.Attribute("name"));
+            var btn = DirectWindow.FindChildWithPath(_container, Right ? _responseButtonsPathRight.Concat(new [] { Button }) : _responseButtonsPathLeft.Concat(new[] { Button }));
             return DirectEve.ThreadedCall(btn.Attribute("OnClick"));
         }
     }

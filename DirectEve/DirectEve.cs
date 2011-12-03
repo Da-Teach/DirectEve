@@ -137,13 +137,7 @@ namespace DirectEve
         /// </summary>
         internal DirectConst Const
         {
-            get
-            {
-                if (_const == null)
-                    _const = new DirectConst(this);
-
-                return _const;
-            }
+            get { return _const ?? (_const = new DirectConst(this)); }
         }
 
         /// <summary>
@@ -151,13 +145,7 @@ namespace DirectEve
         /// </summary>
         public DirectLogin Login
         {
-            get
-            {
-                if (_login == null)
-                    _login = new DirectLogin(this);
-
-                return _login;
-            }
+            get { return _login ?? (_login = new DirectLogin(this)); }
         }
 
         /// <summary>
@@ -165,13 +153,7 @@ namespace DirectEve
         /// </summary>
         public DirectNavigation Navigation
         {
-            get
-            {
-                if (_navigation == null)
-                    _navigation = new DirectNavigation(this);
-
-                return _navigation;
-            }
+            get { return _navigation ?? (_navigation = new DirectNavigation(this)); }
         }
 
         /// <summary>
@@ -179,13 +161,7 @@ namespace DirectEve
         /// </summary>
         public DirectMe Me
         {
-            get
-            {
-                if (_me == null)
-                    _me = new DirectMe(this);
-
-                return _me;
-            }
+            get { return _me ?? (_me = new DirectMe(this)); }
         }
 
         /// <summary>
@@ -193,13 +169,7 @@ namespace DirectEve
         /// </summary>
         public DirectStandings Standings
         {
-            get
-            {
-                if (_standings == null)
-                    _standings = new DirectStandings(this);
-
-                return _standings;
-            }
+            get { return _standings ?? (_standings = new DirectStandings(this)); }
         }
 
         /// <summary>
@@ -207,13 +177,7 @@ namespace DirectEve
         /// </summary>
         public DirectActiveShip ActiveShip
         {
-            get
-            {
-                if (_activeShip == null)
-                    _activeShip = new DirectActiveShip(this);
-
-                return _activeShip;
-            }
+            get { return _activeShip ?? (_activeShip = new DirectActiveShip(this)); }
         }
 
         /// <summary>
@@ -221,13 +185,7 @@ namespace DirectEve
         /// </summary>
         public DirectSession Session
         {
-            get
-            {
-                if (_session == null)
-                    _session = new DirectSession(this);
-
-                return _session;
-            }
+            get { return _session ?? (_session = new DirectSession(this)); }
         }
 
         /// <summary>
@@ -259,13 +217,17 @@ namespace DirectEve
         /// </remarks>
         public Dictionary<long, DirectEntity> EntitiesById
         {
-            get
-            {
-                if (_entitiesById == null)
-                    _entitiesById = DirectEntity.GetEntities(this);
+            get { return _entitiesById ?? (_entitiesById = DirectEntity.GetEntities(this)); }
+        }
 
-                return _entitiesById;
-            }
+        public bool RefreshBookmarks()
+        {
+            return DirectBookmark.RefreshBookmarks(this);
+        }
+
+        public DateTime LastBookmarksUpdate
+        {
+            get { return DirectBookmark.GetLastBookmarksUpdate(this) ?? new DateTime(0, 0, 0); }
         }
 
         /// <summary>
@@ -274,13 +236,7 @@ namespace DirectEve
         /// <value></value>
         public List<DirectBookmark> Bookmarks
         {
-            get
-            {
-                if (_bookmarks == null)
-                    _bookmarks = DirectBookmark.GetBookmarks(this);
-
-                return _bookmarks;
-            }
+            get { return _bookmarks ?? (_bookmarks = DirectBookmark.GetBookmarks(this)); }
         }
 
         /// <summary>
@@ -289,13 +245,7 @@ namespace DirectEve
         /// <value></value>
         public List<DirectAgentMission> AgentMissions
         {
-            get
-            {
-                if (_agentMissions == null)
-                    _agentMissions = DirectAgentMission.GetAgentMissions(this);
-
-                return _agentMissions;
-            }
+            get { return _agentMissions ?? (_agentMissions = DirectAgentMission.GetAgentMissions(this)); }
         }
 
         /// <summary>
@@ -304,13 +254,7 @@ namespace DirectEve
         /// <value></value>
         public List<DirectWindow> Windows
         {
-            get
-            {
-                if (_windows == null)
-                    _windows = DirectWindow.GetWindows(this);
-
-                return _windows;
-            }
+            get { return _windows ?? (_windows = DirectWindow.GetWindows(this)); }
         }
 
         /// <summary>
@@ -322,13 +266,7 @@ namespace DirectEve
         /// </remarks>
         public List<DirectModule> Modules
         {
-            get
-            {
-                if (_modules == null)
-                    _modules = DirectModule.GetModules(this);
-
-                return _modules;
-            }
+            get { return _modules ?? (_modules = DirectModule.GetModules(this)); }
         }
 
         /// <summary>
@@ -389,7 +327,7 @@ namespace DirectEve
         /// <param name = "e"></param>
         private void InnerspaceOnFrame(object sender, LSEventArgs e)
         {
-            using (var pySharp = new PySharp.PySharp())
+            using (var pySharp = new PySharp.PySharp(true))
             {
                 // Make the link to the instance
                 PySharp = pySharp;
@@ -429,8 +367,6 @@ namespace DirectEve
                 _me = null;
                 _activeShip = null;
                 _standings = null;
-
-                // TODO: Check (after we're done) if these actually need to be reset
                 _navigation = null;
                 _session = null;
                 _login = null;
@@ -490,10 +426,7 @@ namespace DirectEve
         /// <returns></returns>
         public DirectContainer GetItemHangar()
         {
-            if (_itemHangar == null)
-                _itemHangar = DirectContainer.GetItemHangar(this);
-
-            return _itemHangar;
+            return _itemHangar ?? (_itemHangar = DirectContainer.GetItemHangar(this));
         }
 
         /// <summary>
@@ -502,10 +435,7 @@ namespace DirectEve
         /// <returns></returns>
         public DirectContainer GetShipHangar()
         {
-            if (_shipHangar == null)
-                _shipHangar = DirectContainer.GetShipHangar(this);
-
-            return _shipHangar;
+            return _shipHangar ?? (_shipHangar = DirectContainer.GetShipHangar(this));
         }
 
         /// <summary>
@@ -514,10 +444,7 @@ namespace DirectEve
         /// <returns></returns>
         public DirectContainer GetShipsCargo()
         {
-            if (_shipsCargo == null)
-                _shipsCargo = DirectContainer.GetShipsCargo(this);
-
-            return _shipsCargo;
+            return _shipsCargo ?? (_shipsCargo = DirectContainer.GetShipsCargo(this));
         }
 
         /// <summary>
@@ -526,10 +453,7 @@ namespace DirectEve
         /// <returns></returns>
         public DirectContainer GetShipsModules()
         {
-            if (_shipsModules == null)
-                _shipsModules = DirectContainer.GetShipsModules(this);
-
-            return _shipsModules;
+            return _shipsModules ?? (_shipsModules = DirectContainer.GetShipsModules(this));
         }
 
 
@@ -539,10 +463,7 @@ namespace DirectEve
         /// <returns></returns>
         public DirectContainer GetShipsDroneBay()
         {
-            if (_shipsDroneBay == null)
-                _shipsDroneBay = DirectContainer.GetShipsDroneBay(this);
-
-            return _shipsDroneBay;
+            return _shipsDroneBay ?? (_shipsDroneBay = DirectContainer.GetShipsDroneBay(this));
         }
 
         /// <summary>
@@ -819,30 +740,6 @@ namespace DirectEve
             var pySharp = this.PySharp;
             var form = pySharp.Import("form");
             ThreadedCall(form.Attribute("FittingMgmt").Attribute("Open"));
-        }
-
-
-        internal static PyObject findChild(PyObject container, string name)
-        {
-            //InnerSpace.Echo("findChild called container: "+container+" name: "+name);
-            var childs = container.Attribute("children").Attribute("_childrenObjects").ToList();
-            /*foreach (var child in childs)
-            {
-                InnerSpace.Echo("child found with name: " + (string)child.Attribute("_name"));
-            }*/
-            PyObject ret = childs.Find(c => ((string)c.Attribute("_name")).Equals(name));
-            //InnerSpace.Echo("return value is" + ret);
-            return ret;
-        }
-        internal static PyObject findChildWithPath(PyObject container, string[] path)
-        {
-
-            PyObject result = container;
-            for (int i = 0; i < path.Length; i++)
-            {
-                result = findChild(result, path[i]);
-            }
-            return result;
         }
     }
 }

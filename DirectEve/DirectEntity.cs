@@ -13,29 +13,27 @@ namespace DirectEve
     using System.Linq;
     using global::DirectEve.PySharp;
 
-    public class DirectEntity : DirectObject
+    public class DirectEntity : DirectInvType
     {
         private int? _allianceId;
         private double? _armorPct;
         private PyObject _ball;
         private PyObject _ballpark;
-        private int? _categoryId;
         private int? _charId;
         private int? _corpId;
         private double? _distance;
         private long? _followId;
-        private int? _groupId;
         private bool? _hasExploded;
         private bool? _hasReleased;
         private bool? _isCloaked;
         private bool? _isEmpty;
         private int? _mode;
         private string _name;
+        private string _givenName;
         private int? _ownerId;
         private double? _shieldPct;
         private PyObject _slimItem;
         private double? _structurePct;
-        private int? _typeId;
         private double? _velocity;
         private double? _x;
         private double? _y;
@@ -47,7 +45,9 @@ namespace DirectEve
             _ballpark = ballpark;
             _ball = ball;
             _slimItem = slimItem;
+
             Id = id;
+            TypeId = (int) _ball.Attribute("typeID");
 
             Attacks = new List<string>();
             ElectronicWarfare = new List<string>();
@@ -66,25 +66,14 @@ namespace DirectEve
             }
         }
 
-        public int GroupId
+        public string GivenName
         {
             get
             {
-                if (!_groupId.HasValue)
-                    _groupId = (int) _slimItem.Attribute("groupID");
+                if (_givenName == null)
+                    _givenName = DirectEve.GetLocationName(Id);
 
-                return _groupId.Value;
-            }
-        }
-
-        public int CategoryId
-        {
-            get
-            {
-                if (!_categoryId.HasValue)
-                    _categoryId = (int) _slimItem.Attribute("categoryID");
-
-                return _categoryId.Value;
+                return _givenName;
             }
         }
 
@@ -140,17 +129,6 @@ namespace DirectEve
                     _followId = (long) _ball.Attribute("followId");
 
                 return _followId.Value;
-            }
-        }
-
-        public int TypeId
-        {
-            get
-            {
-                if (!_typeId.HasValue)
-                    _typeId = (int) _ball.Attribute("typeID");
-
-                return _typeId.Value;
             }
         }
 
@@ -268,11 +246,10 @@ namespace DirectEve
         {
             get
             {
-                /*if (_velocity == null)
-                    _velocity = (double)_ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetWallclockTime")).Call("Length");
+                if (_velocity == null)
+                    _velocity = (double)_ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetSimTime")).Call("Length");
 
-                return _velocity.Value;*/
-                return 0;
+                return _velocity.Value;
             }
         }
 

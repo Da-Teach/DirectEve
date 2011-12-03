@@ -40,32 +40,30 @@ namespace DirectEve
 
             if (viewMode != "SinglePaneView")
             {
-                var buttonsRight = DirectEve.findChildWithPath(pyWindow, responseButtonsPathRight).Attribute("children").Attribute("_childrenObjects").ToList();
+                var buttonsRight = FindChildWithPath(pyWindow, responseButtonsPathRight).Attribute("children").Attribute("_childrenObjects").ToList();
                 
 
                 foreach (var response in buttonsRight)
                 {
                     var directResponse = new DirectAgentResponse(directEve, pyWindow);
                     directResponse.AgentId = AgentId;
-                    //directResponse.ActionId = (int)response.Item(0);
                     directResponse.Text = (string)response.Attribute("text");
-                    directResponse.button = (string)response.Attribute("name");
-                    directResponse.right = true;
+                    directResponse.Button = (string)response.Attribute("name");
+                    directResponse.Right = true;
                     AgentResponses.Add(directResponse);
                 }
             }
             else
             {
-                var buttonsLeft = DirectEve.findChildWithPath(pyWindow, responseButtonsPathLeft).Attribute("children").Attribute("_childrenObjects").ToList();                
+                var buttonsLeft = FindChildWithPath(pyWindow, responseButtonsPathLeft).Attribute("children").Attribute("_childrenObjects").ToList();                
 
                 foreach (var response in buttonsLeft)
                 {
                     var directResponse = new DirectAgentResponse(directEve, pyWindow);
                     directResponse.AgentId = AgentId;
-                    //directResponse.ActionId = (int)response.Item(0);
                     directResponse.Text = (string)response.Attribute("text");
-                    directResponse.button = (string)response.Attribute("name");
-                    directResponse.right = false;
+                    directResponse.Button = (string)response.Attribute("name");
+                    directResponse.Right = false;
                     AgentResponses.Add(directResponse);
                 }
             }            

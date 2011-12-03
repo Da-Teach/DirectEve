@@ -19,6 +19,21 @@ namespace DirectEve.PySharp
         public static PyObject PyNone = new PyObject(null, Py.PyNoneStruct, false);
 
         /// <summary>
+        ///   Dummy code
+        /// </summary>
+        private PyObject _dummyCode;
+
+        /// <summary>
+        ///   Dummy frame
+        /// </summary>
+        private PyObject _frame;
+
+        /// <summary>
+        ///   Old frame
+        /// </summary>
+        private PyObject _oldFrame;
+
+        /// <summary>
         ///   Import cache
         /// </summary>
         private Dictionary<string, PyObject> _importCache;
@@ -63,12 +78,28 @@ namespace DirectEve.PySharp
         /// </summary>
         public PySharp()
         {
+            _dummyCode = PyZero;
+            _frame = PyZero;
+
             _pyReferences = new List<PyObject>();
             _importCache = new Dictionary<string, PyObject>();
             _stringCache = new Dictionary<string, PyObject>();
             _unicodeCache = new Dictionary<string, PyObject>();
             _intCache = new Dictionary<int, PyObject>();
             _longCache = new Dictionary<long, PyObject>();
+        }
+
+        public PySharp(bool createFrame) : this()
+        {
+            if (!createFrame)
+                return;
+
+            // Create dummy code (needed for the new frame)
+            _dummyCode = new PyObject(this, Py.Py_CompileString("", "", 257), true);
+            // Create a new frame
+            _frame = new PyObject(this, Py.PyFrame_New(Py.GetThreadState(), _dummyCode, Import("__main__").Attribute("__dict__"), Import("__main__").Attribute("__dict__")), true);
+            // Exchange frames
+            _oldFrame = new PyObject(this, Py.ExchangePyFrame(_frame), false);
         }
 
         #region IDisposable Members
@@ -78,6 +109,15 @@ namespace DirectEve.PySharp
         /// </summary>
         public void Dispose()
         {
+            // Release the frame created for PySharp
+            if (_frame != PyZero)
+            {
+                // Return the old frame
+                Py.ExchangePyFrame(_oldFrame);
+
+                _frame = PyZero;
+            }
+
             // Remove any of the references we caused
             foreach (var pyObject in _pyReferences)
                 pyObject.Release();
