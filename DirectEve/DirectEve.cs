@@ -257,7 +257,7 @@ namespace DirectEve
         /// <value></value>
         public List<DirectBookmarkFolder> BookmarkFolders
         {
-            get { return _bookmarkFolders ?? (_bookmarkFolders = DirectBookmarkFolder.GetFolders(this)); }
+            get { return _bookmarkFolders ?? (_bookmarkFolders = DirectBookmark.GetFolders(this)); }
         }
 
         /// <summary>

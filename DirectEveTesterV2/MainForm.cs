@@ -123,6 +123,7 @@
                 Log("Bookmark[{0}].ItemId: {1}", i, bookmark.ItemId);
                 Log("Bookmark[{0}].OwnerId: {1}", i, bookmark.OwnerId);
                 Log("Bookmark[{0}].TypeId: {1}", i, bookmark.TypeId);
+                Log("Bookmark[{0}].TypeName: {1}", i, bookmark.TypeName);
 
                 Log("Bookmark[{0}].X: {1}", i, bookmark.X);
                 Log("Bookmark[{0}].Y: {1}", i, bookmark.Y);

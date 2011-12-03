@@ -31,7 +31,7 @@ namespace DirectEve
             LocationId = (long?)pyBookmark.Attribute("locationID");
             FolderId = (long?)pyBookmark.Attribute("folderID");
             Title = (string) pyBookmark.Attribute("memo");
-            if (!string.IsNullOrEmpty(Title) && Title.Contains("\t"))
+            if (!String.IsNullOrEmpty(Title) && Title.Contains("\t"))
             {
                 Memo = Title.Substring(Title.IndexOf("\t") + 1);
                 Title = Title.Substring(0, Title.IndexOf("\t"));
@@ -87,6 +87,13 @@ namespace DirectEve
             // List the bookmarks from cache
             var bookmarks = directEve.GetLocalSvc("bookmarkSvc").Attribute("bookmarkCache").ToDictionary<long>();
             return bookmarks.Values.Select(pyBookmark => new DirectBookmark(directEve, pyBookmark)).ToList();
+        }
+
+        internal static List<DirectBookmarkFolder> GetFolders(DirectEve directEve)
+        {
+            // List the bookmark folders from cache
+            var folders = directEve.GetLocalSvc("bookmarkSvc").Attribute("folders").ToDictionary<long>();
+            return folders.Values.Select(pyFolder => new DirectBookmarkFolder(directEve, pyFolder)).ToList();
         }
 
         internal static bool BookmarkLocation(DirectEve directEve, long itemId, string name, string comment, int typeId, long? locationId)
