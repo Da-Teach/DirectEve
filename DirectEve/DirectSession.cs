@@ -132,12 +132,19 @@ namespace DirectEve
                     if ((bool) station.Attribute("exitingstation"))
                         return false;
 
+                    if ((bool) station.Attribute("dockaborted"))
+                        return false;
+
+                    if ((bool) station.Attribute("loading"))
+                        return false;
+
                     if ((bool) station.Attribute("leavingShip"))
                         return false;
                 }
 
-                /*if (!DirectEve.Windows.Any(w => w.Name == "chatchannel_solarsystemid2"))
-                    return false;*/
+                var loading = (bool)DirectEve.PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("loading").Attribute("display");
+                if (loading)
+                    return false;
 
                 return true;
             }

@@ -44,10 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DirectBookmarkFolder.cs" />
+    <Compile Include="DirectConstellation.cs" />
     <Compile Include="DirectInvType.cs" />
     <Compile Include="DirectLoyaltyPointOffer.cs" />
     <Compile Include="DirectLoyaltyPointOfferRequiredItem.cs" />
     <Compile Include="DirectLoyaltyPointStoreWindow.cs" />
+    <Compile Include="DirectRegion.cs" />
     <Compile Include="DirectReprocessingQuote.cs" />
     <Compile Include="DirectReprocessingQuoteRecoverable.cs" />
     <Compile Include="DirectReprocessingWindow.cs" />
@@ -87,7 +89,9 @@
     <Compile Include="DirectOwnContainerWindow.cs" />
     <Compile Include="DirectOwner.cs" />
     <Compile Include="DirectSession.cs" />
+    <Compile Include="DirectSolarSystem.cs" />
     <Compile Include="DirectStandings.cs" />
+    <Compile Include="DirectStation.cs" />
     <Compile Include="DirectTelecomWindow.cs" />
     <Compile Include="DirectWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

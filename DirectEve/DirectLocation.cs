@@ -44,38 +44,51 @@ namespace DirectEve
         /// <returns></returns>
         public static DirectLocation GetLocation(DirectEve directEve, long locationId)
         {
-            long? itemId = null;
+            bool isValid = false;
+            string name = null;
+            DirectRegion region = null;
+            DirectConstellation constellation = null;
+            DirectSolarSystem solarSystem = null;
+            DirectStation station = null;
 
-            var items = directEve.GetLocalSvc("map").Attribute("mapcache").DictionaryItem("items");
-            var location = items.DictionaryItem(locationId);
-            if (!location.IsValid)
+            if (directEve.Regions.TryGetValue(locationId, out region))
             {
-                var station = directEve.GetLocalSvc("ui").Attribute("stationsdata").Attribute("items").DictionaryItem(locationId);
+                isValid = true;
+                name = region.Name;
+            }
+            else if (directEve.Constellations.TryGetValue(locationId, out constellation))
+            {
+                isValid = true;
+                name = constellation.Name;
 
-                // Not a station and not a item/solarsystem/constellation/region? return an invalid location
-                if (!station.IsValid)
-                    return new DirectLocation(directEve) {LocationId = locationId};
+                region = constellation.Region;
+            }
+            else if (directEve.SolarSystems.TryGetValue(locationId, out solarSystem))
+            {
+                isValid = true;
+                name = solarSystem.Name;
 
-                // Item 1 == solarSystemId
-                var solarSystemId = station.Item(1);
-                itemId = (long?) station.Item(0);
+                constellation = solarSystem.Constellation;
+                region = constellation.Region;
+            }
+            else if (directEve.Stations.TryGetValue(locationId, out station))
+            {
+                isValid = true;
+                name = station.Name;
 
-                // Get the new location
-                location = items.DictionaryItem(solarSystemId);
+                solarSystem = station.SolarSystem;
+                constellation = solarSystem.Constellation;
+                region = constellation.Region;
             }
 
-            // Get the hierarchy data
-            var hierarchy = location.Attribute("hierarchy");
-
-            // Build a new DirectLocation with the info that we found
             var result = new DirectLocation(directEve);
-            result.IsValid = location.IsValid;
+            result.IsValid = isValid;
+            result.Name = name;
             result.LocationId = locationId;
-            result.RegionId = (long?) hierarchy.Item(0);
-            result.ConstellationId = (long?) hierarchy.Item(1);
-            result.SolarSystemId = (long?) hierarchy.Item(2);
-            result.ItemId = (long?) hierarchy.Item(3) ?? itemId;
-            result.Name = GetLocationName(directEve, locationId);
+            result.RegionId = region != null ? region.Id : (long?)null;
+            result.ConstellationId = constellation != null ? constellation.Id : (long?)null;
+            result.SolarSystemId = solarSystem != null ? solarSystem.Id : (long?)null;
+            result.ItemId = station != null ? station.Id : (long?)null;
             return result;
         }
 

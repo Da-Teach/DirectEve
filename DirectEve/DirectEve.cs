@@ -125,6 +125,26 @@ namespace DirectEve
         private List<DirectWindow> _windows;
 
         /// <summary>
+        ///   Cache the GetStations call
+        /// </summary>
+        private Dictionary<long, DirectStation> _stations;
+
+        /// <summary>
+        ///   Cache the GetRegions call
+        /// </summary>
+        private Dictionary<long, DirectSolarSystem> _solarSystems;
+        
+        /// <summary>
+        ///   Cache the GetConstellations call
+        /// </summary>
+        private Dictionary<long, DirectConstellation> _constellations;
+        
+        /// <summary>
+        ///   Cache the GetRegions call
+        /// </summary>
+        private Dictionary<long, DirectRegion> _regions;
+
+        /// <summary>
         ///   Create a DirectEve object
         /// </summary>
         public DirectEve()
@@ -214,7 +234,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a dictonairy of entities by id
+        ///   Return a dictionary of entities by id
         /// </summary>
         /// <value></value>
         /// <remarks>
@@ -301,6 +321,42 @@ namespace DirectEve
                 var droneIds = GetLocalSvc("michelle").Call("GetDrones").Attribute("items").ToDictionary<long>().Keys;
                 return Entities.Where(e => droneIds.Any(d => d == e.Id)).ToList();
             }
+        }
+
+        /// <summary>
+        ///   Return a dictionary of stations
+        /// </summary>
+        /// <remarks>This is cached throughout the existance of this DirectEve Instance</remarks>
+        public Dictionary<long, DirectStation> Stations
+        {
+            get { return _stations ?? (_stations = DirectStation.GetStations(this)); }
+        }
+
+        /// <summary>
+        ///   Return a dictionary of solar systems
+        /// </summary>
+        /// <remarks>This is cached throughout the existance of this DirectEve Instance</remarks>
+        public Dictionary<long, DirectSolarSystem> SolarSystems
+        {
+            get { return _solarSystems ?? (_solarSystems = DirectSolarSystem.GetSolarSystems(this)); }
+        }
+
+        /// <summary>
+        ///   Return a dictionary of solar systems
+        /// </summary>
+        /// <remarks>This is cached throughout the existance of this DirectEve Instance</remarks>
+        public Dictionary<long, DirectConstellation> Constellations
+        {
+            get { return _constellations ?? (_constellations = DirectConstellation.GetConstellations(this)); }
+        }
+
+        /// <summary>
+        ///   Return a dictionary of solar systems
+        /// </summary>
+        /// <remarks>This is cached throughout the existance of this DirectEve Instance</remarks>
+        public Dictionary<long, DirectRegion> Regions
+        {
+            get { return _regions ?? (_regions = DirectRegion.GetRegions(this)); }
         }
 
         /// <summary>

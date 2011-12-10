@@ -20,6 +20,7 @@
             ActiveShip,
             ListWindows,
             ListEntities,
+            ListShipsCargo,
             LaunchDrones,
             RecallDrones,
             RefreshBookmarks,
@@ -28,6 +29,7 @@
             BookmarkCurrentLocation,
             DeleteBookmark,
             DeleteBookmarkFolder,
+            WarpToBookmark,
 
             Done
         }
@@ -78,6 +80,10 @@
                         ListEntitiesTests();
                         break;
 
+                    case TestState.ListShipsCargo:
+                        ListShipsCargoTest();
+                        break;
+
                     case TestState.LaunchDrones:
                         LaunchDronesTest();
                         break;
@@ -109,12 +115,55 @@
                     case TestState.DeleteBookmarkFolder:
                         DeleteBookmarkFolderTest();
                         break;
+
+                    case TestState.WarpToBookmark:
+                        WarpToBookmarkTest();
+                        break;
                 }
             }
             catch (Exception ex)
             {
                 Log("Exception: {0}", ex);
             }
+        }
+
+        private void ListShipsCargoTest()
+        {
+            _state = TestState.Idle;
+
+            var cargo = _directEve.GetShipsCargo();
+            if (!cargo.IsReady)
+            {
+                Log("Your ship's cargo is not ready!");
+                return;
+            }
+
+            for (int i = 0; i < cargo.Items.Count; i++)
+            {
+                var item = cargo.Items[i];
+                LogItem("cargo[" + i + "].{0}: {1}", item);
+            }
+        }
+
+        private void WarpToBookmarkTest()
+        {
+            _state = TestState.Idle;
+
+            if (!_directEve.Session.IsInSpace)
+            {
+                Log("Your not in space, can't warp to a bookmark!");
+                return;
+            }
+
+            var bookmark = _directEve.Bookmarks.FirstOrDefault(b => b.LocationId == _directEve.Session.SolarSystemId);
+            if (bookmark == null)
+            {
+                Log("No bookmark found in this system!");
+                return;
+            }
+
+            Log("Warping to bookmark {0}", bookmark.Title);
+            bookmark.WarpTo(0);
         }
 
         private void DeleteBookmarkFolderTest()

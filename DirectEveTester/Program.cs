@@ -54,6 +54,15 @@ namespace DirectEveTester
 
             try
             {
+                var items = _directEve.GetItemHangar().Items;
+                foreach(var item in items)
+                {
+                    if (item.TypeName != "Small Tractor Beam II")
+                        continue;
+                    
+                    Log("{0} {1} {2}", item.TypeName, item.TypeId, item.GroupId);
+                }
+
                 _done = true;
             }
             catch(Exception e)
