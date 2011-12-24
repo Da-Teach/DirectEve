@@ -1,0 +1,7 @@
+D3DDetour
+- supports DirectX 9, 10 and 11
+
+Dependencies:
+=============
+SlimDX (http://slimdx.org/)
+WhiteMagic (http://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/259362-release-c-whitemagic-injected-net-helper-library.html)

@@ -12,7 +12,6 @@ namespace DirectEve
     using System;
     using System.Collections.Generic;
     using global::DirectEve.PySharp;
-    using InnerSpaceAPI;
 
     public class DirectScannerWindow : DirectWindow
     {
@@ -58,7 +57,7 @@ namespace DirectEve
 
         private static void Log(string line)
         {
-            InnerSpace.Echo(string.Format("{0:D} {1:HH:mm:ss} {2}", -1, DateTime.Now, line));
+            System.Diagnostics.Debugger.Log(0,"DirectScannerWindow",string.Format("{0:D} {1:HH:mm:ss} {2}", -1, DateTime.Now, line));
         }
 
         /// <summary>
