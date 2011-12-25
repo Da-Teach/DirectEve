@@ -32,6 +32,12 @@ namespace Injector
             int i = comboBoxProcesses.Items.Add(s);
             comboBoxProcesses.SelectedIndex = i;
 
+            // fill in default values.  mainly to make debugging quicker
+            textBoxDLL.Text = System.IO.Path.Combine(
+                System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "DomainManager.dll");
+            textBoxFunction.Text = "Onyx.DomainManager.EntryPoint.Entry";
+            textBoxArguments.Text = "DirectEveTester.exe";
+
         }
 
         private void comboBoxProcesses_DropDownOpened(object sender, EventArgs e)

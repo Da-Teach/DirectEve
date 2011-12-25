@@ -13,7 +13,6 @@ namespace DirectEveTester
     using System.Linq;
     using System.Threading;
     using DirectEve;
-    using InnerSpaceAPI;
 
     internal static class Program
     {
@@ -42,7 +41,8 @@ namespace DirectEveTester
 
         private static void Log(string format, params object[] parms)
         {
-            InnerSpace.Echo(string.Format("{0:D} {1:HH:mm:ss} {2}", _frameCount, DateTime.Now, string.Format(format, parms)));
+            //InnerSpace.Echo(string.Format("{0:D} {1:HH:mm:ss} {2}", _frameCount, DateTime.Now, string.Format(format, parms)));
+            System.Diagnostics.Debugger.Log(0, null, string.Format("{0:D} {1:HH:mm:ss} {2}", _frameCount, DateTime.Now, string.Format(format, parms)));
         }
 
         private static void OnFrame(object sender, EventArgs eventArgs)
@@ -54,14 +54,15 @@ namespace DirectEveTester
 
             try
             {
-                var items = _directEve.GetItemHangar().Items;
-                foreach(var item in items)
-                {
-                    if (item.TypeName != "Small Tractor Beam II")
-                        continue;
+                Log("AtLogin = {0}", _directEve.Login.AtLogin); 
+                //var items = _directEve.GetItemHangar().Items;
+                //foreach(var item in items)
+                //{
+                //    if (item.TypeName != "Small Tractor Beam II")
+                //        continue;
                     
-                    Log("{0} {1} {2}", item.TypeName, item.TypeId, item.GroupId);
-                }
+                //    Log("{0} {1} {2}", item.TypeName, item.TypeId, item.GroupId);
+                //}
 
                 _done = true;
             }

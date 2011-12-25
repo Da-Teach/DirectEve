@@ -13,7 +13,6 @@ namespace DirectEve
     using System.Collections.Generic;
     using System.Linq;
     using global::DirectEve.PySharp;
-    using LavishScriptAPI;
 
     public class DirectEve : IDisposable
     {
@@ -52,7 +51,7 @@ namespace DirectEve
         /// </summary>
         private Dictionary<long, DirectEntity> _entitiesById;
 
-        private uint _innerspaceOnFrameId;
+        //private uint _innerspaceOnFrameId;
 
         /// <summary>
         ///   Item Hangar container cache
@@ -153,8 +152,20 @@ namespace DirectEve
             _containers = new Dictionary<long, DirectContainer>();
             _lastKnownTargets = new Dictionary<long, DateTime>();
 
-            _innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
-            LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
+            //_innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
+            //LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
+
+            // Initialize the hook
+            Pulse.Initialize(D3DVersion.Direct3D9);
+
+            // Set something that will only run 1 time in an OnFrame
+            D3DHook.OnFrameOnce += delegate
+            {
+                System.Diagnostics.Debugger.Log(0, null, "OnFrameOnce hook." + Environment.NewLine);
+            };
+
+            // Make the hook call our method each frame
+            D3DHook.OnFrame += new EventHandler(D3DHook_OnFrame);
         }
 
         /// <summary>
@@ -387,7 +398,7 @@ namespace DirectEve
         /// </summary>
         public void Dispose()
         {
-            LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
+            //LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
         }
 
         #endregion
@@ -402,7 +413,8 @@ namespace DirectEve
         /// </summary>
         /// <param name = "sender"></param>
         /// <param name = "e"></param>
-        private void InnerspaceOnFrame(object sender, LSEventArgs e)
+        //private void InnerspaceOnFrame(object sender, LSEventArgs e)
+        private void D3DHook_OnFrame(object sender, EventArgs e)
         {
             using (var pySharp = new PySharp.PySharp(true))
             {

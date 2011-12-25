@@ -61,8 +61,8 @@ namespace Onyx.DomainManager
             MethodInfo entry = asm.EntryPoint;
             //object o = asm.CreateInstance(entry.Name);
             
-            //entry.Invoke(null, null);
-            entry.Invoke(null, new object[] { new string[] { "foo", "bar" } });
+            entry.Invoke(null, null);
+            //entry.Invoke(null, new object[] { new string[] { "foo", "bar" } });
         }
 
         #endregion
