@@ -32,6 +32,10 @@ namespace DirectEve
         private int? _soundId;
         private string _typeName;
         private double? _volume;
+        private PyObject _pyInvGroup;
+        private string _groupName;
+        private PyObject _pyInvCategory;
+        private string _categoryName;
 
         internal DirectInvType(DirectEve directEve)
             : base(directEve)
@@ -40,13 +44,17 @@ namespace DirectEve
 
         internal PyObject PyInvType
         {
-            get
-            {
-                if (_pyInvType == null)
-                    _pyInvType = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypes").Call("GetIfExists", TypeId);
+            get { return _pyInvType ?? (_pyInvType = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypes").Call("GetIfExists", TypeId)); }
+        }
 
-                return _pyInvType;
-            }
+        internal PyObject PyInvGroup
+        {
+            get { return _pyInvGroup ?? (_pyInvGroup = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invgroups").Call("GetIfExists", GroupId)); }
+        }
+
+        internal PyObject PyInvCategory
+        {
+            get { return _pyInvCategory ?? (_pyInvCategory = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invcategories").Call("GetIfExists", GroupId)); }
         }
 
         public int TypeId { get; internal set; }
@@ -59,6 +67,28 @@ namespace DirectEve
                     _groupId = (int) PyInvType.Attribute("groupID");
 
                 return _groupId.Value;
+            }
+        }
+
+        public string GroupName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_groupName))
+                    _groupName = (string)PyInvGroup.Attribute("groupName");
+
+                return _groupName;
+            }
+        }
+
+        public string CategoryName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_categoryName))
+                    _categoryName = (string)PyInvCategory.Attribute("categoryName");
+
+                return _categoryName;
             }
         }
 
