@@ -1,6 +1,7 @@
 ﻿namespace DirectEveTesterV2
 {
     using System;
+    using System.Reflection;
     using System.Linq;
     using DirectEve;
     using System.Windows.Forms;
@@ -8,40 +9,49 @@
 
     public partial class MainForm : Form
     {
+        [AttributeUsage(AttributeTargets.All)]
+        public class Test : System.Attribute
+        {
+            public readonly string _desc;
+
+            public Test(string desc)
+            {
+                this._desc = desc;
+            }
+
+            public Test()
+            {
+                this._desc = null;
+            }
+        }
+
         private DirectEve _directEve;
         private TestState _state;
+        private string _activeTest;
 
         private enum TestState
         {
             Idle,
-
-            Session,
-            Me,
-            ActiveShip,
-            ListWindows,
-            ListEntities,
-            ListShipsCargo,
-            LaunchDrones,
-            RecallDrones,
-            RefreshBookmarks,
-            ListBookmarks,
-            CreateBookmarkFolder,
-            BookmarkCurrentLocation,
-            DeleteBookmark,
-            DeleteBookmarkFolder,
-            WarpToBookmark,
-
+            RunTest,
             Done
         }
-
 
         public MainForm()
         {
             InitializeComponent();
 
-            foreach (var state in Enum.GetNames(typeof(TestState)))
-                TestStatesComboBox.Items.Add(state);
-        
+            Type t = typeof(MainForm);
+            foreach (MethodInfo mi in t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                object[] attrs = mi.GetCustomAttributes(typeof(Test),false);
+                foreach (object attr in attrs)
+                {
+                    TestStatesComboBox.Items.Add(mi.Name);
+                }
+            }
+            _activeTest = "";
+            TestStatesComboBox.SelectedIndex = 0;
+
             _directEve = new DirectEve();
             _directEve.OnFrame += OnFrame;
         }
@@ -60,64 +70,12 @@
             {
                 switch (_state)
                 {
-                    case TestState.Session:
-                        SessionTests();
+                    case TestState.Idle:
+                        lblStatus.Text = "Idle";
                         break;
 
-                    case TestState.Me:
-                        MeTests();
-                        break;
-
-                    case TestState.ListWindows:
-                        ListWindowsTest();
-                        break;
-
-                    case TestState.ActiveShip:
-                        ActiveShipTests();
-                        break;
-                    
-                    case TestState.ListEntities:
-                        ListEntitiesTests();
-                        break;
-
-                    case TestState.ListShipsCargo:
-                        ListShipsCargoTest();
-                        break;
-
-                    case TestState.LaunchDrones:
-                        LaunchDronesTest();
-                        break;
-
-                    case TestState.RecallDrones:
-                        RecallDronesTest();
-                        break;
-
-                    case TestState.ListBookmarks:
-                        ListBookmarksTest();
-                        break;
-
-                    case TestState.RefreshBookmarks:
-                        RefreshBookmarksTest();
-                        break;
-
-                    case TestState.CreateBookmarkFolder:
-                        CreateBookmarkFolderTest();
-                        break;
-
-                    case TestState.BookmarkCurrentLocation:
-                        BookmarkCurrentLocationTest();
-                        break;
-
-                    case TestState.DeleteBookmark:
-                        DeleteBookmarkTest();
-                        break;
-
-                    case TestState.DeleteBookmarkFolder:
-                        DeleteBookmarkFolderTest();
-                        break;
-
-                    case TestState.WarpToBookmark:
-                        WarpToBookmarkTest();
+                    case TestState.RunTest:
+                        RunSelectedTest();
                         break;
                 }
             }
@@ -127,6 +85,31 @@
             }
         }
 
+        private void RunSelectedTest()
+        {
+            if (!String.IsNullOrEmpty(_activeTest))
+            {
+                Type t = typeof(MainForm);
+                MethodInfo mi = t.GetMethod(_activeTest, BindingFlags.NonPublic | BindingFlags.Instance);
+                object[] attrs = mi.GetCustomAttributes(typeof(Test),false);
+                foreach (object attr in attrs)
+                {
+                    Test ta = (Test)attr;
+                    if (String.IsNullOrEmpty(ta._desc))
+                    {
+                        Log("Running {0} test...", mi.Name);
+                    }
+                    else
+                    {
+                        Log("Running {0} test...", ta._desc);
+                    }
+                }
+                mi.Invoke(this, null);
+                _activeTest = null;
+            }
+        }
+
+        [Test("Ship's cargo")]
         private void ListShipsCargoTest()
         {
             _state = TestState.Idle;
@@ -145,6 +128,7 @@
             }
         }
 
+        [Test("Warp to bookmark")]
         private void WarpToBookmarkTest()
         {
             _state = TestState.Idle;
@@ -180,6 +164,7 @@
             folder.Delete();
         }
 
+        [Test("Create bookmark")]
         private void CreateBookmarkFolderTest()
         {
             _state = TestState.Idle;
@@ -187,6 +172,7 @@
             _directEve.CreateBookmarkFolder("Wassup Folder");
         }
 
+        [Test("Delete bookmark")]
         private void DeleteBookmarkTest()
         {
             _state = TestState.Idle;
@@ -201,6 +187,7 @@
             bookmark.Delete();
         }
 
+        [Test("Bookmark location")]
         private void BookmarkCurrentLocationTest()
         {
             _state = TestState.Idle;
@@ -210,6 +197,7 @@
             _directEve.BookmarkCurrentLocation("Wassup", "This is the drinking bar", folder != null ? folder.Id : (long?)null);
         }
 
+        [Test("Refresh bookmarks")]
         private void RefreshBookmarksTest()
         {
             _state = TestState.Idle;
@@ -218,6 +206,7 @@
             _directEve.RefreshBookmarks();
         }
 
+        [Test("List bookmarks")]
         private void ListBookmarksTest()
         {
             _state = TestState.Idle;
@@ -257,6 +246,7 @@
             }
         }
 
+        [Test]
         private void RecallDronesTest()
         {
             _state = TestState.Idle;
@@ -276,6 +266,7 @@
             _directEve.ExecuteCommand(DirectCmd.CmdDronesReturnToBay);
         }
 
+        [Test]
         private void LaunchDronesTest()
         {
             _state = TestState.Idle;
@@ -303,6 +294,7 @@
             _directEve.ActiveShip.LaunchDrones(drones);
         }
 
+        [Test]
         private void ListEntitiesTests()
         {
             _state = TestState.Idle;
@@ -311,6 +303,7 @@
                 LogEntity("Entity[" + entity.Id + "].{0}: {1}", entity);
         }
 
+        [Test]
         private void ActiveShipTests()
         {
             _state = TestState.Idle;
@@ -330,6 +323,7 @@
             LogEntity("ActiveShip.Entity.{0}: {1}", _directEve.ActiveShip.Entity);
         }
 
+        [Test]
         private void ListWindowsTest()
         {
             _state = TestState.Idle;
@@ -351,6 +345,7 @@
             }
         }
 
+        [Test]
         private void MeTests()
         {
             _state = TestState.Idle;
@@ -361,6 +356,7 @@
             Log("Me.Wealth: {0}", _directEve.Me.Wealth);
         }
 
+        [Test]
         private void SessionTests()
         {
             _state = TestState.Idle;
@@ -444,9 +440,20 @@
 
         private void ExecuteTest_Click(object sender, EventArgs e)
         {
-            _state = (TestState) TestStatesComboBox.SelectedIndex;
+            _state = TestState.RunTest;
+            _activeTest = TestStatesComboBox.Text;
             if (TestStatesComboBox.SelectedIndex < TestStatesComboBox.Items.Count - 1)
                 TestStatesComboBox.SelectedIndex++;
+            ExecuteTest.Enabled = false;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(_activeTest))
+            {
+                ExecuteTest.Enabled = true;
+            }
+            timer1.Enabled = true;
         }
     }
 }
