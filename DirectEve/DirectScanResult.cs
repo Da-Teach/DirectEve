@@ -24,5 +24,10 @@ namespace DirectEve
             _ball = ball;
             _celestialRec = celestialRec;
         }
+
+        // return these as strings for now
+        public string SlimItem { get { return _slimItem.GetPyType().ToString(); } }
+        public string Ball { get { return _ball.GetPyType().ToString(); } }
+        public string Celestial { get { return _celestialRec.GetPyType().ToString(); } }
     }
 }

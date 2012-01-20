@@ -28,6 +28,7 @@
         private DirectEve _directEve;
         private TestState _state;
         private string _activeTest;
+        private int _frameCount;
 
         private enum TestState
         {
@@ -381,6 +382,87 @@
             Log("Session.IsInSpace: {0}", _directEve.Session.IsInSpace);
             Log("Session.IsInStation: {0}", _directEve.Session.IsInStation);
             Log("Session.IsReady: {0}", _directEve.Session.IsReady);
+        }
+
+        [Test]
+        private void OpenScanner()
+        {
+            _state = TestState.Idle;
+
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner == null)
+            {
+                _directEve.ExecuteCommand(DirectCmd.OpenScanner);
+            }
+        }
+
+        [Test]
+        private void IsScannerReady()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                Log("scanner: {0}", scanner);
+            }
+            else
+            {
+                Log("scanner not ready");
+            }
+        }
+
+        [Test]
+        private void SelectDirectionalScan()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                if (scanner.GetSelectedIdx() != 1)
+                {
+                    scanner.SelectByIdx(1); // select dscan tab
+                }
+            }
+            else
+            {
+                Log("scanner not ready");
+            }
+        }
+        
+        [Test]
+        private void DoDirectionalScan()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                scanner.DirectionSearch();
+            }
+        }
+
+        [Test]
+        private void DumpScanResults()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                foreach (var result in scanner.ScanResults)
+                {
+                    Log("SR: {0} -- {1} -- {2}", result.SlimItem, result.Ball, result.Celestial);
+                }
+            }
+        }
+
+        [Test]
+        private void CloseScanner()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                scanner.Close();            
+            }
         }
 
         private void LogItem(string format, DirectItem item)
