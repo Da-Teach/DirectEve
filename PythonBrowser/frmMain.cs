@@ -122,40 +122,40 @@ namespace PythonBrowser
                     {
                         _doTest = false;
 
-                        //pyObject = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("invCache").Attribute("inventories").Call("keys");
+                        // Make eve reload the compiled code file (stupid DiscardCode function :)
+                        pySharp.Import("nasty").Attribute("nasty").Attribute("compiler").Call("Load", pySharp.Import("nasty").Attribute("nasty").Attribute("compiledCodeFile"));
 
-                        //var shipid = (long)pySharp.Import("__builtin__").Attribute("eve").Attribute("session").Attribute("shipid");
-                        //pyObject = pySharp.Import("__builtin__").Attribute("eve").Call("GetInventoryFromId", shipid);
+                        // Get a reference to all code files
+                        var dict = pySharp.Import("nasty").Attribute("nasty").Attribute("compiler").Attribute("code").ToDictionary();
 
-                        //pySharp.Import("uthread").Call("new", pySharp.Import("__builtin__").Attribute("eve").Attribute("GetInventoryFromId"), shipid);
-                        //pyObject = pySharp.Import("blue").Attribute("os").Call("GetTime");
-                        /*var shipid = (long)pySharp.Import("__builtin__").Attribute("eve").Attribute("session").Attribute("shipid");
-                        pyObject = pySharp.Import("__builtin__").Attribute("eve").Call("GetInventoryFromId", shipid);
+                        // Get the magic once
+                        var magic = pySharp.Import("imp").Call("get_magic");
 
-                        var items = pyObject.Call("List").ToList();
-                        foreach(var item in items)
+                        foreach (var item in dict)
                         {
-                            if ((int)item.Attribute("quantity") < 1000)
-                                continue;
+                            // Clean up the path
+                            var path = (string)item.Key.Item(0);
+                            if (path.IndexOf(":") >= 0)
+                                path = path.Substring(path.IndexOf(":") + 1);
+                            while (path.StartsWith("/.."))
+                                path = path.Substring(3);
+                            path = "c:/dump/code" + path + "c";
 
-                            InnerSpace.Echo("TypeId " + (int)item.Attribute("typeID") + " ; Quantity " + (int)item.Attribute("quantity"));
+                            // Create the directory
+                            Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-                            var keywords = new Dictionary<string, object>
-                                           {
-                                               {"qty", 1}
-                                           };
-                            pySharp.Import("__builtin__").Attribute("eve").Call("GetInventory", 10004).CallWithKeywords("Add", keywords, item.Attribute("itemID"), item.Attribute("locationID"));
-                        }*/
-                        //pyObject = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("godma").Attribute("stateManager").Attribute("chargedAttributesByItemAttribute").DictionaryItem(shipid).DictionaryItem("shieldCharge");
-                        //pyObject = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("godma").Attribute("stateManager").Call("GetChargeValue", pyObject.Item(0), pyObject.Item(1), pyObject.Item(2), pyObject.Item(3));
+                            var file = pySharp.Import("__builtin__").Call("open", path, "wb");
+                            var time = pySharp.Import("os").Attribute("path").Call("getmtime", path);
 
-                        //pyObject = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("addressbook").Attribute("allianceContacts").Call("get", 481995776, PySharp.PyNone).Attribute("relationshipID");
-                        //pyObject = pySharp.Import("__builtin__").Attribute("uicore").Attribute("registry").Attribute("windows").Item(0).Attribute("channelID");
-                        //pyObject = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("LSC").Attribute("channels").DictionaryItem(pyObject);
-
-                        //pyObject = pySharp.Import("__builtin__").Attribute("uicore").Attribute("registry").Attribute("windows").Item(8);
-                        //pySharp.Import("uthread").Call("new", pyObject.Attribute("LoadTypeID_Ext"), 20);
-                        pySharp.Run(File.ReadAllText("C:/Downloads/tmp/dump.py"));
+                            // Write the magic
+                            file.Call("write", magic);
+                            // Write the time
+                            file.Call("write", pySharp.Import("struct").Call("pack", "<i", time));
+                            // Write the code
+                            pySharp.Import("marshal").Call("dump", item.Value.Item(0), file);
+                            // Close the file
+                            file.Call("close");
+                        }
                         InnerSpace.Echo("Done");
                     }
 
