@@ -51,10 +51,63 @@ namespace PythonBrowser
             LavishScript.Events.AttachEventTarget(LavishScript.Events.RegisterEvent("OnFrame"), OnFrame);
         }
 
-        private PyObject Evaluate(PySharp.PySharp pySharp)
+        private PyObject Evaluate(PySharp.PySharp pySharp, PyObject pyObject)
         {
-            pySharp.Run("import __builtin__\n__builtin__.evalresult = " + _evaluate);
-            return pySharp.Import("__builtin__").Attribute("evalresult");
+            // TODO: Better part splitting (e.g. bla('bla', const.bla)
+            var parts = _evaluate.Split('.');
+            if (parts.Length == 0)
+            {
+                // TODO: List imports
+                return null;
+            }
+
+            if (pyObject == null)
+                pyObject = pySharp.Import(parts[0]);
+
+            for (var i = 1; i < parts.Length; i++)
+            {
+                if (parts[i].Contains("("))
+                {
+                    // TODO: Call
+                }
+                else if (parts[i].Contains("["))
+                {
+                    var attr = parts[i].Substring(0, parts[i].IndexOf('['));
+
+                    var key = parts[i].Substring(parts[i].IndexOf('[') + 1, parts[i].IndexOf(']') - parts[i].IndexOf('[') - 1);
+                    if (key.StartsWith("'") || key.StartsWith("\""))
+                        key = key.Substring(1, key.Length - 2);
+
+                    if (!string.IsNullOrEmpty(attr))
+                        pyObject = pyObject.Attribute(attr);
+
+                    if (pyObject.GetPyType() == PyType.DictType ||
+                        pyObject.GetPyType() == PyType.DerivedDictType ||
+                        pyObject.GetPyType() == PyType.DictProxyType ||
+                        pyObject.GetPyType() == PyType.DerivedDictProxyType)
+                    {
+                        var dict = pyObject.ToDictionary();
+
+                        pyObject = PySharp.PySharp.PyZero;
+                        foreach (var dictItem in dict)
+                        {
+                            if (GetPyValue(dictItem.Key) == key)
+                                pyObject = dictItem.Value;
+                        }
+                    }
+                    else
+                    {
+                        int index;
+                        pyObject = int.TryParse(key, out index) ? pyObject.Item(index) : PySharp.PySharp.PyZero;
+                    }
+                }
+                else
+                {
+                    pyObject = pyObject.Attribute(parts[i]);
+                }
+            }
+
+            return pyObject;
         }
 
         private void OnFrame(object sender, LSEventArgs e)
@@ -109,7 +162,7 @@ namespace PythonBrowser
                     if (_doEvaluate)
                     {
                         _doEvaluate = false;
-                        pyObject = Evaluate(pySharp);
+                        pyObject = Evaluate(pySharp, pyObject);
                     }
 
                     if (pyObject != null)
