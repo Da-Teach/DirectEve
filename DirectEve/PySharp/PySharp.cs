@@ -95,7 +95,7 @@ namespace DirectEve.PySharp
                 return;
 
             // Create dummy code (needed for the new frame)
-            _dummyCode = new PyObject(this, Py.Py_CompileString("", "", 257), true);
+            _dummyCode = new PyObject(this, Py.PyCode_NewEmpty("", "", 1), true);
             // Create a new frame
             _frame = new PyObject(this, Py.PyFrame_New(Py.GetThreadState(), _dummyCode, Import("__main__").Attribute("__dict__"), Import("__main__").Attribute("__dict__")), true);
             // Exchange frames
@@ -282,16 +282,6 @@ namespace DirectEve.PySharp
                 _unicodeCache[value] = result;
             }
             return result;
-        }
-
-        /// <summary>
-        ///   Run the supplied python code
-        /// </summary>
-        /// <param name = "code"></param>
-        /// <returns></returns>
-        public bool Run(string code)
-        {
-            return Py.PyRun_SimpleString(code) == 0;
         }
 
         /// <summary>

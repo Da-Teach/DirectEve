@@ -830,28 +830,5 @@ namespace DirectEve
             var form = pySharp.Import("form");
             ThreadedCall(form.Attribute("FittingMgmt").Attribute("Open"));
         }
-
-        /// <summary>
-        /// Read a script file and execute it
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        public bool RunScript(string filename)
-        {
-            var pySharp = this.PySharp;
-            string text = "";
-
-            try
-            {
-                text = System.IO.File.ReadAllText(filename);
-            }
-            catch
-            {
-                var path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                var scriptPath = System.IO.Path.Combine(path, filename);
-                text = System.IO.File.ReadAllText(scriptPath);
-            }
-            return pySharp.Run(text);
-        }
     }
 }

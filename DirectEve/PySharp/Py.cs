@@ -253,13 +253,7 @@ namespace DirectEve.PySharp
         internal static extern IntPtr PyTuple_GetItem(IntPtr op, int index);
 
         [DllImport("python27.dll")]
-        internal static extern int PyRun_SimpleString(string s);
-
-        [DllImport("python27.dll")]
-        internal static extern IntPtr PyRun_String(string s, int start, IntPtr globals, IntPtr locals);
-
-        [DllImport("python27.dll")]
-        internal static extern IntPtr Py_CompileString(string s, string f, int start);
+        internal static extern IntPtr PyCode_NewEmpty(string filename, string funcname, int firstlineno);
 
         [DllImport("python27.dll")]
         internal static extern IntPtr PyFrame_New(IntPtr tstate, IntPtr code, IntPtr globals, IntPtr locals);
