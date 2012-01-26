@@ -374,7 +374,7 @@ namespace DirectEve
                 entity.IsTarget = true;
             }
 
-            var targeting = target.Attribute("targeting").ToList<long>();
+            var targeting = target.Attribute("targeting").ToDictionary<long>().Keys;
             foreach (var targetId in targeting)
             {
                 if (!entitiesById.TryGetValue(targetId, out entity))
