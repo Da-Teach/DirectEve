@@ -449,7 +449,15 @@
             {
                 foreach (var result in scanner.ScanResults)
                 {
-                    Log("SR: {0} -- {1} -- {2}", result.SlimItem, result.Ball, result.Celestial);
+                    var entity = result.Entity;
+                    if (entity != null && entity.IsValid)
+                    {
+                        Log("SR: {0} -- {1} -- {2}", result.Name, result.TypeName, entity.Distance);
+                    }
+                    else
+                    {
+                        Log("SR: {0} -- {1} -- <--->", result.Name, result.TypeName);
+                    }
                 }
             }
         }
