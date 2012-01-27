@@ -30,6 +30,18 @@ namespace DirectEve
 
         public bool IsReady { get; internal set; }
 
+        public int Range 
+        { 
+            get
+            {
+                return (int)PyWindow.Attribute("dir_rangeinput").Call("GetValue");
+            }
+            set 
+            {
+                PyWindow.Attribute("dir_rangeinput").Call("SetValue",value.ToString());
+            }
+        }
+
         /// <summary>
         ///   List all the scan results
         /// </summary>

@@ -428,7 +428,18 @@
                 Log("scanner not ready");
             }
         }
-        
+
+        [Test]
+        private void ScanRangeTest()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                scanner.Range = scanner.Range/2;
+            }
+        }
+
         [Test]
         private void DoDirectionalScan()
         {
