@@ -83,7 +83,7 @@
     <Compile Include="DirectReprocessingQuote.cs" />
     <Compile Include="DirectReprocessingQuoteRecoverable.cs" />
     <Compile Include="DirectReprocessingWindow.cs" />
-    <Compile Include="DirectScanResult.cs" />
+    <Compile Include="DirectDirectionalScanResult.cs" />
     <Compile Include="DirectScannerWindow.cs" />
     <Compile Include="DirectActiveShip.cs" />
     <Compile Include="DirectAgent.cs" />

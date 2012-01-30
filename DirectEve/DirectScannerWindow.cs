@@ -16,7 +16,7 @@ namespace DirectEve
 
     public class DirectScannerWindow : DirectWindow
     {
-        private List<DirectScanResult> _scanResults;
+        private List<DirectDirectionalScanResult> _scanResults;
 
         internal DirectScannerWindow(DirectEve directEve, PyObject pyWindow)
             : base(directEve, pyWindow)
@@ -47,19 +47,19 @@ namespace DirectEve
         /// </summary>
         /// <remarks>
         /// </remarks>
-        public List<DirectScanResult> ScanResults
+        public List<DirectDirectionalScanResult> ScanResults
         {
             get
             {
                 var charId = DirectEve.Session.CharacterId;
                 if (_scanResults == null && charId != null)
                 {
-                    _scanResults = new List<DirectScanResult>();
+                    _scanResults = new List<DirectDirectionalScanResult>();
                     foreach (var result in PyWindow.Attribute("scanresult").ToList())
                     {
                         // scan result is a list of tuples
                         var resultAsList = result.ToList();
-                        _scanResults.Add(new DirectScanResult(DirectEve, resultAsList[0],
+                        _scanResults.Add(new DirectDirectionalScanResult(DirectEve, resultAsList[0],
                                                               resultAsList[1], resultAsList[2]));
                     }
                 }
