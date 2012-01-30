@@ -73,6 +73,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectSkill.cs" />
+    <Compile Include="DirectSystemScanResult.cs" />
     <Compile Include="DirectBookmarkFolder.cs" />
     <Compile Include="DirectConstellation.cs" />
     <Compile Include="DirectInvType.cs" />
@@ -83,7 +85,7 @@
     <Compile Include="DirectReprocessingQuote.cs" />
     <Compile Include="DirectReprocessingQuoteRecoverable.cs" />
     <Compile Include="DirectReprocessingWindow.cs" />
-    <Compile Include="DirectScanResult.cs" />
+    <Compile Include="DirectDirectionalScanResult.cs" />
     <Compile Include="DirectScannerWindow.cs" />
     <Compile Include="DirectActiveShip.cs" />
     <Compile Include="DirectAgent.cs" />
@@ -119,7 +121,6 @@
     <Compile Include="DirectOwnContainerWindow.cs" />
     <Compile Include="DirectOwner.cs" />
     <Compile Include="DirectSession.cs" />
-    <Compile Include="DirectSkill.cs" />
     <Compile Include="DirectSolarSystem.cs" />
     <Compile Include="DirectStandings.cs" />
     <Compile Include="DirectStation.cs" />
