@@ -119,6 +119,7 @@
     <Compile Include="DirectOwnContainerWindow.cs" />
     <Compile Include="DirectOwner.cs" />
     <Compile Include="DirectSession.cs" />
+    <Compile Include="DirectSkill.cs" />
     <Compile Include="DirectSolarSystem.cs" />
     <Compile Include="DirectStandings.cs" />
     <Compile Include="DirectStation.cs" />

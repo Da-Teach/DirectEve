@@ -133,12 +133,12 @@ namespace DirectEve
         ///   Cache the GetRegions call
         /// </summary>
         private Dictionary<long, DirectSolarSystem> _solarSystems;
-        
+
         /// <summary>
         ///   Cache the GetConstellations call
         /// </summary>
         private Dictionary<long, DirectConstellation> _constellations;
-        
+
         /// <summary>
         ///   Cache the GetRegions call
         /// </summary>
@@ -794,6 +794,24 @@ namespace DirectEve
         }
 
         /// <summary>
+        /// Returns a map from all skill type ids to the skill name
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<int, string> GetAllSkills()
+        {
+            return DirectSkill.GetAllSkills(this);
+        }
+
+        /// <summary>
+        /// Return my skills
+        /// </summary>
+        /// <returns></returns>
+        public List<DirectSkill> GetMySkills()
+        {
+            return DirectSkill.GetMySkills(this);
+        }
+
+        /// <summary>
         ///   Return what "eve.LocalSvc" would return, unless the service wasn't started yet
         /// </summary>
         /// <param name = "svc"></param>
@@ -848,7 +866,7 @@ namespace DirectEve
                 return false;
 
             RegisterAppEventTime();
-            return !PySharp.Import("uthread").CallWithKeywords("new", keywords, (new object[] {pyCall}).Concat(parms).ToArray()).IsNull;
+            return !PySharp.Import("uthread").CallWithKeywords("new", keywords, (new object[] { pyCall }).Concat(parms).ToArray()).IsNull;
         }
 
         /// <summary>

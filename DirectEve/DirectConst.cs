@@ -77,6 +77,11 @@ namespace DirectEve
             get { return Const.Attribute("flagDroneBay"); }
         }
 
+        public PyObject FlagSkillInTraining
+        {
+            get { return Const.Attribute("flagSkillInTraining"); }
+        }
+
         public PyObject FlagUnlocked
         {
             get { return Const.Attribute("flagUnlocked"); }

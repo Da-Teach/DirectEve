@@ -484,6 +484,49 @@
             }
         }
 
+        [Test]
+        private void ListAllSkills()
+        {
+            foreach (var skill in _directEve.GetAllSkills())
+                Log("Skill TypeId: {0} Name: {1}", skill.Key, skill.Value);
+        }
+
+        [Test]
+        private void ListMySkills()
+        {
+            foreach (var skill in _directEve.GetMySkills())
+                Log("Skill " + 
+                    "ItemId: {4} " +
+                    "TypeId: {0} " +
+                    "FlagId: {1} " +
+                    "LocationId: {6} " +
+                    "InTraining: {2} " +
+                    "Level: {3} " +
+                    "Name: {5} " +
+                    "SkillPoints: {7} " +
+                    "SkillTimeConstant: {8}",
+                    skill.TypeId, 
+                    skill.FlagId, 
+                    skill.InTraining, 
+                    skill.Level, 
+                    skill.ItemId, 
+                    skill.Name, 
+                    skill.LocationId, 
+                    skill.SkillPoints, 
+                    skill.SkillTimeConstant);
+        }
+
+        //[Test]
+        //private void TrainFirstNonMaxxedSkill()
+        //{
+        //    var skillToTrain = _directEve.GetMySkills().Where(skill => skill.Level != 5).FirstOrDefault();
+        //    if (skillToTrain != null)
+        //    {
+        //        Log("Training {0}", skillToTrain.Name);
+        //        skillToTrain.Train();
+        //    }
+        //}
+
         private void LogItem(string format, DirectItem item)
         {
             Log(format, "ItemId", item.ItemId);
