@@ -811,6 +811,91 @@ namespace DirectEve
             return DirectSkill.GetMySkills(this);
         }
 
+
+        /// <summary>
+        ///   Gets the current skillqueue length.
+        /// </summary>        
+        /// <returns>a TimeSpan indicating the length of the queue or MaxValue if the service isn't running</returns>
+        public TimeSpan GetSkillQueueLenght()
+        {
+            return DirectSkillqueue.GetSkillQueueLenght(this);
+        }
+
+        /// <summary>
+        ///   Gets the currently trained skill levels by id.
+        /// </summary>        
+        /// <returns>a Dictionary with the skill typeId as key, and its level as value</returns>
+        public Dictionary<int, int> GetSkillLevelsById()
+        {
+            return DirectSkillqueue.GetSkillLevelsById(this);
+        }
+
+        /// <summary>
+        ///   Checks if a skill is in the current skillqueue and returns which levels are queued.
+        /// </summary>       
+        /// <param name = "skillId">TypeId of the skill to look for in the queue.</param>
+        /// <returns>a List of ints with all the levels queued for skillId</returns>
+        public IEnumerable<int> isInQueue(int skillId)
+        {
+            return DirectSkillqueue.isInQueue(this, skillId);
+        }
+
+        /// <summary>
+        ///   Basically a IntPair.
+        /// </summary>
+        public class QueueEntry
+        {
+            int skill;
+            int level;
+            public QueueEntry(int _skill, int _level)
+            {
+                skill = _skill;
+                level = _level;
+            }
+        }
+        
+        /// <summary>
+        ///   Gets a list of QueueEntries to represent the current skillqueue.
+        /// </summary>           
+        /// <returns>a List of QueueEntry</returns>
+        public List<QueueEntry> GetSkillsInQueue()
+        {
+            return DirectSkillqueue.GetSkillsInQueue(this);
+        }
+
+        /// <summary>
+        ///   Adds a skill to the end of the queue.
+        /// </summary>        
+        /// <param name = "skillId">typeId of the skill to add</param>   
+        /// <param name = "currentLevel">current level of the skill</param>
+        /// <param name = "skillLevel">level to add to the queue</param>
+        /// <returns>true if the call was successfull, false otherwise</returns>
+        public bool AddSkillToEndOfQueue(int skillId, int currentLevel, int skillLevel)
+        {
+            return DirectSkillqueue.AddSkillToEndOfQueue(this, skillId, currentLevel, skillLevel);
+        }
+
+        /// <summary>
+        ///   Adds a skill to the front of the queue and starts training it.
+        /// </summary>        
+        /// <param name = "skillId">typeId of the skill to add</param>           
+        /// <param name = "skillLevel">level to add to the queue</param>
+        /// <returns>true if the call was successfull, false otherwise</returns>
+        public bool TrainSkillNow(int skillId, int skillLevel)
+        {
+            return DirectSkillqueue.TrainSkillNow(this, skillId, skillLevel);
+        }
+
+        /// <summary>
+        ///   Injects a skill into the character's brain.
+        /// </summary>        
+        /// <param name = "skillItemId">itemId of the skill to add</param>          
+        /// <returns>true if the call was successfull, false otherwise</returns>
+        public bool InjectSkill(long skillItemId)
+        {
+            return DirectSkillqueue.InjectSkill(this, skillItemId);
+        }
+
         /// <summary>
         ///   Return what "eve.LocalSvc" would return, unless the service wasn't started yet
         /// </summary>
