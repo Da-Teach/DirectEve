@@ -78,5 +78,24 @@ namespace DirectEve
         {
             return DirectEve.Skills.AddSkillToEndOfQueue(this);
         }
+
+        /// <summary>
+        ///   Train this skill right now (add it at the start of the queue)
+        /// </summary>
+        /// <returns></returns>
+        public bool TrainNow()
+        {
+            return DirectEve.Skills.TrainSkillNow(this);
+        }
+
+        // TODO: This doesnt work :(
+        ///// <summary>
+        /////   Remove this skill from the queue (only use on skills from the MySkillQueue list)
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool RemoveFromQueue()
+        //{
+        //    return DirectEve.Skills.RemoveSkillFromQueue(this);
+        //}
     }
 }

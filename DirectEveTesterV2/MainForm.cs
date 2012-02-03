@@ -551,11 +551,11 @@
                     skill.SkillTimeConstant);
         }
 
-        [Test]
-        private void AbortTraining()
-        {
-            _directEve.Skills.AbortTraining();
-        }
+        //[Test]
+        //private void AbortTraining()
+        //{
+        //    _directEve.Skills.AbortTraining();
+        //}
 
         [Test]
         private void TrainTacticalShieldManipulation()

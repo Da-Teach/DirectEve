@@ -176,20 +176,39 @@ namespace DirectEve
             return DirectEve.ThreadedLocalSvcCall("skillqueue", "TrainSkillNow", skill.TypeId, currentLevel);
         }
 
-        /// <summary>
-        ///   Abort the current skill in training
-        /// </summary>
-        /// <returns></returns>
-        public bool AbortTraining()
-        {
-            var godma = DirectEve.GetLocalSvc("godma");
-            if (!godma.Attribute("skillHandler").IsValid)
-            {
-                DirectEve.ThreadedCall(godma.Attribute("GetSkillHandler"));
-                return false;
-            }
+        // Doesn't work
+        ///// <summary>
+        /////   Remove's a skill from the queue (note only use DirectSkill's from the MySkillQueue list!)
+        ///// </summary>
+        ///// <param name="skill"></param>
+        ///// <returns></returns>
+        //public bool RemoveSkillFromQueue(DirectSkill skill)
+        //{
+        //    if (skill.PyItem.IsValid)
+        //        return false;
 
-            return DirectEve.ThreadedCall(godma.Attribute("skillHandler").Attribute("CharStopTrainingSkill"));
-        }
+        //    DirectEve.GetLocalSvc("skillqueue").Call("RemoveSkillFromQueue", skill.TypeId, skill.Level);
+        //    if (!DirectEve.GetLocalSvc("skillqueue").Attribute("cachedSkillQueue").IsValid)
+        //        return false;
+
+        //    return DirectEve.ThreadedLocalSvcCall("skillqueue", "CommitTransaction");
+        //}
+        
+        // This only pauses
+        ///// <summary>
+        /////   Abort the current skill in training
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool AbortTraining()
+        //{
+        //    var godma = DirectEve.GetLocalSvc("godma");
+        //    if (!godma.Attribute("skillHandler").IsValid)
+        //    {
+        //        DirectEve.ThreadedCall(godma.Attribute("GetSkillHandler"));
+        //        return false;
+        //    }
+
+        //    return DirectEve.ThreadedCall(godma.Attribute("skillHandler").Attribute("CharStopTrainingSkill"));
+        //}
     }
 }
