@@ -498,6 +498,20 @@
         }
 
         [Test]
+        private void ListMySkillQueue()
+        {
+            if (!_directEve.Skills.IsReady)
+            {
+                Log("Skills arent ready yet");
+                return;
+            }
+
+            foreach (var skill in _directEve.Skills.MySkillQueue)
+                Log("Skill TypeId: {0} TypeName: {1} Level: {2}", skill.TypeId, skill.TypeName, skill.Level);
+        }
+
+
+        [Test]
         private void ListMySkills()
         {
             if (!_directEve.Skills.IsReady)
@@ -537,16 +551,24 @@
                     skill.SkillTimeConstant);
         }
 
-        //[Test]
-        //private void TrainFirstNonMaxxedSkill()
-        //{
-        //    var skillToTrain = _directEve.GetMySkills().Where(skill => skill.Level != 5).FirstOrDefault();
-        //    if (skillToTrain != null)
-        //    {
-        //        Log("Training {0}", skillToTrain.Name);
-        //        skillToTrain.Train();
-        //    }
-        //}
+        [Test]
+        private void AbortTraining()
+        {
+            _directEve.Skills.AbortTraining();
+        }
+
+        [Test]
+        private void TrainTacticalShieldManipulation()
+        {
+            var skill = _directEve.Skills.MySkills.FirstOrDefault(s => s.TypeId == 3420);
+            if (skill == null)
+            {
+                Log("No non-level 5 skill found");
+                return;
+            }
+
+            skill.AddToEndOfQueue();
+        }
 
         private void LogItem(string format, DirectItem item)
         {

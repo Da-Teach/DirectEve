@@ -465,6 +465,7 @@ namespace DirectEve
                 _navigation = null;
                 _session = null;
                 _login = null;
+                _skills = null;
 
                 // Remove the link
                 PySharp = null;
