@@ -120,6 +120,29 @@ namespace DirectEve
             return DirectEve.ThreadedCall(PyWindow.Attribute("CloseByUser"));
         }
 
+        /// <summary>
+        ///   Find a child object (usually button)
+        /// </summary>
+        /// <param name = "container"></param>
+        /// <param name = "name"></param>
+        /// <returns></returns>
+        internal static PyObject FindChild(PyObject container, string name)
+        {
+            var childs = container.Attribute("children").Attribute("_childrenObjects").ToList();
+            return childs.Find(c => String.Compare((string) c.Attribute("_name"), name) == 0) ?? global::DirectEve.PySharp.PySharp.PyZero;
+        }
+
+        /// <summary>
+        ///   Find a child object (using the supplied path)
+        /// </summary>
+        /// <param name = "container"></param>
+        /// <param name = "path"></param>
+        /// <returns></returns>
+        internal static PyObject FindChildWithPath(PyObject container, IEnumerable<string> path)
+        {
+            return path.Aggregate(container, FindChild);
+        }
+
         #region Nested type: WindowType
 
         private class WindowType
@@ -137,28 +160,5 @@ namespace DirectEve
         }
 
         #endregion
-
-        /// <summary>
-        ///   Find a child object (usually button)
-        /// </summary>
-        /// <param name="container"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        internal static PyObject FindChild(PyObject container, string name)
-        {
-            var childs = container.Attribute("children").Attribute("_childrenObjects").ToList();
-            return childs.Find(c => String.Compare((string)c.Attribute("_name"), name) == 0) ?? global::DirectEve.PySharp.PySharp.PyZero;
-        }
-
-        /// <summary>
-        ///   Find a child object (using the supplied path)
-        /// </summary>
-        /// <param name="container"></param>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        internal static PyObject FindChildWithPath(PyObject container, IEnumerable<string> path)
-        {
-            return path.Aggregate(container, FindChild);
-        }
     }
 }

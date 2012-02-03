@@ -44,7 +44,7 @@ namespace DirectEve
         /// <returns></returns>
         public static DirectLocation GetLocation(DirectEve directEve, long locationId)
         {
-            bool isValid = false;
+            var isValid = false;
             string name = null;
             DirectRegion region = null;
             DirectConstellation constellation = null;
@@ -85,10 +85,10 @@ namespace DirectEve
             result.IsValid = isValid;
             result.Name = name;
             result.LocationId = locationId;
-            result.RegionId = region != null ? region.Id : (long?)null;
-            result.ConstellationId = constellation != null ? constellation.Id : (long?)null;
-            result.SolarSystemId = solarSystem != null ? solarSystem.Id : (long?)null;
-            result.ItemId = station != null ? station.Id : (long?)null;
+            result.RegionId = region != null ? region.Id : (long?) null;
+            result.ConstellationId = constellation != null ? constellation.Id : (long?) null;
+            result.SolarSystemId = solarSystem != null ? solarSystem.Id : (long?) null;
+            result.ItemId = station != null ? station.Id : (long?) null;
             return result;
         }
 

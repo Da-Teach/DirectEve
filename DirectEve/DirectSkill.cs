@@ -1,189 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 namespace DirectEve
 {
+    using global::DirectEve.PySharp;
+
     /// <summary>
-    /// Skill in the game
+    ///   Skill in the game
     /// </summary>
-    public class DirectSkill : DirectObject
+    public class DirectSkill : DirectItem
     {
-        long itemId, locationId;
-        int typeId, flagId;
+        private int? _level;
+        private PyObject _pyGodmaItem;
+        private int? _skillPoints;
+        private int? _skillTimeConstant;
 
-        /// <summary>
-        /// item id
-        /// </summary>
-        public long ItemId
+        internal DirectSkill(DirectEve directEve, PyObject pySkill) : base(directEve)
+        {
+            PyItem = pySkill;
+        }
+
+        internal PyObject PyGodmaItem
         {
             get
             {
-                return itemId;
+                if (!PyItem.IsValid)
+                    return global::DirectEve.PySharp.PySharp.PyZero;
+
+                return _pyGodmaItem ?? (_pyGodmaItem = DirectEve.GetLocalSvc("godma").Call("GetItem", ItemId));
             }
         }
 
         /// <summary>
-        /// typeID of the skill
-        /// </summary>
-        public int TypeId
-        {
-            get
-            {
-                return typeId;
-            }
-        }
-
-        /// <summary>
-        /// flag of skill changes to show if it's beaing trained
-        /// </summary>
-        public int FlagId
-        {
-            get
-            {
-                return flagId;
-            }
-        }
-
-        /// <summary>
-        /// no idea what this is
-        /// </summary>
-        public long LocationId
-        {
-            get
-            {
-                return locationId;
-            }
-        }
-
-        /// <summary>
-        /// True if this skill is currently training
+        ///   Are we currently training this skill?
         /// </summary>
         public bool InTraining
         {
-            get
-            {
-                return FlagId == new DirectConst(DirectEve).FlagSkillInTraining.ToInt();
-            }
+            get { return FlagId == DirectEve.Const.FlagSkillInTraining; }
         }
 
         /// <summary>
-        /// Level of skill
+        ///   Level of skill
         /// </summary>
         public int Level
         {
-            get
-            {
-                // CharStartTrainingSkill
-                return DirectEve.GetLocalSvc("godma").Call("GetItem", ItemId).Attribute("skillLevel").ToInt();
-                //sm.GetService('godma').GetItem(skillID)
-                //return 0;
-            }
+            get { return (int) (_level ?? (_level = (int) PyGodmaItem.Attribute("skillLevel"))); }
+            set { _level = value; }
         }
 
         /// <summary>
-        /// skill name
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return FindName(DirectEve, TypeId);
-            }
-        }
-
-        /// <summary>
-        /// Number of points in this skill
+        ///   Number of points in this skill
         /// </summary>
         public int SkillPoints
         {
-            get
-            {
-                return DirectEve.GetLocalSvc("godma").Call("GetItem", ItemId).Attribute("skillPoints").ToInt();
-            }
+            get { return (int) (_skillPoints ?? (_skillPoints = (int) PyGodmaItem.Attribute("skillPoints"))); }
         }
 
         /// <summary>
-        /// Time multiplier to indicate relative training time
+        ///   Time multiplier to indicate relative training time
         /// </summary>
         public int SkillTimeConstant
         {
-            get
-            {
-                return FindSkillTimeConstant(DirectEve, ItemId);
-            }
+            get { return (int) (_skillTimeConstant ?? (_skillTimeConstant = (int) PyGodmaItem.Attribute("skillTimeConstant"))); }
         }
 
         /// <summary>
-        /// Start training this skill - I think this is from before queues
+        ///   Enqueue this skill at the end of the queue
         /// </summary>
-        //public void Train()
-        //{
-        //    // sm.GetService('godma').GetSkillHandler().CharStartTrainingSkill(skillX.itemID, skillX.locationID)
-        //    DirectEve.GetLocalSvc("godma").Call("GetSkillHandler").Call("CharStartTrainingSkill", ItemId, locationId);
-        //}
-
-        static Dictionary<int, string> skillNames = new Dictionary<int, string>();
-
-        internal static string FindName(DirectEve directEve, int typeId)
+        /// <returns></returns>
+        public bool AddToEndOfQueue()
         {
-            string name;
-            if (!skillNames.TryGetValue(typeId, out name))
-            {
-                name = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypes").Call("Get", typeId).Attribute("name").ToUnicodeString();
-                skillNames.Add(typeId, name);
-            }
-            return name;
+            return DirectEve.Skills.AddSkillToEndOfQueue(this);
         }
-
-        static Dictionary<long, int> skillTimeConstants = new Dictionary<long, int>();
-
-        internal static int FindSkillTimeConstant(DirectEve directEve, long itemId)
-        {
-            int skillTimeConstant;
-            if (!skillTimeConstants.TryGetValue(itemId, out skillTimeConstant))
-            {
-                skillTimeConstant = directEve.GetLocalSvc("godma").Call("GetItem", itemId).Attribute("skillTimeConstant").ToInt();
-                skillTimeConstants.Add(itemId, skillTimeConstant);
-            }
-            return skillTimeConstant;
-        }
-
-        internal DirectSkill(DirectEve directEve, long itemId, int typeId, int flagId, long locationId ) : base(directEve)
-        {
-            this.itemId = itemId;
-            this.typeId = typeId;
-            this.flagId = flagId;
-            this.locationId = locationId;
-        }
-
-        internal static Dictionary<int, string> GetAllSkills(DirectEve directEve)
-        {
-            // __builtin__.sm.services["skills"].allskills[0]
-            var allskills = directEve.PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("skills").Call("GetAllSkills").ToList();
-
-            var skills = new Dictionary<int, string>();
-
-            foreach (var skill in allskills) {
-                var typeId = skill.Attribute("typeID").ToInt();
-                skills.Add(typeId, FindName(directEve, typeId));
-            }
-            return skills;
-        }
-
-        internal static List<DirectSkill> GetMySkills(DirectEve directEve)
-        {
-            var myskills = directEve.GetLocalSvc("skills").Call("MySkills").ToList();
-
-            return myskills.Select(skill => new DirectSkill(directEve,
-                skill.Attribute("itemID").ToLong(),
-                skill.Attribute("typeID").ToInt(),
-                skill.Attribute("flagID").ToInt(),
-                skill.Attribute("locationID").ToLong()
-                )).ToList();
-        }
-
-        
     }
 }

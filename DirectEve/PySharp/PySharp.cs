@@ -29,11 +29,6 @@ namespace DirectEve.PySharp
         private PyObject _frame;
 
         /// <summary>
-        ///   Old frame
-        /// </summary>
-        private PyObject _oldFrame;
-
-        /// <summary>
         ///   Import cache
         /// </summary>
         private Dictionary<string, PyObject> _importCache;
@@ -47,6 +42,11 @@ namespace DirectEve.PySharp
         ///   Long cache
         /// </summary>
         private Dictionary<long, PyObject> _longCache;
+
+        /// <summary>
+        ///   Old frame
+        /// </summary>
+        private PyObject _oldFrame;
 
         /// <summary>
         ///   PyFalse cache

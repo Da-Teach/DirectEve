@@ -17,6 +17,10 @@ namespace DirectEve
         }
 
         internal DirectEve DirectEve { get; private set; }
-        internal PySharp.PySharp PySharp { get { return DirectEve.PySharp; } }
+
+        internal PySharp.PySharp PySharp
+        {
+            get { return DirectEve.PySharp; }
+        }
     }
 }

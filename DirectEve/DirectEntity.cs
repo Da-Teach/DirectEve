@@ -23,13 +23,13 @@ namespace DirectEve
         private int? _corpId;
         private double? _distance;
         private long? _followId;
+        private string _givenName;
         private bool? _hasExploded;
         private bool? _hasReleased;
         private bool? _isCloaked;
         private bool? _isEmpty;
         private int? _mode;
         private string _name;
-        private string _givenName;
         private int? _ownerId;
         private double? _shieldPct;
         private PyObject _slimItem;
@@ -251,7 +251,7 @@ namespace DirectEve
             get
             {
                 if (_velocity == null)
-                    _velocity = (double)_ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetSimTime")).Call("Length");
+                    _velocity = (double) _ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetSimTime")).Call("Length");
 
                 return _velocity.Value;
             }
@@ -532,7 +532,6 @@ namespace DirectEve
             return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
         }
 
-        
 
         /// <summary>
         ///   Warp to target

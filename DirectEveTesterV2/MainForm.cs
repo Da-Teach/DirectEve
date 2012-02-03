@@ -487,14 +487,35 @@
         [Test]
         private void ListAllSkills()
         {
-            foreach (var skill in _directEve.GetAllSkills())
-                Log("Skill TypeId: {0} Name: {1}", skill.Key, skill.Value);
+            if (!_directEve.Skills.IsReady)
+            {
+                Log("Skills arent ready yet");
+                return;
+            }
+
+            foreach (var skill in _directEve.Skills.AllSkills)
+                Log("Skill TypeId: {0} Name: {1}", skill.TypeId, skill.TypeName);
         }
 
         [Test]
         private void ListMySkills()
         {
-            foreach (var skill in _directEve.GetMySkills())
+            if (!_directEve.Skills.IsReady)
+            {
+                Log("Skills arent ready yet");
+                return;
+            }
+
+            if (!_directEve.Skills.AreMySkillsReady)
+            {
+                _directEve.Skills.RefreshMySkills();
+
+                Log("MySkills arent ready yet");
+                return;
+            }
+
+
+            foreach (var skill in _directEve.Skills.MySkills)
                 Log("Skill " + 
                     "ItemId: {4} " +
                     "TypeId: {0} " +
@@ -510,7 +531,7 @@
                     skill.InTraining, 
                     skill.Level, 
                     skill.ItemId, 
-                    skill.Name, 
+                    skill.TypeName, 
                     skill.LocationId, 
                     skill.SkillPoints, 
                     skill.SkillTimeConstant);

@@ -170,7 +170,7 @@ namespace DirectEve.PySharp
 
         internal static IntPtr GetThreadState()
         {
-            return Py.GetStruct("_PyThreadState_Current");
+            return GetStruct("_PyThreadState_Current");
         }
 
         internal static IntPtr ExchangePyFrame(IntPtr frame)

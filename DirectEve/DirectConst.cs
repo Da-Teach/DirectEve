@@ -77,9 +77,9 @@ namespace DirectEve
             get { return Const.Attribute("flagDroneBay"); }
         }
 
-        public PyObject FlagSkillInTraining
+        public int FlagSkillInTraining
         {
-            get { return Const.Attribute("flagSkillInTraining"); }
+            get { return (int) Const.Attribute("flagSkillInTraining"); }
         }
 
         public PyObject FlagUnlocked
@@ -95,6 +95,11 @@ namespace DirectEve
         public PyObject CategoryModule
         {
             get { return Const.Attribute("categoryModule"); }
+        }
+
+        public PyObject CategorySkill
+        {
+            get { return Const.Attribute("categorySkill"); }
         }
 
         public PyObject GroupAuditLogSecureContainer

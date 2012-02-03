@@ -1,6 +1,14 @@
-﻿namespace DirectEve
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
+namespace DirectEve
 {
-    using System.Linq;
     using System.Collections.Generic;
     using global::DirectEve.PySharp;
 
@@ -10,13 +18,13 @@
 
         internal DirectStation(DirectEve directEve, PyObject pyo) : base(directEve)
         {
-            Id = (long)pyo.Attribute("stationID");
-            Name = (string)pyo.Attribute("stationName");
-            X = (double)pyo.Attribute("x");
-            Y = (double)pyo.Attribute("y");
-            Z = (double)pyo.Attribute("z");
-            TypeId = (int)pyo.Attribute("stationTypeID");
-            SolarSystemId = (long)pyo.Attribute("solarSystemID");
+            Id = (long) pyo.Attribute("stationID");
+            Name = (string) pyo.Attribute("stationName");
+            X = (double) pyo.Attribute("x");
+            Y = (double) pyo.Attribute("y");
+            Z = (double) pyo.Attribute("z");
+            TypeId = (int) pyo.Attribute("stationTypeID");
+            SolarSystemId = (long) pyo.Attribute("solarSystemID");
         }
 
         public long Id { get; private set; }
@@ -26,7 +34,8 @@
         public double Z { get; private set; }
 
         public long SolarSystemId { get; private set; }
-        public DirectSolarSystem SolarSystem 
+
+        public DirectSolarSystem SolarSystem
         {
             get
             {
@@ -40,7 +49,7 @@
             var result = new Dictionary<long, DirectStation>();
 
             var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("stations").Attribute("data").ToDictionary<long>();
-            foreach(var pair in pyDict)
+            foreach (var pair in pyDict)
                 result[pair.Key] = new DirectStation(directEve, pair.Value);
 
             return result;

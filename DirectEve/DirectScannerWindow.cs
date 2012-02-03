@@ -30,16 +30,10 @@ namespace DirectEve
 
         public bool IsReady { get; internal set; }
 
-        public int Range 
-        { 
-            get
-            {
-                return (int)PyWindow.Attribute("dir_rangeinput").Call("GetValue");
-            }
-            set 
-            {
-                PyWindow.Attribute("dir_rangeinput").Call("SetValue",value.ToString());
-            }
+        public int Range
+        {
+            get { return (int) PyWindow.Attribute("dir_rangeinput").Call("GetValue"); }
+            set { PyWindow.Attribute("dir_rangeinput").Call("SetValue", value.ToString()); }
         }
 
         /// <summary>
@@ -60,7 +54,7 @@ namespace DirectEve
                         // scan result is a list of tuples
                         var resultAsList = result.ToList();
                         _scanResults.Add(new DirectDirectionalScanResult(DirectEve, resultAsList[0],
-                                                              resultAsList[1], resultAsList[2]));
+                                                                         resultAsList[1], resultAsList[2]));
                     }
                 }
 

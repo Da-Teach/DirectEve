@@ -17,6 +17,11 @@ namespace DirectEve
     public class DirectContainer : DirectInvType
     {
         /// <summary>
+        ///   Item Id
+        /// </summary>
+        private long _itemId;
+
+        /// <summary>
         ///   Items cache
         /// </summary>
         private List<DirectItem> _items;
@@ -46,18 +51,13 @@ namespace DirectEve
         /// </summary>
         private string _windowName;
 
-        /// <summary>
-        ///   Item Id
-        /// </summary>
-        private long _itemId;
-
         internal DirectContainer(DirectEve directEve, PyObject pyInventory, PyObject pyFlag)
             : base(directEve)
         {
             _pyInventory = pyInventory;
             _pyFlag = pyFlag;
 
-            TypeId = (int)pyInventory.Attribute("typeID");
+            TypeId = (int) pyInventory.Attribute("typeID");
 
             if (!pyInventory.Attribute("listed").IsValid)
                 DirectItem.RefreshItems(directEve, pyInventory, pyFlag);
@@ -70,7 +70,7 @@ namespace DirectEve
         /// <param name = "pyInventory"></param>
         /// <param name = "pyFlag"></param>
         /// <param name = "windowName"></param>
-        internal DirectContainer(DirectEve directEve, PyObject pyInventory, PyObject pyFlag, string windowName) 
+        internal DirectContainer(DirectEve directEve, PyObject pyInventory, PyObject pyFlag, string windowName)
             : this(directEve, pyInventory, pyFlag)
         {
             _windowName = windowName;
@@ -429,7 +429,7 @@ namespace DirectEve
             keywords.Add("qty", quantity);
             if (_pyFlag.IsValid)
                 keywords.Add("flag", _pyFlag);
-            if (!_pyFlag.IsValid && GroupId == (int)DirectEve.Const.GroupAuditLogSecureContainer)
+            if (!_pyFlag.IsValid && GroupId == (int) DirectEve.Const.GroupAuditLogSecureContainer)
                 keywords.Add("flag", DirectEve.Const.FlagUnlocked);
             return DirectEve.ThreadedCallWithKeywords(_pyInventory.Attribute("Add"), keywords, item.ItemId, item.LocationId);
         }
@@ -451,7 +451,7 @@ namespace DirectEve
             var keywords = new Dictionary<string, object>();
             if (_pyFlag.IsValid)
                 keywords.Add("flag", _pyFlag);
-            if (!_pyFlag.IsValid && GroupId == (int)DirectEve.Const.GroupAuditLogSecureContainer)
+            if (!_pyFlag.IsValid && GroupId == (int) DirectEve.Const.GroupAuditLogSecureContainer)
                 keywords.Add("flag", DirectEve.Const.FlagUnlocked);
             return DirectEve.ThreadedCallWithKeywords(_pyInventory.Attribute("MultiAdd"), keywords, items.Select(i => i.ItemId), items.First().LocationId);
         }

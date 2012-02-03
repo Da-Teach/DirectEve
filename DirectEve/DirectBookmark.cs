@@ -28,8 +28,8 @@ namespace DirectEve
             BookmarkId = (long?) pyBookmark.Attribute("bookmarkID");
             CreatedOn = (DateTime?) pyBookmark.Attribute("created");
             ItemId = (long?) pyBookmark.Attribute("itemID");
-            LocationId = (long?)pyBookmark.Attribute("locationID");
-            FolderId = (long?)pyBookmark.Attribute("folderID");
+            LocationId = (long?) pyBookmark.Attribute("locationID");
+            FolderId = (long?) pyBookmark.Attribute("folderID");
             Title = (string) pyBookmark.Attribute("memo");
             if (!String.IsNullOrEmpty(Title) && Title.Contains("\t"))
             {

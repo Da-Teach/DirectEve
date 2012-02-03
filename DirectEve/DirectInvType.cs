@@ -16,26 +16,26 @@ namespace DirectEve
         private double? _basePrice;
         private double? _capacity;
         private int? _categoryId;
+        private string _categoryName;
         private double? _chanceOfDuplicating;
         private int? _dataId;
         private string _description;
         private int? _graphicId;
         private int? _groupId;
+        private string _groupName;
         private int? _iconId;
         private int? _marketGroupId;
         private double? _mass;
         private int? _portionSize;
         private bool? _published;
+        private PyObject _pyInvCategory;
+        private PyObject _pyInvGroup;
         private PyObject _pyInvType;
         private int? _raceId;
         private double? _radius;
         private int? _soundId;
         private string _typeName;
         private double? _volume;
-        private PyObject _pyInvGroup;
-        private string _groupName;
-        private PyObject _pyInvCategory;
-        private string _categoryName;
 
         internal DirectInvType(DirectEve directEve)
             : base(directEve)
@@ -75,7 +75,7 @@ namespace DirectEve
             get
             {
                 if (string.IsNullOrEmpty(_groupName))
-                    _groupName = (string)PyInvGroup.Attribute("groupName");
+                    _groupName = (string) PyInvGroup.Attribute("groupName");
 
                 return _groupName;
             }
@@ -86,7 +86,7 @@ namespace DirectEve
             get
             {
                 if (string.IsNullOrEmpty(_categoryName))
-                    _categoryName = (string)PyInvCategory.Attribute("categoryName");
+                    _categoryName = (string) PyInvCategory.Attribute("categoryName");
 
                 return _categoryName;
             }

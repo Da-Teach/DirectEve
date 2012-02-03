@@ -18,9 +18,9 @@ namespace DirectEve
     {
         private PyObject _ball;
         private PyObject _celestialRec;
-        private PyObject _slimItem;
-        private string _name;
         private int? _itemId;
+        private string _name;
+        private PyObject _slimItem;
 
         internal DirectDirectionalScanResult(DirectEve directEve, PyObject slimItem, PyObject ball, PyObject celestialRec)
             : base(directEve)
@@ -29,31 +29,30 @@ namespace DirectEve
             _ball = ball;
             _celestialRec = celestialRec;
 
-            if(_slimItem.IsValid)
+            if (_slimItem.IsValid)
             {
                 TypeId = (int) _slimItem.Attribute("typeID");
             }
             else if (_celestialRec.IsValid)
             {
-                TypeId = (int)_celestialRec.Attribute("typeID");
+                TypeId = (int) _celestialRec.Attribute("typeID");
             }
         }
 
-        public int ItemID 
-        { 
+        public int ItemID
+        {
             get
             {
                 if (!_itemId.HasValue)
                 {
                     if (_slimItem.IsValid)
                     {
-                        _itemId = (int?)_slimItem.Attribute("itemID");
+                        _itemId = (int?) _slimItem.Attribute("itemID");
                     }
                     else if (_celestialRec.IsValid)
                     {
-                        _itemId = (int?)_celestialRec.Attribute("id");
+                        _itemId = (int?) _celestialRec.Attribute("id");
                     }
-
                 }
                 return _itemId.Value;
             }
@@ -67,7 +66,7 @@ namespace DirectEve
                 {
                     if (_slimItem.IsValid)
                     {
-                        _name = (string)PySharp.Import("uix").Call("GetSlimItemName", _slimItem);
+                        _name = (string) PySharp.Import("uix").Call("GetSlimItemName", _slimItem);
                     }
                     else if (_celestialRec.IsValid)
                     {
@@ -75,11 +74,11 @@ namespace DirectEve
                         _name = (string) PyInvType.Attribute("name");
                         if (this.GroupId == (int) c["groupHarvestableCloud"])
                         {
-                            _name = (string)PySharp.Import("localization").Call("GetByLabel", "UI/Inventory/SlimItemNames/SlimHarvestableCloud", _name);
+                            _name = (string) PySharp.Import("localization").Call("GetByLabel", "UI/Inventory/SlimItemNames/SlimHarvestableCloud", _name);
                         }
                         else if (this.CategoryId == (int) c["categoryAsteroid"])
                         {
-                            _name = (string)PySharp.Import("localization").Call("GetByLabel", "UI/Inventory/SlimItemNames/SlimAsteroid", _name);
+                            _name = (string) PySharp.Import("localization").Call("GetByLabel", "UI/Inventory/SlimItemNames/SlimAsteroid", _name);
                         }
                         else
                         {
