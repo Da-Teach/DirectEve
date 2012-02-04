@@ -112,6 +112,28 @@ namespace DirectEve
             return directEve.ThreadedCallWithKeywords(bookmarkLocation, keywords, itemId, ownerId, name, comment, typeId);
         }
 
+        internal static bool RefreshPnPWindow(DirectEve directEve)
+        {
+            return directEve.ThreadedLocalSvcCall("bookmarkSvc", "RefreshWindow"); ;
+        }
+
+        public bool CopyBookmarksToCorpFolder()
+        {
+
+            if ((!BookmarkId.HasValue) || (DirectEve.Session.CorporationId == null))
+                return false;
+
+            return DirectEve.ThreadedLocalSvcCall("bookmarkSvc", "MoveBookmarksToFolder", DirectEve.Session.CorporationId, DirectEve.Session.CorporationId, PyBookmark.Attribute("bookmarkID"));
+        }
+
+        public bool UpdateBookmark(string name, string comment)
+        {
+            if (!BookmarkId.HasValue)
+                return false;
+
+            return DirectEve.ThreadedLocalSvcCall("bookmarkSvc", "UpdateBookmark", PyBookmark.Attribute("bookmarkID"), PyBookmark.Attribute("ownerID"), name, comment, PyBookmark.Attribute("folderID"));
+        }
+
         public bool WarpTo()
         {
             return WarpTo(0);
