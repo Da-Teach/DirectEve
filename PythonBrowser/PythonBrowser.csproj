@@ -66,6 +66,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Innerspace\Lavish.InnerSpace.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -87,6 +88,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PySharp\IntPtrExtension.cs" />
     <Compile Include="PySharp\Py.cs" />
+    <Compile Include="PySharp\PyDynamic.cs" />
     <Compile Include="PySharp\PyObject.cs" />
     <Compile Include="PySharp\PySharp.cs" />
     <Compile Include="PySharp\PyType.cs" />

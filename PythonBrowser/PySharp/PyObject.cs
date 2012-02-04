@@ -14,7 +14,7 @@ namespace PythonBrowser.PySharp
     using System.Linq;
     using System.Runtime.InteropServices;
 
-    internal class PyObject
+    internal partial class PyObject
     {
         /// <summary>
         ///   Attribute cache
@@ -950,6 +950,8 @@ namespace PythonBrowser.PySharp
                 HandlePythonError();
             }
         }
+
+
 
         /// <summary>
         ///   Handle a python error (e.g. clear error)

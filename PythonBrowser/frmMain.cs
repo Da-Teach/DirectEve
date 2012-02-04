@@ -114,48 +114,54 @@ namespace PythonBrowser
         {
             try
             {
-                using (var pySharp = new PySharp.PySharp())
+                using (dynamic pySharp = new PySharp.PySharp())
                 {
-                    PyObject pyObject = null;
+                    dynamic pyObject = null;
 
                     if (_doTest)
                     {
                         _doTest = false;
 
-                        // Make eve reload the compiled code file (stupid DiscardCode function :)
-                        pySharp.Import("nasty").Attribute("nasty").Attribute("compiler").Call("Load", pySharp.Import("nasty").Attribute("nasty").Attribute("compiledCodeFile"));
+                        pyObject = pySharp.__builtin__.eve.session;
 
-                        // Get a reference to all code files
-                        var dict = pySharp.Import("nasty").Attribute("nasty").Attribute("compiler").Attribute("code").ToDictionary();
+                        var file = pySharp.__builtin__.open("c:/blaat.txt", "wb");
+                        file.write("hello world");
+                        file.close();
 
-                        // Get the magic once
-                        var magic = pySharp.Import("imp").Call("get_magic");
+                        //// Make eve reload the compiled code file (stupid DiscardCode function :)
+                        //pySharp.Import("nasty").Attribute("nasty").Attribute("compiler").Call("Load", pySharp.Import("nasty").Attribute("nasty").Attribute("compiledCodeFile"));
 
-                        foreach (var item in dict)
-                        {
-                            // Clean up the path
-                            var path = (string)item.Key.Item(0);
-                            if (path.IndexOf(":") >= 0)
-                                path = path.Substring(path.IndexOf(":") + 1);
-                            while (path.StartsWith("/.."))
-                                path = path.Substring(3);
-                            path = "c:/dump/code" + path + "c";
+                        //// Get a reference to all code files
+                        //var dict = pySharp.Import("nasty").Attribute("nasty").Attribute("compiler").Attribute("code").ToDictionary();
 
-                            // Create the directory
-                            Directory.CreateDirectory(Path.GetDirectoryName(path));
+                        //// Get the magic once
+                        //var magic = pySharp.Import("imp").Call("get_magic");
 
-                            var file = pySharp.Import("__builtin__").Call("open", path, "wb");
-                            var time = pySharp.Import("os").Attribute("path").Call("getmtime", path);
+                        //foreach (var item in dict)
+                        //{
+                        //    // Clean up the path
+                        //    var path = (string)item.Key.Item(0);
+                        //    if (path.IndexOf(":") >= 0)
+                        //        path = path.Substring(path.IndexOf(":") + 1);
+                        //    while (path.StartsWith("/.."))
+                        //        path = path.Substring(3);
+                        //    path = "c:/dump/code" + path + "c";
 
-                            // Write the magic
-                            file.Call("write", magic);
-                            // Write the time
-                            file.Call("write", pySharp.Import("struct").Call("pack", "<i", time));
-                            // Write the code
-                            pySharp.Import("marshal").Call("dump", item.Value.Item(0), file);
-                            // Close the file
-                            file.Call("close");
-                        }
+                        //    // Create the directory
+                        //    Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+                        //    var file = pySharp.Import("__builtin__").Call("open", path, "wb");
+                        //    var time = pySharp.Import("os").Attribute("path").Call("getmtime", path);
+
+                        //    // Write the magic
+                        //    file.Call("write", magic);
+                        //    // Write the time
+                        //    file.Call("write", pySharp.Import("struct").Call("pack", "<i", time));
+                        //    // Write the code
+                        //    pySharp.Import("marshal").Call("dump", item.Value.Item(0), file);
+                        //    // Close the file
+                        //    file.Call("close");
+                        //}
                         InnerSpace.Echo("Done");
                     }
 
