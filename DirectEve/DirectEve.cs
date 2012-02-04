@@ -411,6 +411,15 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Refresh the PnPWindow
+        /// </summary>
+        /// <returns></returns>
+        public bool RefreshPnPWindow()
+        {
+            return DirectBookmark.RefreshPnPWindow(this);
+        }
+
+        /// <summary>
         ///   OnFrame event, use this to do your eve-stuff
         /// </summary>
         public event EventHandler OnFrame;
