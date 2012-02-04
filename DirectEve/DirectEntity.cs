@@ -355,7 +355,6 @@ namespace DirectEve
 
                 // Create the entity
                 entitiesById[id] = new DirectEntity(directEve, ballpark, ball, slimItem, id);
-                ;
             }
 
             // Mark active target

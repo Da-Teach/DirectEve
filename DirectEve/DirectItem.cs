@@ -313,7 +313,7 @@ namespace DirectEve
             if (ItemId == 0 || !PyItem.IsValid)
                 return false;
 
-            return DirectEve.ThreadedLocalSvcCall("menu", "InjectSkillIntoBrain", new[] {PyItem});
+            return DirectEve.ThreadedLocalSvcCall("menu", "InjectSkillIntoBrain", new List<PyObject> { PyItem });
         }
     }
 }

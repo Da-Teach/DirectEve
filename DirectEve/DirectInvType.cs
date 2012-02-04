@@ -54,7 +54,7 @@ namespace DirectEve
 
         internal PyObject PyInvCategory
         {
-            get { return _pyInvCategory ?? (_pyInvCategory = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invcategories").Call("GetIfExists", GroupId)); }
+            get { return _pyInvCategory ?? (_pyInvCategory = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invcategories").Call("GetIfExists", CategoryId)); }
         }
 
         public int TypeId { get; internal set; }

@@ -570,10 +570,30 @@
             skill.AddToEndOfQueue();
         }
 
+        [Test]
+        private void InjectSkillItem()
+        {
+            var item = _directEve.GetItemHangar().Items.FirstOrDefault(i => i.CategoryId == 16);
+            if (item == null)
+            {
+                Log("No skill item found");
+                return;
+            }
+
+            item.InjectSkill();
+        }
+
         private void LogItem(string format, DirectItem item)
         {
             Log(format, "ItemId", item.ItemId);
+
             Log(format, "TypeId", item.TypeId);
+
+            Log(format, "GroupId", item.GroupId);
+            Log(format, "GroupName", item.GroupName);
+
+            Log(format, "CategoryId", item.CategoryId);
+            Log(format, "CategoryName", item.CategoryName);
 
             Log(format, "OwnerId", item.OwnerId);
             Log(format, "LocationId", item.LocationId);
