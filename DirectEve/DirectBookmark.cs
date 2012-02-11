@@ -48,7 +48,15 @@ namespace DirectEve
 
         public long? BookmarkId { get; internal set; }
         public DateTime? CreatedOn { get; internal set; }
+
+        /// <summary>
+        /// If this is a bookmark of a station, this is the StationId
+        /// </summary>
         public long? ItemId { get; internal set; }
+
+        /// <summary>
+        /// Matches SolarSystemId
+        /// </summary>
         public long? LocationId { get; internal set; }
         public long? FolderId { get; internal set; }
         public string Title { get; internal set; }
