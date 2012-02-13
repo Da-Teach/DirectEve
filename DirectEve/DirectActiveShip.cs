@@ -149,6 +149,14 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Inertia Modifier (also called agility)
+        /// </summary>
+        public double InertiaModifier 
+        {
+            get { return Attributes.TryGet<double>("agility"); }
+        }
+
+        /// <summary>
         ///   The entity associated with your ship
         /// </summary>
         /// <remarks>
