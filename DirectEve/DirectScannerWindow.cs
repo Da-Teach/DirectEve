@@ -68,7 +68,7 @@ namespace DirectEve
                 return _scanResults;
             }
         }
-#if SYSTEM_SCANNER_ENABLED
+#if SYSTEM_SCANNER_ENABLED  // This is broken and can lead to bans.  Don't enable unless you know what you are doing.
         /// <summary>
         /// List of all the system scanner results
         /// </summary>
@@ -143,7 +143,7 @@ namespace DirectEve
             _scanResults = null; // free old results
             return DirectEve.ThreadedCall(PyWindow.Attribute("DirectionSearch"));
         }
-#if SYSTEM_SCANNER_ENABLED
+#if SYSTEM_SCANNER_ENABLED  // This is broken and can lead to bans.  Don't enable unless you know what you are doing.
         /// <summary>
         /// Start a system scan; i.e. click the Analyze button.
         /// </summary>
