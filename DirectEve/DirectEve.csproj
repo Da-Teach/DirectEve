@@ -73,6 +73,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectSkill.cs" />
+    <Compile Include="DirectSystemScanResult.cs" />
     <Compile Include="DirectBookmarkFolder.cs" />
     <Compile Include="DirectConstellation.cs" />
     <Compile Include="DirectInvType.cs" />
@@ -119,7 +121,6 @@
     <Compile Include="DirectOwnContainerWindow.cs" />
     <Compile Include="DirectOwner.cs" />
     <Compile Include="DirectSession.cs" />
-    <Compile Include="DirectSkill.cs" />
     <Compile Include="DirectSkills.cs" />
     <Compile Include="DirectSolarSystem.cs" />
     <Compile Include="DirectStandings.cs" />

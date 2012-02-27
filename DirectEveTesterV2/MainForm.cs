@@ -458,7 +458,7 @@
             var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
             if (scanner != null && scanner.IsReady)
             {
-                foreach (var result in scanner.ScanResults)
+                foreach (var result in scanner.DirectionalScanResults)
                 {
                     var entity = result.Entity;
                     if (entity != null && entity.IsValid)
@@ -468,6 +468,73 @@
                     else
                     {
                         Log("SR: {0} -- {1} -- <--->", result.Name, result.TypeName);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        private void SelectProbeScan()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                if (scanner.GetSelectedIdx() != 0)
+                {
+                    scanner.SelectByIdx(0); // select system scanner tab
+                }
+            }
+            else
+            {
+                Log("scanner not ready");
+            }
+        }
+
+        [Test]
+        private void DoSystemScan()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                scanner.Analyze();
+            }
+        }
+
+        [Test]
+        private void DumpSystemScanResults()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                foreach (var result in scanner.SystemScanResults)
+                {
+                    Log("ID = {0}",result.ID);
+                    Log("ScanGroup = {0}", result.ScanGroup);
+                    Log("Group = {0}", result.Group);
+                    Log("Type = {0}", result.Type);
+                    Log("SignalStrength = {0}", result.SignalStrength);
+                    Log("Distance = {0}", result.Distance);
+                    Log(result.DumpData());
+                }
+            }
+        }
+
+        [Test]
+        private void WarpToSystemScanResults()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                foreach (var result in scanner.SystemScanResults)
+                {
+                    Log("SignalStrength = {0}", result.SignalStrength);
+                    if (result.SignalStrength > 99)
+                    {
+                        result.WarpTo();
                     }
                 }
             }
@@ -530,7 +597,7 @@
 
 
             foreach (var skill in _directEve.Skills.MySkills)
-                Log("Skill " + 
+                Log("Skill " +
                     "ItemId: {4} " +
                     "TypeId: {0} " +
                     "FlagId: {1} " +
@@ -540,14 +607,14 @@
                     "Name: {5} " +
                     "SkillPoints: {7} " +
                     "SkillTimeConstant: {8}",
-                    skill.TypeId, 
-                    skill.FlagId, 
-                    skill.InTraining, 
-                    skill.Level, 
-                    skill.ItemId, 
-                    skill.TypeName, 
-                    skill.LocationId, 
-                    skill.SkillPoints, 
+                    skill.TypeId,
+                    skill.FlagId,
+                    skill.InTraining,
+                    skill.Level,
+                    skill.ItemId,
+                    skill.Name,
+                    skill.LocationId,
+                    skill.SkillPoints,
                     skill.SkillTimeConstant);
         }
 

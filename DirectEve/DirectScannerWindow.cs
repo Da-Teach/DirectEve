@@ -17,6 +17,7 @@ namespace DirectEve
     public class DirectScannerWindow : DirectWindow
     {
         private List<DirectDirectionalScanResult> _scanResults;
+        private List<DirectSystemScanResult> _systemScanResults;
 
         internal DirectScannerWindow(DirectEve directEve, PyObject pyWindow)
             : base(directEve, pyWindow)
@@ -28,8 +29,14 @@ namespace DirectEve
             IsReady = charId != null && obj.IsValid && (bool) obj == false;
         }
 
+        /// <summary>
+        /// True if the scanner window is ready for new operations
+        /// </summary>
         public bool IsReady { get; internal set; }
 
+        /// <summary>
+        /// The directional scanner range limit
+        /// </summary>
         public int Range
         {
             get { return (int) PyWindow.Attribute("dir_rangeinput").Call("GetValue"); }
@@ -41,7 +48,7 @@ namespace DirectEve
         /// </summary>
         /// <remarks>
         /// </remarks>
-        public List<DirectDirectionalScanResult> ScanResults
+        public List<DirectDirectionalScanResult> DirectionalScanResults
         {
             get
             {
@@ -59,6 +66,30 @@ namespace DirectEve
                 }
 
                 return _scanResults;
+            }
+        }
+
+        /// <summary>
+        /// List of all the system scanner results
+        /// </summary>
+        public List<DirectSystemScanResult> SystemScanResults
+        {
+            get
+            {
+                var charId = DirectEve.Session.CharacterId;
+                if (_systemScanResults == null && charId != null)
+                {
+                    _systemScanResults = new List<DirectSystemScanResult>();
+                    foreach (var node in PyWindow.Attribute("sr").Attribute("resultscroll").Call("GetNodes").ToList())
+                    {
+                        if (node.Attribute("result").IsValid)
+                        {
+                            _systemScanResults.Add(new DirectSystemScanResult(DirectEve, node));
+                        }
+                    }
+                }
+
+                return _systemScanResults;
             }
         }
 
@@ -111,6 +142,24 @@ namespace DirectEve
         {
             _scanResults = null; // free old results
             return DirectEve.ThreadedCall(PyWindow.Attribute("DirectionSearch"));
+        }
+
+        /// <summary>
+        /// Start a system scan; i.e. click the Analyze button.
+        /// </summary>
+        /// <returns>false if scan already running.  true if new scan was started</returns>
+        public bool Analyze()
+        {
+            var scanningProbes = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("scanSvc").Attribute("scanningProbes");
+
+            // Check for an active scan.  If we call Analyze while a scan is running Eve will throw an exception
+            if (scanningProbes.IsValid == false)
+            {
+                _systemScanResults = null; // free old results
+                return DirectEve.ThreadedCall(PyWindow.Attribute("Analyze"));
+            }
+
+            return false;
         }
     }
 }
