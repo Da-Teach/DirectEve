@@ -68,7 +68,7 @@ namespace DirectEve
                 return _scanResults;
             }
         }
-
+#if SYSTEM_SCANNER_ENABLED
         /// <summary>
         /// List of all the system scanner results
         /// </summary>
@@ -92,7 +92,7 @@ namespace DirectEve
                 return _systemScanResults;
             }
         }
-
+#endif
         private static void Log(string line)
         {
             InnerSpace.Echo(string.Format("{0:D} {1:HH:mm:ss} {2}", -1, DateTime.Now, line));
@@ -143,7 +143,7 @@ namespace DirectEve
             _scanResults = null; // free old results
             return DirectEve.ThreadedCall(PyWindow.Attribute("DirectionSearch"));
         }
-
+#if SYSTEM_SCANNER_ENABLED
         /// <summary>
         /// Start a system scan; i.e. click the Analyze button.
         /// </summary>
@@ -161,5 +161,6 @@ namespace DirectEve
 
             return false;
         }
+#endif
     }
 }
