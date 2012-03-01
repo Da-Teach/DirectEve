@@ -490,7 +490,7 @@
                 Log("scanner not ready");
             }
         }
-
+#if SYSTEM_SCANNER_ENABLED
         [Test]
         private void DoSystemScan()
         {
@@ -539,7 +539,7 @@
                 }
             }
         }
-
+#endif
         [Test]
         private void CloseScanner()
         {
@@ -612,7 +612,7 @@
                     skill.InTraining,
                     skill.Level,
                     skill.ItemId,
-                    skill.Name,
+                    skill.TypeName,
                     skill.LocationId,
                     skill.SkillPoints,
                     skill.SkillTimeConstant);
