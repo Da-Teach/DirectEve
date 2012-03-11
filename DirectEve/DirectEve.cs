@@ -493,6 +493,30 @@ namespace DirectEve
             return ThreadedLocalSvcCall("window", "OpenCorpHangar", global::DirectEve.PySharp.PySharp.PyNone, global::DirectEve.PySharp.PySharp.PyNone, 1);
         }
 
+        public bool OpenCorpHangarArray(long itemID)
+        {
+            return ThreadedLocalSvcCall("menuSvc", "OpenCorpHangarArray", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        }
+
+        public bool OpenStructure(long itemID)
+        {
+            return ThreadedLocalSvcCall("menuSvc", "OpenStructure", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        }
+
+        public bool OpenStructureCharges(long itemID, bool hasCapacity)
+        {
+            return ThreadedLocalSvcCall("menuSvc", "OpenStructureCharges", itemID, global::DirectEve.PySharp.PySharp.PyNone, hasCapacity);
+        }
+
+        public bool OpenStructureCargo(long itemID)
+        {
+            return ThreadedLocalSvcCall("menuSvc", "OpenStructureCargo", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        }
+
+        public bool OpenStrontiumBay(long itemID)
+        {
+            return ThreadedLocalSvcCall("menuSvc", "OpenStrontiumBay", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        }
         /// <summary>
         ///   Execute a command
         /// </summary>
