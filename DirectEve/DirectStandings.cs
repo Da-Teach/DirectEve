@@ -61,5 +61,23 @@ namespace DirectEve
 
             return (float) AddressBook.Attribute("allianceContacts").Call("get", id, global::DirectEve.PySharp.PySharp.PyNone).Attribute("relationshipID");
         }
+
+        /// <summary>
+        /// Return the effective standing between you and something else.
+        /// </summary>
+        /// <param name="fromID">The ID of the thing you are checking standings with.  If this thing is an NPC the result is modified by skills.</param>
+        /// <param name="toID">The ID of the thing you are checking standings to.  This is typically DirectEve.Session.CharacterId.</param>
+        /// <returns>The standing between toID and fromID.</returns>
+        public float EffectiveStanding(long fromID, long toID)
+        {
+            var result = DirectEve.GetLocalSvc("standing").Call("GetEffectiveStanding", fromID, toID);
+
+            if (result.IsValid)
+            {
+                return (float)result.Item(0);
+            }
+
+            return (float)0.0;
+        }
     }
 }
