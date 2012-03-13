@@ -495,27 +495,27 @@ namespace DirectEve
 
         public bool OpenCorpHangarArray(long itemID)
         {
-            return ThreadedLocalSvcCall("menuSvc", "OpenCorpHangarArray", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+            return ThreadedLocalSvcCall("menu", "OpenCorpHangarArray", itemID, global::DirectEve.PySharp.PySharp.PyNone);
         }
 
         public bool OpenStructure(long itemID)
         {
-            return ThreadedLocalSvcCall("menuSvc", "OpenStructure", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+            return ThreadedLocalSvcCall("menu", "OpenStructure", itemID, global::DirectEve.PySharp.PySharp.PyNone);
         }
 
         public bool OpenStructureCharges(long itemID, bool hasCapacity)
         {
-            return ThreadedLocalSvcCall("menuSvc", "OpenStructureCharges", itemID, global::DirectEve.PySharp.PySharp.PyNone, hasCapacity);
+            return ThreadedLocalSvcCall("menu", "OpenStructureCharges", itemID, global::DirectEve.PySharp.PySharp.PyNone, hasCapacity);
         }
 
         public bool OpenStructureCargo(long itemID)
         {
-            return ThreadedLocalSvcCall("menuSvc", "OpenStructureCargo", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+            return ThreadedLocalSvcCall("menu", "OpenStructureCargo", itemID, global::DirectEve.PySharp.PySharp.PyNone);
         }
 
         public bool OpenStrontiumBay(long itemID)
         {
-            return ThreadedLocalSvcCall("menuSvc", "OpenStrontiumBay", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+            return ThreadedLocalSvcCall("menu", "OpenStrontiumBay", itemID, global::DirectEve.PySharp.PySharp.PyNone);
         }
         /// <summary>
         ///   Execute a command
