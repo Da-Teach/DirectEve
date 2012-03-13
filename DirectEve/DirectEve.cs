@@ -628,6 +628,16 @@ namespace DirectEve
             return DirectContainer.GetCorporationHangar(this, divisionId);
         }
 
+        public DirectContainer GetCorporationHangarArray(long itemId, string divisionName)
+        {
+            return DirectContainer.GetCorporationHangarArray(this, itemId, divisionName);
+        }
+
+        public DirectContainer GetCorporationHangarArray(long itemId, int divisionId)
+        {
+            return DirectContainer.GetCorporationHangarArray(this, itemId, divisionId);
+        }
+
         /// <summary>
         ///   Return the entity by it's id
         /// </summary>

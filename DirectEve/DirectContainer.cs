@@ -311,6 +311,53 @@ namespace DirectEve
             return new DirectContainer(directEve, inventory, flag, "corpHangar_" + itemId);
         }
 
+        internal static DirectContainer GetCorporationHangarArray(DirectEve directEve, long itemId, string divisionName)
+        {
+            var divisions = directEve.GetLocalSvc("corp").Call("GetDivisionNames");
+            for (var i = 1; i <= 7; i++)
+            {
+                if (string.Compare(divisionName, (string)divisions.DictionaryItem(i), true) == 0)
+                    return GetCorporationHangarArray(directEve, itemId, i);
+            }
+
+            return new DirectContainer(directEve, global::DirectEve.PySharp.PySharp.PyZero, global::DirectEve.PySharp.PySharp.PyZero, string.Empty);
+        }
+
+        internal static DirectContainer GetCorporationHangarArray(DirectEve directEve, long itemId, int divisionId)
+        {
+            PyObject flag = null;
+            switch (divisionId)
+            {
+                case 1:
+                    flag = directEve.Const.FlagHangar;
+                    break;
+                case 2:
+                    flag = directEve.Const.FlagCorpSAG2;
+                    break;
+                case 3:
+                    flag = directEve.Const.FlagCorpSAG3;
+                    break;
+                case 4:
+                    flag = directEve.Const.FlagCorpSAG4;
+                    break;
+                case 5:
+                    flag = directEve.Const.FlagCorpSAG5;
+                    break;
+                case 6:
+                    flag = directEve.Const.FlagCorpSAG6;
+                    break;
+                case 7:
+                    flag = directEve.Const.FlagCorpSAG7;
+                    break;
+            }
+
+            if (flag == null)
+                return new DirectContainer(directEve, global::DirectEve.PySharp.PySharp.PyZero, global::DirectEve.PySharp.PySharp.PyZero, string.Empty);
+
+            var inventory = GetInventory(directEve, "GetInventoryFromId", itemId);
+            return new DirectContainer(directEve, inventory, flag, "corpHangar_" + itemId);
+        }
+
         /// <summary>
         ///   Get the item hangar container
         /// </summary>
