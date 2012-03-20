@@ -143,6 +143,45 @@ namespace DirectEve
             return path.Aggregate(container, FindChild);
         }
 
+
+
+        /// <summary>
+        ///   Answers a modal window
+        /// </summary>
+        /// <param name = "button">a string indicating which button to press. Possible values are: Yes, No, Ok, Cancel, Suppress</param>        
+        /// <returns>true if successfull</returns>
+        public bool AnswerModal(string button)
+        {
+
+            string[] buttonPath  = { "__maincontainer", "bottom", "btnsmainparent", "btns", "Yes_Btn" };
+
+            switch (button)
+            {
+                case "Yes":                    
+                    break;
+                case "No":
+                    buttonPath[4] = "No_Btn";
+                    break;
+                case "OK":
+                case "Ok":
+                    buttonPath[4] = "OK_Btn";
+                    break;
+                case "Cancel":
+                    buttonPath[4] = "Cancel_Btn";
+                    break;
+                case "Suppress":
+                    string[] suppress = { "__maincontainer", "main", "suppressContainer", "suppress" };
+                    buttonPath = suppress;
+                    break;
+                default:
+                    return false;
+            }                        
+            PyObject btn = FindChildWithPath(PyWindow, buttonPath);
+            if (btn != null)
+                return DirectEve.ThreadedCall(btn.Attribute("OnClick"));
+            return false;
+        }
+
         #region Nested type: WindowType
 
         private class WindowType
