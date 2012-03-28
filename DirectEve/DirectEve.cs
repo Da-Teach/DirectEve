@@ -12,11 +12,15 @@ namespace DirectEve
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+    using System.Security;
     using global::DirectEve.PySharp;
     using LavishScriptAPI;
 
     public class DirectEve : IDisposable
     {
+        private DirectEveSecurity _security;
+
         /// <summary>
         ///   ActiveShip cache
         /// </summary>
@@ -151,6 +155,14 @@ namespace DirectEve
         /// </summary>
         public DirectEve()
         {
+            _security = new DirectEveSecurity(this);
+
+            if (!_security.IsValid)
+            {
+                InnerSpaceAPI.InnerSpace.Echo("Incompatible EVE Online version detected");
+                return;
+            }
+            
             _localSvcCache = new Dictionary<string, PyObject>();
             _containers = new Dictionary<long, DirectContainer>();
             _lastKnownTargets = new Dictionary<long, DateTime>();
@@ -397,6 +409,8 @@ namespace DirectEve
         public void Dispose()
         {
             LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
+
+            _security.QuitDirectEve();
         }
 
         #endregion
@@ -436,6 +450,10 @@ namespace DirectEve
                 // Make the link to the instance
                 PySharp = pySharp;
 
+                // Pulse security
+                if (!_security.Pulse())
+                    return;
+
                 // Get current target list
                 var targets = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targets").ToList<long>();
                 targets.AddRange(pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targeting").ToList<long>());
@@ -450,7 +468,8 @@ namespace DirectEve
                     _lastKnownTargets.Remove(t);
                 }
 
-                if (OnFrame != null)
+                // Check if we're still valid
+                if (OnFrame != null && _security.IsValid)
                     OnFrame(this, new EventArgs());
 
                 // Clear any cache that we had during this frame

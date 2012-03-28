@@ -142,7 +142,7 @@ namespace DirectEve
 
             try
             {
-                str += string.Join(", ",_node["texts"].ToList<string>()) + "\n";
+                str += string.Join(", ",_node["texts"].ToList<string>().ToArray()) + "\n";
                 var result = _node["result"];
                 str += "warpable = " + (bool)PySharp.Import("scanner").Call("IsResultWithinWarpDistance", result) + "\n";
                 str += "result.id = " + (string)result.Attribute("id") + "\n";

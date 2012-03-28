@@ -5,7 +5,7 @@
             <ExceptionReporting Template="res:{SmartExceptions}.1033.dll" />
             <FeatureUsageReporting Template="res:SmartUsageWithUIConsentFirstRun1033.dll" />
             <StringsEncoding Compress="1" Encode="1" UseImprovedEncoding="1" />
-            <StrongNameSigning />
+            <StrongNameSigning KeyFileName=".\DirectEve.snk" Sign="1" TamperProtect="1" />
             <OtherOptimizations SealClasses="1" />
             <Obfuscation ChangeMethodParent="1" FieldsNameMangling="3" NameMangling="3" />
             <OtherProtections SuppressIldasm="1" />
@@ -85,6 +85,20 @@
                         <Exclusion />
                     </Obfuscation>
                 </Merging>
+            </Assembly>
+            <Assembly AssemblyName="DirectEve, Culture=neutral, PublicKeyToken=9587cca19f02132b">
+                <Merging>
+                    <ResourcesCompression />
+                    <MemberRefsProxy Proxy="1" />
+                    <Pruning Prune="1">
+                        <Exclusion />
+                    </Pruning>
+                    <Obfuscation Obfuscate="1">
+                        <Exclusion />
+                    </Obfuscation>
+                    <ControlFlow Obfuscate="1" ObfuscationLevel="4" />
+                </Merging>
+                <Embedding />
             </Assembly>
         </Assemblies>
     </Configuration>

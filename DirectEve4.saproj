@@ -1,17 +1,19 @@
 <SmartAssemblyProject ProjectId="{3ef863e0-9a5a-4249-9f04-9560786894a6}" Version="2.0">
     <MainAssemblyFileName>.\bin\Release\DirectEve.dll</MainAssemblyFileName>
+    <FriendlyName>DirectEve</FriendlyName>
+    <CompanyName>Microsoft</CompanyName>
     <Configuration Name="Release">
         <Options>
             <ExceptionReporting Template="res:{SmartExceptions}.1033.dll" />
-            <FeatureUsageReporting Template="res:SmartUsageWithUIConsentFirstRun1033.dll" />
+            <FeatureUsageReporting ReportUsages="0" Template="res:SmartUsageWithUIConsentFirstRun1033.dll" />
             <StringsEncoding Compress="1" Encode="1" UseImprovedEncoding="1" />
-            <StrongNameSigning />
+            <StrongNameSigning KeyFileName=".\DirectEve.snk" Sign="1" TamperProtect="1" />
             <OtherOptimizations SealClasses="1" />
             <Obfuscation ChangeMethodParent="1" FieldsNameMangling="3" NameMangling="3" />
             <OtherProtections SuppressIldasm="1" />
             <Debugging />
         </Options>
-        <ApplicationName />
+        <ApplicationName>DirectEve</ApplicationName>
         <Destination DestinationFileName="..\Questor\DirectEve\.NET4\DirectEve.dll" />
         <Assemblies>
             <Assembly AssemblyName="DirectEve, Culture=neutral, PublicKeyToken=null">
@@ -24,7 +26,7 @@
                     <Obfuscation Obfuscate="1">
                         <Exclusion />
                     </Obfuscation>
-                    <ControlFlow Obfuscate="1" ObfuscationLevel="3" />
+                    <ControlFlow Obfuscate="1" ObfuscationLevel="4" />
                 </Merging>
                 <Embedding />
             </Assembly>
@@ -85,6 +87,20 @@
                         <Exclusion />
                     </Obfuscation>
                 </Merging>
+            </Assembly>
+            <Assembly AssemblyName="DirectEve, Culture=neutral, PublicKeyToken=9587cca19f02132b">
+                <Merging>
+                    <ResourcesCompression />
+                    <MemberRefsProxy Proxy="1" />
+                    <Pruning Prune="1">
+                        <Exclusion />
+                    </Pruning>
+                    <Obfuscation Obfuscate="1">
+                        <Exclusion />
+                    </Obfuscation>
+                    <ControlFlow Obfuscate="1" ObfuscationLevel="4" />
+                </Merging>
+                <Embedding />
             </Assembly>
         </Assemblies>
     </Configuration>

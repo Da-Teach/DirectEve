@@ -61,6 +61,12 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>DirectEve.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lavish.InnerSpace">
       <HintPath>..\..\..\Program Files (x86)\Innerspace\Lavish.InnerSpace.dll</HintPath>
@@ -73,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectEveSecurity.cs" />
     <Compile Include="DirectSkill.cs" />
     <Compile Include="DirectSystemScanResult.cs" />
     <Compile Include="DirectBookmarkFolder.cs" />
@@ -133,6 +140,9 @@
     <Compile Include="PySharp\PyObject.cs" />
     <Compile Include="PySharp\PySharp.cs" />
     <Compile Include="PySharp\PyType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DirectEve.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
