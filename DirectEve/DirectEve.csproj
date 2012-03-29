@@ -146,7 +146,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="CopyToInnerSpace" BeforeTargets="AfterBuild">
+  <Target Name="CopyToInnerSpace" AfterTargets="AfterBuild">
     <PropertyGroup>
       <InnerSpacePath Condition="'$(InnerSpacePath)'==''">$(registry:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\App Paths\InnerSpace.exe@Path)</InnerSpacePath>
       <InnerSpacePath Condition="'$(InnerSpacePath)'==''">$(registry:HKEY_CURRENT_USER\Software\Microsoft\IntelliPoint\AppSpecific\InnerSpace.exe@Path)</InnerSpacePath>
