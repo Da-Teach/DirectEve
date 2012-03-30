@@ -11,6 +11,7 @@ namespace DirectEve
 {
     using System.Collections.Generic;
     using global::DirectEve.PySharp;
+    using System;
 
     public class DirectModule : DirectItem
     {
@@ -33,6 +34,9 @@ namespace DirectEve
         public bool IsChangingAmmo { get; internal set; }
 
         public DirectItem Charge { get; internal set; }
+
+        private DateTime lastActivation = DateTime.MinValue;
+        private long lastTarget = 0;
 
         public int CurrentCharges
         {
@@ -150,11 +154,22 @@ namespace DirectEve
 
         public bool Activate()
         {
+            if (DateTime.Now.Subtract(lastActivation).TotalSeconds < 5)
+                return false;
+            lastActivation = DateTime.Now;
             return DirectEve.ThreadedCall(_pyModule.Attribute("ActivateEffect"), _pyModule.Attribute("def_effect"));
         }
 
         public bool Activate(long targetId)
         {
+            int delay;
+            if (lastTarget == targetId)
+                delay = 10;
+            else delay = 5;
+            if (DateTime.Now.Subtract(lastActivation).TotalSeconds < delay)
+                return false;
+
+            lastActivation = DateTime.Now;
             return DirectEve.ThreadedCall(_pyModule.Attribute("ActivateEffect"), _pyModule.Attribute("def_effect"), targetId);
         }
 

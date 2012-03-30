@@ -12,6 +12,7 @@ namespace DirectEve
     using System.Collections.Generic;
     using System.Linq;
     using global::DirectEve.PySharp;
+    using System;
 
     public class DirectEntity : DirectInvType
     {
@@ -38,6 +39,7 @@ namespace DirectEve
         private double? _x;
         private double? _y;
         private double? _z;
+        private DateTime lastApproach = DateTime.MinValue;
 
         internal DirectEntity(DirectEve directEve, PyObject ballpark, PyObject ball, PyObject slimItem, long id)
             : base(directEve)
@@ -481,6 +483,9 @@ namespace DirectEve
         /// <returns></returns>
         public bool Approach(int range)
         {
+            if (DateTime.Now.Subtract(lastApproach).TotalSeconds < 10)
+                return false;
+            lastApproach = DateTime.Now;
             return DirectEve.ThreadedLocalSvcCall("menu", "Approach", Id, range);
         }
 
