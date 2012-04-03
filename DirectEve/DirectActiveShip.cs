@@ -19,10 +19,24 @@ namespace DirectEve
         /// </summary>
         private DirectEntity _entity;
 
+        private long? _itemId;
+
         internal DirectActiveShip(DirectEve directEve)
             : base(directEve)
         {
             PyItem = directEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation").Call("GetShip");
+        }
+
+        public long ItemId
+        {
+            get
+            {
+                if (!_itemId.HasValue)
+                    _itemId = (long)DirectEve.Session.ShipId;
+
+                return _itemId.Value;
+            }
+            internal set { _itemId = value; }
         }
 
         /// <summary>

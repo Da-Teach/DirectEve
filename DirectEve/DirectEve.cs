@@ -989,5 +989,11 @@ namespace DirectEve
             var form = PySharp.Import("form");
             ThreadedCall(form.Attribute("FittingMgmt").Attribute("Open"));
         }
+
+        public bool ScatterEvent(string evt)
+        {
+            var scatterEvent = PySharp.Import("__builtin__").Attribute("sm").Attribute("ScatterEvent");
+            return ThreadedCall(scatterEvent, evt);
+        }
     }
 }

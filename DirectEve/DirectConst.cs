@@ -102,6 +102,11 @@ namespace DirectEve
             get { return Const.Attribute("categorySkill"); }
         }
 
+        public PyObject CategoryStructure
+        {
+            get { return Const.Attribute("categoryStructure"); }
+        }
+
         public PyObject GroupAuditLogSecureContainer
         {
             get { return Const.Attribute("groupAuditLogSecureContainer"); }
