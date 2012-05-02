@@ -1,6 +1,7 @@
 ﻿namespace DirectEveTesterV2
 {
     using System;
+    using System.Reflection;
     using System.Linq;
     using DirectEve;
     using System.Windows.Forms;
@@ -8,40 +9,50 @@
 
     public partial class MainForm : Form
     {
+        [AttributeUsage(AttributeTargets.All)]
+        public class Test : System.Attribute
+        {
+            public readonly string _desc;
+
+            public Test(string desc)
+            {
+                this._desc = desc;
+            }
+
+            public Test()
+            {
+                this._desc = null;
+            }
+        }
+
         private DirectEve _directEve;
         private TestState _state;
+        private string _activeTest;
+        private int _frameCount;
 
         private enum TestState
         {
             Idle,
-
-            Session,
-            Me,
-            ActiveShip,
-            ListWindows,
-            ListEntities,
-            ListShipsCargo,
-            LaunchDrones,
-            RecallDrones,
-            RefreshBookmarks,
-            ListBookmarks,
-            CreateBookmarkFolder,
-            BookmarkCurrentLocation,
-            DeleteBookmark,
-            DeleteBookmarkFolder,
-            WarpToBookmark,
-
+            RunTest,
             Done
         }
-
 
         public MainForm()
         {
             InitializeComponent();
 
-            foreach (var state in Enum.GetNames(typeof(TestState)))
-                TestStatesComboBox.Items.Add(state);
-        
+            Type t = typeof(MainForm);
+            foreach (MethodInfo mi in t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                object[] attrs = mi.GetCustomAttributes(typeof(Test),false);
+                foreach (object attr in attrs)
+                {
+                    TestStatesComboBox.Items.Add(mi.Name);
+                }
+            }
+            _activeTest = "";
+            TestStatesComboBox.SelectedIndex = 0;
+
             _directEve = new DirectEve();
             _directEve.OnFrame += OnFrame;
         }
@@ -60,64 +71,12 @@
             {
                 switch (_state)
                 {
-                    case TestState.Session:
-                        SessionTests();
+                    case TestState.Idle:
+                        lblStatus.Text = "Idle";
                         break;
 
-                    case TestState.Me:
-                        MeTests();
-                        break;
-
-                    case TestState.ListWindows:
-                        ListWindowsTest();
-                        break;
-
-                    case TestState.ActiveShip:
-                        ActiveShipTests();
-                        break;
-                    
-                    case TestState.ListEntities:
-                        ListEntitiesTests();
-                        break;
-
-                    case TestState.ListShipsCargo:
-                        ListShipsCargoTest();
-                        break;
-
-                    case TestState.LaunchDrones:
-                        LaunchDronesTest();
-                        break;
-
-                    case TestState.RecallDrones:
-                        RecallDronesTest();
-                        break;
-
-                    case TestState.ListBookmarks:
-                        ListBookmarksTest();
-                        break;
-
-                    case TestState.RefreshBookmarks:
-                        RefreshBookmarksTest();
-                        break;
-
-                    case TestState.CreateBookmarkFolder:
-                        CreateBookmarkFolderTest();
-                        break;
-
-                    case TestState.BookmarkCurrentLocation:
-                        BookmarkCurrentLocationTest();
-                        break;
-
-                    case TestState.DeleteBookmark:
-                        DeleteBookmarkTest();
-                        break;
-
-                    case TestState.DeleteBookmarkFolder:
-                        DeleteBookmarkFolderTest();
-                        break;
-
-                    case TestState.WarpToBookmark:
-                        WarpToBookmarkTest();
+                    case TestState.RunTest:
+                        RunSelectedTest();
                         break;
                 }
             }
@@ -127,6 +86,31 @@
             }
         }
 
+        private void RunSelectedTest()
+        {
+            if (!String.IsNullOrEmpty(_activeTest))
+            {
+                Type t = typeof(MainForm);
+                MethodInfo mi = t.GetMethod(_activeTest, BindingFlags.NonPublic | BindingFlags.Instance);
+                object[] attrs = mi.GetCustomAttributes(typeof(Test),false);
+                foreach (object attr in attrs)
+                {
+                    Test ta = (Test)attr;
+                    if (String.IsNullOrEmpty(ta._desc))
+                    {
+                        Log("Running {0} test...", mi.Name);
+                    }
+                    else
+                    {
+                        Log("Running {0} test...", ta._desc);
+                    }
+                }
+                mi.Invoke(this, null);
+                _activeTest = null;
+            }
+        }
+
+        [Test("Ship's cargo")]
         private void ListShipsCargoTest()
         {
             _state = TestState.Idle;
@@ -145,6 +129,7 @@
             }
         }
 
+        [Test("Warp to bookmark")]
         private void WarpToBookmarkTest()
         {
             _state = TestState.Idle;
@@ -180,6 +165,7 @@
             folder.Delete();
         }
 
+        [Test("Create bookmark")]
         private void CreateBookmarkFolderTest()
         {
             _state = TestState.Idle;
@@ -187,6 +173,7 @@
             _directEve.CreateBookmarkFolder("Wassup Folder");
         }
 
+        [Test("Delete bookmark")]
         private void DeleteBookmarkTest()
         {
             _state = TestState.Idle;
@@ -201,6 +188,7 @@
             bookmark.Delete();
         }
 
+        [Test("Bookmark location")]
         private void BookmarkCurrentLocationTest()
         {
             _state = TestState.Idle;
@@ -210,6 +198,7 @@
             _directEve.BookmarkCurrentLocation("Wassup", "This is the drinking bar", folder != null ? folder.Id : (long?)null);
         }
 
+        [Test("Refresh bookmarks")]
         private void RefreshBookmarksTest()
         {
             _state = TestState.Idle;
@@ -218,6 +207,7 @@
             _directEve.RefreshBookmarks();
         }
 
+        [Test("List bookmarks")]
         private void ListBookmarksTest()
         {
             _state = TestState.Idle;
@@ -257,6 +247,7 @@
             }
         }
 
+        [Test]
         private void RecallDronesTest()
         {
             _state = TestState.Idle;
@@ -276,6 +267,7 @@
             _directEve.ExecuteCommand(DirectCmd.CmdDronesReturnToBay);
         }
 
+        [Test]
         private void LaunchDronesTest()
         {
             _state = TestState.Idle;
@@ -303,6 +295,7 @@
             _directEve.ActiveShip.LaunchDrones(drones);
         }
 
+        [Test]
         private void ListEntitiesTests()
         {
             _state = TestState.Idle;
@@ -311,6 +304,7 @@
                 LogEntity("Entity[" + entity.Id + "].{0}: {1}", entity);
         }
 
+        [Test]
         private void ActiveShipTests()
         {
             _state = TestState.Idle;
@@ -330,6 +324,7 @@
             LogEntity("ActiveShip.Entity.{0}: {1}", _directEve.ActiveShip.Entity);
         }
 
+        [Test]
         private void ListWindowsTest()
         {
             _state = TestState.Idle;
@@ -351,6 +346,7 @@
             }
         }
 
+        [Test]
         private void MeTests()
         {
             _state = TestState.Idle;
@@ -361,6 +357,7 @@
             Log("Me.Wealth: {0}", _directEve.Me.Wealth);
         }
 
+        [Test]
         private void SessionTests()
         {
             _state = TestState.Idle;
@@ -387,10 +384,283 @@
             Log("Session.IsReady: {0}", _directEve.Session.IsReady);
         }
 
+        [Test]
+        private void OpenScanner()
+        {
+            _state = TestState.Idle;
+
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner == null)
+            {
+                _directEve.ExecuteCommand(DirectCmd.OpenScanner);
+            }
+        }
+
+        [Test]
+        private void IsScannerReady()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                Log("scanner: {0}", scanner);
+            }
+            else
+            {
+                Log("scanner not ready");
+            }
+        }
+
+        [Test]
+        private void SelectDirectionalScan()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                if (scanner.GetSelectedIdx() != 1)
+                {
+                    scanner.SelectByIdx(1); // select dscan tab
+                }
+            }
+            else
+            {
+                Log("scanner not ready");
+            }
+        }
+
+        [Test]
+        private void ScanRangeTest()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                scanner.Range = scanner.Range/2;
+            }
+        }
+
+        [Test]
+        private void DoDirectionalScan()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                scanner.DirectionSearch();
+            }
+        }
+
+        [Test]
+        private void DumpScanResults()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                foreach (var result in scanner.DirectionalScanResults)
+                {
+                    var entity = result.Entity;
+                    if (entity != null && entity.IsValid)
+                    {
+                        Log("SR: {0} -- {1} -- {2}", result.Name, result.TypeName, entity.Distance);
+                    }
+                    else
+                    {
+                        Log("SR: {0} -- {1} -- <--->", result.Name, result.TypeName);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        private void SelectProbeScan()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                if (scanner.GetSelectedIdx() != 0)
+                {
+                    scanner.SelectByIdx(0); // select system scanner tab
+                }
+            }
+            else
+            {
+                Log("scanner not ready");
+            }
+        }
+#if SYSTEM_SCANNER_ENABLED
+        [Test]
+        private void DoSystemScan()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                scanner.Analyze();
+            }
+        }
+
+        [Test]
+        private void DumpSystemScanResults()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                foreach (var result in scanner.SystemScanResults)
+                {
+                    Log("ID = {0}",result.ID);
+                    Log("ScanGroup = {0}", result.ScanGroup);
+                    Log("Group = {0}", result.Group);
+                    Log("Type = {0}", result.Type);
+                    Log("SignalStrength = {0}", result.SignalStrength);
+                    Log("Distance = {0}", result.Distance);
+                    Log(result.DumpData());
+                }
+            }
+        }
+
+        [Test]
+        private void WarpToSystemScanResults()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                foreach (var result in scanner.SystemScanResults)
+                {
+                    Log("SignalStrength = {0}", result.SignalStrength);
+                    if (result.SignalStrength > 99)
+                    {
+                        result.WarpTo();
+                    }
+                }
+            }
+        }
+#endif
+        [Test]
+        private void CloseScanner()
+        {
+            _state = TestState.Idle;
+            var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            if (scanner != null && scanner.IsReady)
+            {
+                scanner.Close();            
+            }
+        }
+
+        [Test]
+        private void ListAllSkills()
+        {
+            if (!_directEve.Skills.IsReady)
+            {
+                Log("Skills arent ready yet");
+                return;
+            }
+
+            foreach (var skill in _directEve.Skills.AllSkills)
+                Log("Skill TypeId: {0} Name: {1}", skill.TypeId, skill.TypeName);
+        }
+
+        [Test]
+        private void ListMySkillQueue()
+        {
+            if (!_directEve.Skills.IsReady)
+            {
+                Log("Skills arent ready yet");
+                return;
+            }
+
+            foreach (var skill in _directEve.Skills.MySkillQueue)
+                Log("Skill TypeId: {0} TypeName: {1} Level: {2}", skill.TypeId, skill.TypeName, skill.Level);
+        }
+
+
+        [Test]
+        private void ListMySkills()
+        {
+            if (!_directEve.Skills.IsReady)
+            {
+                Log("Skills arent ready yet");
+                return;
+            }
+
+            if (!_directEve.Skills.AreMySkillsReady)
+            {
+                _directEve.Skills.RefreshMySkills();
+
+                Log("MySkills arent ready yet");
+                return;
+            }
+
+
+            foreach (var skill in _directEve.Skills.MySkills)
+                Log("Skill " +
+                    "ItemId: {4} " +
+                    "TypeId: {0} " +
+                    "FlagId: {1} " +
+                    "LocationId: {6} " +
+                    "InTraining: {2} " +
+                    "Level: {3} " +
+                    "Name: {5} " +
+                    "SkillPoints: {7} " +
+                    "SkillTimeConstant: {8}",
+                    skill.TypeId,
+                    skill.FlagId,
+                    skill.InTraining,
+                    skill.Level,
+                    skill.ItemId,
+                    skill.TypeName,
+                    skill.LocationId,
+                    skill.SkillPoints,
+                    skill.SkillTimeConstant);
+        }
+
+        //[Test]
+        //private void AbortTraining()
+        //{
+        //    _directEve.Skills.AbortTraining();
+        //}
+
+        [Test]
+        private void TrainTacticalShieldManipulation()
+        {
+            var skill = _directEve.Skills.MySkills.FirstOrDefault(s => s.TypeId == 3420);
+            if (skill == null)
+            {
+                Log("No non-level 5 skill found");
+                return;
+            }
+
+            skill.AddToEndOfQueue();
+        }
+
+        [Test]
+        private void InjectSkillItem()
+        {
+            var item = _directEve.GetItemHangar().Items.FirstOrDefault(i => i.CategoryId == 16);
+            if (item == null)
+            {
+                Log("No skill item found");
+                return;
+            }
+
+            item.InjectSkill();
+        }
+
         private void LogItem(string format, DirectItem item)
         {
             Log(format, "ItemId", item.ItemId);
+
             Log(format, "TypeId", item.TypeId);
+
+            Log(format, "GroupId", item.GroupId);
+            Log(format, "GroupName", item.GroupName);
+
+            Log(format, "CategoryId", item.CategoryId);
+            Log(format, "CategoryName", item.CategoryName);
 
             Log(format, "OwnerId", item.OwnerId);
             Log(format, "LocationId", item.LocationId);
@@ -444,9 +714,20 @@
 
         private void ExecuteTest_Click(object sender, EventArgs e)
         {
-            _state = (TestState) TestStatesComboBox.SelectedIndex;
+            _state = TestState.RunTest;
+            _activeTest = TestStatesComboBox.Text;
             if (TestStatesComboBox.SelectedIndex < TestStatesComboBox.Items.Count - 1)
                 TestStatesComboBox.SelectedIndex++;
+            ExecuteTest.Enabled = false;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(_activeTest))
+            {
+                ExecuteTest.Enabled = true;
+            }
+            timer1.Enabled = true;
         }
     }
 }

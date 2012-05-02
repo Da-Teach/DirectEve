@@ -37,7 +37,7 @@ namespace DirectEve
             get
             {
                 var strip = new Regex(@"<(.|\n)*?>");
-                return strip.Replace((string) _pySlot.Attribute("sr").Attribute("smallcaption").Attribute("text"), string.Empty);
+                return strip.Replace((string) _pySlot.Attribute("sr").Attribute("smallcaption").Attribute("text").ToList().FindLast(c => true), string.Empty);
             }
         }
 

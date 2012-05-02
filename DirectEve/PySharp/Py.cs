@@ -49,6 +49,8 @@ namespace DirectEve.PySharp
                     _moduleHandle = LoadLibrary("python27.dll");
 
                 structure = GetProcAddress(_moduleHandle, name);
+                if (structure == IntPtr.Zero)
+                    throw new Exception("Structure " + name + " not found!");
 
                 if (structure != IntPtr.Zero)
                     _structures[name] = structure;
@@ -75,7 +77,6 @@ namespace DirectEve.PySharp
             _types.Add(GetStruct("PyCapsule_Type"), PyType.CapsuleType);
             _types.Add(GetStruct("PyCell_Type"), PyType.CellType);
             _types.Add(GetStruct("PyChannel_TypePtr"), PyType.ChannelTypePtr);
-            _types.Add(GetStruct("PyClassMethodDescr_Type"), PyType.ClassMethodDescrType);
             _types.Add(GetStruct("PyClassMethod_Type"), PyType.ClassMethodType);
             _types.Add(GetStruct("PyClass_Type"), PyType.ClassType);
             _types.Add(GetStruct("PyCode_Type"), PyType.CodeType);
@@ -105,8 +106,6 @@ namespace DirectEve.PySharp
             _types.Add(GetStruct("PyLong_Type"), PyType.LongType);
             _types.Add(GetStruct("PyMemberDescr_Type"), PyType.MemberDescrType);
             _types.Add(GetStruct("PyMemoryView_Type"), PyType.MemoryViewType);
-            _types.Add(GetStruct("PyMethodDescr_Type"), PyType.MethodDescrType);
-            _types.Add(GetStruct("PyMethodWrapper_Type"), PyType.MethodWrapperType);
             _types.Add(GetStruct("PyMethod_Type"), PyType.MethodType);
             _types.Add(GetStruct("PyModule_Type"), PyType.ModuleType);
             _types.Add(GetStruct("PyNullImporter_Type"), PyType.NullImporterType);
@@ -154,7 +153,7 @@ namespace DirectEve.PySharp
             if (derived)
             {
                 var s = type.ToString();
-                type = (PyType) Enum.Parse(typeof (PyType), "Derived" + s);
+                type = (PyType)Enum.Parse(typeof(PyType), "Derived" + s);
             }
 
             return type;
@@ -170,7 +169,7 @@ namespace DirectEve.PySharp
 
         internal static IntPtr GetThreadState()
         {
-            return Py.GetStruct("_PyThreadState_Current");
+            return GetStruct("_PyThreadState_Current");
         }
 
         internal static IntPtr ExchangePyFrame(IntPtr frame)
@@ -253,13 +252,7 @@ namespace DirectEve.PySharp
         internal static extern IntPtr PyTuple_GetItem(IntPtr op, int index);
 
         [DllImport("python27.dll")]
-        internal static extern int PyRun_SimpleString(string s);
-
-        [DllImport("python27.dll")]
-        internal static extern IntPtr PyRun_String(string s, int start, IntPtr globals, IntPtr locals);
-
-        [DllImport("python27.dll")]
-        internal static extern IntPtr Py_CompileString(string s, string f, int start);
+        internal static extern IntPtr PyCode_NewEmpty(string filename, string funcname, int firstlineno);
 
         [DllImport("python27.dll")]
         internal static extern IntPtr PyFrame_New(IntPtr tstate, IntPtr code, IntPtr globals, IntPtr locals);

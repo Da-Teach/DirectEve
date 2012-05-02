@@ -10,7 +10,6 @@
 namespace DirectEve
 {
     using System;
-    using System.Linq;
     using global::DirectEve.PySharp;
 
     public class DirectSession : DirectObject
@@ -79,7 +78,7 @@ namespace DirectEve
             get
             {
                 if (!_now.HasValue)
-                    _now = (DateTime)PySharp.Import("blue").Attribute("os").Call("GetSimTime");
+                    _now = (DateTime) PySharp.Import("blue").Attribute("os").Call("GetSimTime");
 
                 return _now.Value;
             }
@@ -142,7 +141,7 @@ namespace DirectEve
                         return false;
                 }
 
-                var loading = (bool)DirectEve.PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("loading").Attribute("display");
+                var loading = (bool) DirectEve.PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("loading").Attribute("display");
                 if (loading)
                     return false;
 

@@ -12,10 +12,14 @@ namespace DirectEve
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+    using System.Security;
     using global::DirectEve.PySharp;
 
     public class DirectEve : IDisposable
     {
+        private DirectEveSecurity _security;
+
         /// <summary>
         ///   ActiveShip cache
         /// </summary>
@@ -27,19 +31,24 @@ namespace DirectEve
         private List<DirectAgentMission> _agentMissions;
 
         /// <summary>
-        ///   Cache the Bookmarks
-        /// </summary>
-        private List<DirectBookmark> _bookmarks;
-
-        /// <summary>
         ///   Cache the Bookmark Folders
         /// </summary>
         private List<DirectBookmarkFolder> _bookmarkFolders;
 
         /// <summary>
+        ///   Cache the Bookmarks
+        /// </summary>
+        private List<DirectBookmark> _bookmarks;
+
+        /// <summary>
         ///   Const cache
         /// </summary>
         private DirectConst _const;
+
+        /// <summary>
+        ///   Cache the GetConstellations call
+        /// </summary>
+        private Dictionary<long, DirectConstellation> _constellations;
 
         /// <summary>
         ///   Item container cache
@@ -89,6 +98,11 @@ namespace DirectEve
         private DirectNavigation _navigation;
 
         /// <summary>
+        ///   Cache the GetRegions call
+        /// </summary>
+        private Dictionary<long, DirectRegion> _regions;
+
+        /// <summary>
         ///   Session cache
         /// </summary>
         private DirectSession _session;
@@ -113,15 +127,17 @@ namespace DirectEve
         /// </summary>
         private DirectContainer _shipsModules;
 
+        private DirectSkills _skills;
+
+        /// <summary>
+        ///   Cache the GetRegions call
+        /// </summary>
+        private Dictionary<long, DirectSolarSystem> _solarSystems;
+
         /// <summary>
         ///   Standings cache
         /// </summary>
         private DirectStandings _standings;
-
-        /// <summary>
-        ///   Cache the GetWindows call
-        /// </summary>
-        private List<DirectWindow> _windows;
 
         /// <summary>
         ///   Cache the GetStations call
@@ -129,25 +145,23 @@ namespace DirectEve
         private Dictionary<long, DirectStation> _stations;
 
         /// <summary>
-        ///   Cache the GetRegions call
+        ///   Cache the GetWindows call
         /// </summary>
-        private Dictionary<long, DirectSolarSystem> _solarSystems;
-        
-        /// <summary>
-        ///   Cache the GetConstellations call
-        /// </summary>
-        private Dictionary<long, DirectConstellation> _constellations;
-        
-        /// <summary>
-        ///   Cache the GetRegions call
-        /// </summary>
-        private Dictionary<long, DirectRegion> _regions;
+        private List<DirectWindow> _windows;
 
         /// <summary>
         ///   Create a DirectEve object
         /// </summary>
         public DirectEve()
         {
+            _security = new DirectEveSecurity(this);
+
+            if (!_security.IsValid)
+            {
+                InnerSpaceAPI.InnerSpace.Echo("Incompatible EVE Online version detected");
+                return;
+            }
+            
             _localSvcCache = new Dictionary<string, PyObject>();
             _containers = new Dictionary<long, DirectContainer>();
             _lastKnownTargets = new Dictionary<long, DateTime>();
@@ -225,6 +239,14 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Return a DirectSkills object
+        /// </summary>
+        public DirectSkills Skills
+        {
+            get { return _skills ?? (_skills = new DirectSkills(this)); }
+        }
+
+        /// <summary>
         ///   Internal reference to the PySharp object that is used for the frame
         /// </summary>
         /// <remarks>
@@ -254,15 +276,6 @@ namespace DirectEve
         public Dictionary<long, DirectEntity> EntitiesById
         {
             get { return _entitiesById ?? (_entitiesById = DirectEntity.GetEntities(this)); }
-        }
-
-        /// <summary>
-        ///   Refresh the bookmark cache (if needed)
-        /// </summary>
-        /// <returns></returns>
-        public bool RefreshBookmarks()
-        {
-            return DirectBookmark.RefreshBookmarks(this);
         }
 
         /// <summary>
@@ -337,7 +350,9 @@ namespace DirectEve
         /// <summary>
         ///   Return a dictionary of stations
         /// </summary>
-        /// <remarks>This is cached throughout the existance of this DirectEve Instance</remarks>
+        /// <remarks>
+        ///   This is cached throughout the existance of this DirectEve Instance
+        /// </remarks>
         public Dictionary<long, DirectStation> Stations
         {
             get { return _stations ?? (_stations = DirectStation.GetStations(this)); }
@@ -346,7 +361,9 @@ namespace DirectEve
         /// <summary>
         ///   Return a dictionary of solar systems
         /// </summary>
-        /// <remarks>This is cached throughout the existance of this DirectEve Instance</remarks>
+        /// <remarks>
+        ///   This is cached throughout the existance of this DirectEve Instance
+        /// </remarks>
         public Dictionary<long, DirectSolarSystem> SolarSystems
         {
             get { return _solarSystems ?? (_solarSystems = DirectSolarSystem.GetSolarSystems(this)); }
@@ -355,7 +372,9 @@ namespace DirectEve
         /// <summary>
         ///   Return a dictionary of solar systems
         /// </summary>
-        /// <remarks>This is cached throughout the existance of this DirectEve Instance</remarks>
+        /// <remarks>
+        ///   This is cached throughout the existance of this DirectEve Instance
+        /// </remarks>
         public Dictionary<long, DirectConstellation> Constellations
         {
             get { return _constellations ?? (_constellations = DirectConstellation.GetConstellations(this)); }
@@ -364,7 +383,9 @@ namespace DirectEve
         /// <summary>
         ///   Return a dictionary of solar systems
         /// </summary>
-        /// <remarks>This is cached throughout the existance of this DirectEve Instance</remarks>
+        /// <remarks>
+        ///   This is cached throughout the existance of this DirectEve Instance
+        /// </remarks>
         public Dictionary<long, DirectRegion> Regions
         {
             get { return _regions ?? (_regions = DirectRegion.GetRegions(this)); }
@@ -399,9 +420,29 @@ namespace DirectEve
         public void Dispose()
         {
             //LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
+
+            _security.QuitDirectEve();
         }
 
         #endregion
+
+        /// <summary>
+        ///   Refresh the bookmark cache (if needed)
+        /// </summary>
+        /// <returns></returns>
+        public bool RefreshBookmarks()
+        {
+            return DirectBookmark.RefreshBookmarks(this);
+        }
+
+        /// <summary>
+        ///   Refresh the PnPWindow
+        /// </summary>
+        /// <returns></returns>
+        public bool RefreshPnPWindow()
+        {
+            return DirectBookmark.RefreshPnPWindow(this);
+        }
 
         /// <summary>
         ///   OnFrame event, use this to do your eve-stuff
@@ -421,6 +462,10 @@ namespace DirectEve
                 // Make the link to the instance
                 PySharp = pySharp;
 
+                // Pulse security
+                if (!_security.Pulse())
+                    return;
+
                 // Get current target list
                 var targets = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targets").ToList<long>();
                 targets.AddRange(pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targeting").ToList<long>());
@@ -435,7 +480,8 @@ namespace DirectEve
                     _lastKnownTargets.Remove(t);
                 }
 
-                if (OnFrame != null)
+                // Check if we're still valid
+                if (OnFrame != null && _security.IsValid)
                     OnFrame(this, new EventArgs());
 
                 // Clear any cache that we had during this frame
@@ -459,6 +505,7 @@ namespace DirectEve
                 _navigation = null;
                 _session = null;
                 _login = null;
+                _skills = null;
 
                 // Remove the link
                 PySharp = null;
@@ -477,6 +524,30 @@ namespace DirectEve
             return ThreadedLocalSvcCall("window", "OpenCorpHangar", global::DirectEve.PySharp.PySharp.PyNone, global::DirectEve.PySharp.PySharp.PyNone, 1);
         }
 
+        public bool OpenCorpHangarArray(long itemID)
+        {
+            return ThreadedLocalSvcCall("menu", "OpenCorpHangarArray", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        }
+
+        public bool OpenStructure(long itemID)
+        {
+            return ThreadedLocalSvcCall("menu", "OpenStructure", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        }
+
+        public bool OpenStructureCharges(long itemID, bool hasCapacity)
+        {
+            return ThreadedLocalSvcCall("menu", "OpenStructureCharges", itemID, global::DirectEve.PySharp.PySharp.PyNone, hasCapacity);
+        }
+
+        public bool OpenStructureCargo(long itemID)
+        {
+            return ThreadedLocalSvcCall("menu", "OpenStructureCargo", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        }
+
+        public bool OpenStrontiumBay(long itemID)
+        {
+            return ThreadedLocalSvcCall("menu", "OpenStrontiumBay", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        }
         /// <summary>
         ///   Execute a command
         /// </summary>
@@ -588,6 +659,16 @@ namespace DirectEve
             return DirectContainer.GetCorporationHangar(this, divisionId);
         }
 
+        public DirectContainer GetCorporationHangarArray(long itemId, string divisionName)
+        {
+            return DirectContainer.GetCorporationHangarArray(this, itemId, divisionName);
+        }
+
+        public DirectContainer GetCorporationHangarArray(long itemId, int divisionId)
+        {
+            return DirectContainer.GetCorporationHangarArray(this, itemId, divisionId);
+        }
+
         /// <summary>
         ///   Return the entity by it's id
         /// </summary>
@@ -602,7 +683,6 @@ namespace DirectEve
             return null;
         }
 
-
         /// <summary>
         ///   Bookmark the current location
         /// </summary>
@@ -612,17 +692,49 @@ namespace DirectEve
         /// <returns></returns>
         public bool BookmarkCurrentLocation(string name, string comment, long? folderId)
         {
+            if (Session.CharacterId == null)
+                return false;
+
+            return BookmarkCurrentLocation(Session.CharacterId.Value, name, comment, folderId);
+        }
+
+
+        /// <summary>
+        ///   Bookmark the current location
+        /// </summary>
+        /// <param name = "name"></param>
+        /// <param name = "comment"></param>
+        /// <param name = "folderId"></param>
+        /// <returns></returns>
+        public bool CorpBookmarkCurrentLocation(string name, string comment, long? folderId)
+        {
+            if (Session.CorporationId == null)
+                return false;
+
+            return BookmarkCurrentLocation(Session.CorporationId.Value, name, comment, folderId);
+        }
+
+        /// <summary>
+        ///   Bookmark the current location
+        /// </summary>
+        /// <param name = "ownerId"></param>
+        /// <param name = "name"></param>
+        /// <param name = "comment"></param>
+        /// <param name = "folderId"></param>
+        /// <returns></returns>
+        internal bool BookmarkCurrentLocation(long ownerId, string name, string comment, long? folderId)
+        {
             if (Session.StationId.HasValue)
             {
                 var station = GetLocalSvc("station").Attribute("station");
                 if (!station.IsValid)
                     return false;
 
-                return DirectBookmark.BookmarkLocation(this, (long) station.Attribute("stationID"), name, comment, (int) station.Attribute("stationTypeID"), (long?) station.Attribute("solarSystemID"), folderId);
+                return DirectBookmark.BookmarkLocation(this, ownerId, (long) station.Attribute("stationID"), name, comment, (int) station.Attribute("stationTypeID"), (long?) station.Attribute("solarSystemID"), folderId);
             }
 
             if (ActiveShip.Entity.IsValid && Session.SolarSystemId.HasValue)
-                return DirectBookmark.BookmarkLocation(this, ActiveShip.Entity.Id, name, comment, ActiveShip.Entity.TypeId, Session.SolarSystemId, folderId);
+                return DirectBookmark.BookmarkLocation(this, ownerId, ActiveShip.Entity.Id, name, comment, ActiveShip.Entity.TypeId, Session.SolarSystemId, folderId);
 
             return false;
         }
@@ -640,17 +752,56 @@ namespace DirectEve
             if (!entity.IsValid)
                 return false;
 
-            return DirectBookmark.BookmarkLocation(this, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId, folderId);
+            if (Session.CharacterId == null)
+                return false;
+
+            return DirectBookmark.BookmarkLocation(this, Session.CharacterId.Value, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId, folderId);
+        }
+
+
+        /// <summary>
+        ///   Bookmark an entity
+        /// </summary>
+        /// <param name = "entity"></param>
+        /// <param name = "name"></param>
+        /// <param name = "comment"></param>
+        /// <param name = "folderId"></param>
+        /// <returns></returns>
+        public bool CorpBookmarkEntity(DirectEntity entity, string name, string comment, long? folderId)
+        {
+            if (!entity.IsValid)
+                return false;
+
+            if (Session.CorporationId == null)
+                return false;
+
+            return DirectBookmark.BookmarkLocation(this, Session.CorporationId.Value, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId, folderId);
         }
 
         /// <summary>
         ///   Create a bookmark folder
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name = "name"></param>
         /// <returns></returns>
         public bool CreateBookmarkFolder(string name)
         {
-            return DirectBookmark.CreateBookmarkFolder(this, name);
+            if (Session.CharacterId == null)
+                return false;
+
+            return DirectBookmark.CreateBookmarkFolder(this, Session.CharacterId.Value, name);
+        }
+
+        /// <summary>
+        ///   Create a bookmark folder
+        /// </summary>
+        /// <param name = "name"></param>
+        /// <returns></returns>
+        public bool CreateCorpBookmarkFolder(string name)
+        {
+            if (Session.CorporationId == null)
+                return false;
+
+            return DirectBookmark.CreateBookmarkFolder(this, Session.CorporationId.Value, name);
         }
 
         /// <summary>
@@ -789,6 +940,7 @@ namespace DirectEve
             if (!pyCall.IsValid)
                 return false;
 
+            RegisterAppEventTime();
             return !PySharp.Import("uthread").CallWithKeywords("new", keywords, (new object[] {pyCall}).Concat(parms).ToArray()).IsNull;
         }
 
@@ -834,36 +986,26 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Register app event time
+        /// </summary>
+        private void RegisterAppEventTime()
+        {
+            PySharp.Import("__builtin__").Attribute("uicore").Attribute("uilib").Call("RegisterAppEventTime");
+        }
+
+        /// <summary>
         ///   Open the fitting management window
         /// </summary>
         public void OpenFitingManager()
         {
-            var pySharp = this.PySharp;
-            var form = pySharp.Import("form");
+            var form = PySharp.Import("form");
             ThreadedCall(form.Attribute("FittingMgmt").Attribute("Open"));
         }
 
-        /// <summary>
-        /// Read a script file and execute it
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        public bool RunScript(string filename)
+        public bool ScatterEvent(string evt)
         {
-            var pySharp = this.PySharp;
-            string text = "";
-
-            try
-            {
-                text = System.IO.File.ReadAllText(filename);
-            }
-            catch
-            {
-                var path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                var scriptPath = System.IO.Path.Combine(path, filename);
-                text = System.IO.File.ReadAllText(scriptPath);
-            }
-            return pySharp.Run(text);
+            var scatterEvent = PySharp.Import("__builtin__").Attribute("sm").Attribute("ScatterEvent");
+            return ThreadedCall(scatterEvent, evt);
         }
     }
 }

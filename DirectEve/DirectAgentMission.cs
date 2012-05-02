@@ -35,23 +35,24 @@ namespace DirectEve
             var missions = new List<DirectAgentMission>();
 
             var pyMissions = directEve.GetLocalSvc("journal").Attribute("agentjournal").Item(0).ToList();
+            
             foreach (var pyMission in pyMissions)
             {
                 var mission = new DirectAgentMission(directEve);
-                mission.State = (int) pyMission.Item(0);
-                mission.Important = (bool) pyMission.Item(1);
-                mission.Type = (string) pyMission.Item(2);
-                mission.Name = (string) pyMission.Item(3);
-
+                mission.State = (int)pyMission.Item(0);
+                mission.Important = (bool)pyMission.Item(1);
+                mission.Type = (string)pyMission.Item(2);
+                mission.Name = (string)directEve.PySharp.Import("localization").Call("GetByMessageID", (int)pyMission.Item(3));
+                
                 mission._pyAgentId = pyMission.Item(4);
-                mission.AgentId = (long) pyMission.Item(4);
+                mission.AgentId = (long)pyMission.Item(4);
 
-                mission.ExpiresOn = (DateTime) pyMission.Item(5);
+                mission.ExpiresOn = (DateTime)pyMission.Item(5);
                 mission.Bookmarks = pyMission.Item(6).ToList().Select(b => new DirectAgentMissionBookmark(directEve, b)).ToList();
                 missions.Add(mission);
             }
 
-            return missions;
+            return missions;          
         }
 
         public bool RemoveOffer()

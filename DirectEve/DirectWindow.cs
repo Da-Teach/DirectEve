@@ -120,6 +120,68 @@ namespace DirectEve
             return DirectEve.ThreadedCall(PyWindow.Attribute("CloseByUser"));
         }
 
+        /// <summary>
+        ///   Find a child object (usually button)
+        /// </summary>
+        /// <param name = "container"></param>
+        /// <param name = "name"></param>
+        /// <returns></returns>
+        internal static PyObject FindChild(PyObject container, string name)
+        {
+            var childs = container.Attribute("children").Attribute("_childrenObjects").ToList();
+            return childs.Find(c => String.Compare((string) c.Attribute("_name"), name) == 0) ?? global::DirectEve.PySharp.PySharp.PyZero;
+        }
+
+        /// <summary>
+        ///   Find a child object (using the supplied path)
+        /// </summary>
+        /// <param name = "container"></param>
+        /// <param name = "path"></param>
+        /// <returns></returns>
+        internal static PyObject FindChildWithPath(PyObject container, IEnumerable<string> path)
+        {
+            return path.Aggregate(container, FindChild);
+        }
+
+
+
+        /// <summary>
+        ///   Answers a modal window
+        /// </summary>
+        /// <param name = "button">a string indicating which button to press. Possible values are: Yes, No, Ok, Cancel, Suppress</param>        
+        /// <returns>true if successfull</returns>
+        public bool AnswerModal(string button)
+        {
+
+            string[] buttonPath  = { "__maincontainer", "bottom", "btnsmainparent", "btns", "Yes_Btn" };
+
+            switch (button)
+            {
+                case "Yes":                    
+                    break;
+                case "No":
+                    buttonPath[4] = "No_Btn";
+                    break;
+                case "OK":
+                case "Ok":
+                    buttonPath[4] = "OK_Btn";
+                    break;
+                case "Cancel":
+                    buttonPath[4] = "Cancel_Btn";
+                    break;
+                case "Suppress":
+                    string[] suppress = { "__maincontainer", "main", "suppressContainer", "suppress" };
+                    buttonPath = suppress;
+                    break;
+                default:
+                    return false;
+            }                        
+            PyObject btn = FindChildWithPath(PyWindow, buttonPath);
+            if (btn != null)
+                return DirectEve.ThreadedCall(btn.Attribute("OnClick"));
+            return false;
+        }
+
         #region Nested type: WindowType
 
         private class WindowType
@@ -137,28 +199,5 @@ namespace DirectEve
         }
 
         #endregion
-
-        /// <summary>
-        ///   Find a child object (usually button)
-        /// </summary>
-        /// <param name="container"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        internal static PyObject FindChild(PyObject container, string name)
-        {
-            var childs = container.Attribute("children").Attribute("_childrenObjects").ToList();
-            return childs.Find(c => String.Compare((string)c.Attribute("_name"), name) == 0) ?? global::DirectEve.PySharp.PySharp.PyZero;
-        }
-
-        /// <summary>
-        ///   Find a child object (using the supplied path)
-        /// </summary>
-        /// <param name="container"></param>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        internal static PyObject FindChildWithPath(PyObject container, IEnumerable<string> path)
-        {
-            return path.Aggregate(container, FindChild);
-        }
     }
 }

@@ -1,4 +1,13 @@
-﻿namespace DirectEve
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
+namespace DirectEve
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -12,18 +21,19 @@
         internal DirectConstellation(DirectEve directEve, PyObject pyo)
             : base(directEve)
         {
-            Id = (long)pyo.Attribute("constellationID");
-            Name = (string)pyo.Attribute("constellationName");
-            Description = (string)pyo.Attribute("description");
-            RegionId = (long)pyo.Attribute("regionID");
-            FactionId = (long?)pyo.Attribute("factionID");
+            Id = (long) pyo.Attribute("constellationID");
+            Name = (string) pyo.Attribute("constellationName");
+            Description = (string) pyo.Attribute("description");
+            RegionId = (long) pyo.Attribute("regionID");
+            FactionId = (long?) pyo.Attribute("factionID");
         }
 
         public long Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
-        
+
         public long RegionId { get; private set; }
+
         public DirectRegion Region
         {
             get

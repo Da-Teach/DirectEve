@@ -12,6 +12,7 @@ namespace DirectEve
     using System.Collections.Generic;
     using System.Linq;
     using global::DirectEve.PySharp;
+    using System;
 
     public class DirectEntity : DirectInvType
     {
@@ -23,13 +24,13 @@ namespace DirectEve
         private int? _corpId;
         private double? _distance;
         private long? _followId;
+        private string _givenName;
         private bool? _hasExploded;
         private bool? _hasReleased;
         private bool? _isCloaked;
         private bool? _isEmpty;
         private int? _mode;
         private string _name;
-        private string _givenName;
         private int? _ownerId;
         private double? _shieldPct;
         private PyObject _slimItem;
@@ -38,6 +39,7 @@ namespace DirectEve
         private double? _x;
         private double? _y;
         private double? _z;
+        private DateTime lastApproach = DateTime.MinValue;
 
         internal DirectEntity(DirectEve directEve, PyObject ballpark, PyObject ball, PyObject slimItem, long id)
             : base(directEve)
@@ -251,7 +253,7 @@ namespace DirectEve
             get
             {
                 if (_velocity == null)
-                    _velocity = (double)_ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetSimTime")).Call("Length");
+                    _velocity = (double) _ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetSimTime")).Call("Length");
 
                 return _velocity.Value;
             }
@@ -355,7 +357,6 @@ namespace DirectEve
 
                 // Create the entity
                 entitiesById[id] = new DirectEntity(directEve, ballpark, ball, slimItem, id);
-                ;
             }
 
             // Mark active target
@@ -374,7 +375,7 @@ namespace DirectEve
                 entity.IsTarget = true;
             }
 
-            var targeting = target.Attribute("targeting").ToList<long>();
+            var targeting = target.Attribute("targeting").ToDictionary<long>().Keys;
             foreach (var targetId in targeting)
             {
                 if (!entitiesById.TryGetValue(targetId, out entity))
@@ -482,6 +483,9 @@ namespace DirectEve
         /// <returns></returns>
         public bool Approach(int range)
         {
+            if (DateTime.Now.Subtract(lastApproach).TotalSeconds < 10)
+                return false;
+            lastApproach = DateTime.Now;
             return DirectEve.ThreadedLocalSvcCall("menu", "Approach", Id, range);
         }
 
@@ -532,7 +536,6 @@ namespace DirectEve
             return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
         }
 
-        
 
         /// <summary>
         ///   Warp to target

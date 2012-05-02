@@ -7,23 +7,23 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
-using global::DirectEve.PySharp;
 namespace DirectEve
 {
     using System.Linq;
+    using global::DirectEve.PySharp;
 
     public class DirectAgentResponse : DirectObject
     {
         private PyObject _container;
 
+        private string[] _responseButtonsPathLeft = {"__maincontainer", "main", "rightPaneBottom", "btnsmainparent", "btns"};
+        private string[] _responseButtonsPathRight = {"__maincontainer", "main", "rightPane", "rightPaneBottom", "btnsmainparent", "btns"};
+
         internal DirectAgentResponse(DirectEve directEve, PyObject container)
             : base(directEve)
         {
             _container = container;
-        }        
-
-        private string[] _responseButtonsPathRight = { "__maincontainer", "main", "rightPane", "rightPaneBottom", "btnsmainparent", "btns" };
-        private string[] _responseButtonsPathLeft = { "__maincontainer", "main", "rightPaneBottom", "btnsmainparent", "btns" };
+        }
 
         public long AgentId { get; internal set; }
         public string Text { get; internal set; }
@@ -32,7 +32,7 @@ namespace DirectEve
 
         public bool Say()
         {
-            var btn = DirectWindow.FindChildWithPath(_container, (Right ? _responseButtonsPathRight : _responseButtonsPathLeft).Concat(new[] { Button }));
+            var btn = DirectWindow.FindChildWithPath(_container, (Right ? _responseButtonsPathRight : _responseButtonsPathLeft).Concat(new[] {Button}));
             return DirectEve.ThreadedCall(btn.Attribute("OnClick"));
         }
     }

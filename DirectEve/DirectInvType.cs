@@ -16,16 +16,20 @@ namespace DirectEve
         private double? _basePrice;
         private double? _capacity;
         private int? _categoryId;
+        private string _categoryName;
         private double? _chanceOfDuplicating;
         private int? _dataId;
         private string _description;
         private int? _graphicId;
         private int? _groupId;
+        private string _groupName;
         private int? _iconId;
         private int? _marketGroupId;
         private double? _mass;
         private int? _portionSize;
         private bool? _published;
+        private PyObject _pyInvCategory;
+        private PyObject _pyInvGroup;
         private PyObject _pyInvType;
         private int? _raceId;
         private double? _radius;
@@ -40,13 +44,17 @@ namespace DirectEve
 
         internal PyObject PyInvType
         {
-            get
-            {
-                if (_pyInvType == null)
-                    _pyInvType = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypes").Call("GetIfExists", TypeId);
+            get { return _pyInvType ?? (_pyInvType = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypes").Call("GetIfExists", TypeId)); }
+        }
 
-                return _pyInvType;
-            }
+        internal PyObject PyInvGroup
+        {
+            get { return _pyInvGroup ?? (_pyInvGroup = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invgroups").Call("GetIfExists", GroupId)); }
+        }
+
+        internal PyObject PyInvCategory
+        {
+            get { return _pyInvCategory ?? (_pyInvCategory = PySharp.Import("__builtin__").Attribute("cfg").Attribute("invcategories").Call("GetIfExists", CategoryId)); }
         }
 
         public int TypeId { get; internal set; }
@@ -59,6 +67,28 @@ namespace DirectEve
                     _groupId = (int) PyInvType.Attribute("groupID");
 
                 return _groupId.Value;
+            }
+        }
+
+        public string GroupName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_groupName))
+                    _groupName = (string) PyInvGroup.Attribute("groupName");
+
+                return _groupName;
+            }
+        }
+
+        public string CategoryName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_categoryName))
+                    _categoryName = (string) PyInvCategory.Attribute("categoryName");
+
+                return _categoryName;
             }
         }
 

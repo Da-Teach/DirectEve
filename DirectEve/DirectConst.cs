@@ -77,6 +77,16 @@ namespace DirectEve
             get { return Const.Attribute("flagDroneBay"); }
         }
 
+        public int FlagSkillInTraining
+        {
+            get { return (int) Const.Attribute("flagSkillInTraining"); }
+        }
+
+        public PyObject FlagUnlocked
+        {
+            get { return Const.Attribute("flagUnlocked"); }
+        }
+
         public PyObject CategoryShip
         {
             get { return Const.Attribute("categoryShip"); }
@@ -85,6 +95,21 @@ namespace DirectEve
         public PyObject CategoryModule
         {
             get { return Const.Attribute("categoryModule"); }
+        }
+
+        public PyObject CategorySkill
+        {
+            get { return Const.Attribute("categorySkill"); }
+        }
+
+        public PyObject CategoryStructure
+        {
+            get { return Const.Attribute("categoryStructure"); }
+        }
+
+        public PyObject GroupAuditLogSecureContainer
+        {
+            get { return Const.Attribute("groupAuditLogSecureContainer"); }
         }
 
         public PyObject RangeRegion

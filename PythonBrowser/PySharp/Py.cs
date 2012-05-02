@@ -40,7 +40,7 @@ namespace PythonBrowser.PySharp
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern IntPtr LoadLibrary(string lpszLib);
 
-        private static IntPtr GetStruct(string name)
+        internal static IntPtr GetStruct(string name)
         {
             IntPtr structure;
             if (!_structures.TryGetValue(name, out structure))
@@ -49,6 +49,8 @@ namespace PythonBrowser.PySharp
                     _moduleHandle = LoadLibrary("python27.dll");
 
                 structure = GetProcAddress(_moduleHandle, name);
+                if (structure == IntPtr.Zero)
+                    throw new Exception("Structure " + name + " not found!");
 
                 if (structure != IntPtr.Zero)
                     _structures[name] = structure;
@@ -75,7 +77,6 @@ namespace PythonBrowser.PySharp
             _types.Add(GetStruct("PyCapsule_Type"), PyType.CapsuleType);
             _types.Add(GetStruct("PyCell_Type"), PyType.CellType);
             _types.Add(GetStruct("PyChannel_TypePtr"), PyType.ChannelTypePtr);
-            _types.Add(GetStruct("PyClassMethodDescr_Type"), PyType.ClassMethodDescrType);
             _types.Add(GetStruct("PyClassMethod_Type"), PyType.ClassMethodType);
             _types.Add(GetStruct("PyClass_Type"), PyType.ClassType);
             _types.Add(GetStruct("PyCode_Type"), PyType.CodeType);
@@ -105,8 +106,6 @@ namespace PythonBrowser.PySharp
             _types.Add(GetStruct("PyLong_Type"), PyType.LongType);
             _types.Add(GetStruct("PyMemberDescr_Type"), PyType.MemberDescrType);
             _types.Add(GetStruct("PyMemoryView_Type"), PyType.MemoryViewType);
-            _types.Add(GetStruct("PyMethodDescr_Type"), PyType.MethodDescrType);
-            _types.Add(GetStruct("PyMethodWrapper_Type"), PyType.MethodWrapperType);
             _types.Add(GetStruct("PyMethod_Type"), PyType.MethodType);
             _types.Add(GetStruct("PyModule_Type"), PyType.ModuleType);
             _types.Add(GetStruct("PyNullImporter_Type"), PyType.NullImporterType);
@@ -168,8 +167,24 @@ namespace PythonBrowser.PySharp
             return Marshal.ReadInt32(po);
         }
 
+        internal static IntPtr GetThreadState()
+        {
+            return GetStruct("_PyThreadState_Current");
+        }
+
+        internal static IntPtr ExchangePyFrame(IntPtr frame)
+        {
+            var tstate = Marshal.ReadIntPtr(GetThreadState());
+            var prevFrame = Marshal.ReadIntPtr(tstate.Add(8));
+            Marshal.WriteIntPtr(tstate.Add(8), frame);
+            return prevFrame;
+        }
+
         [DllImport("python27.dll")]
         internal static extern IntPtr PyImport_ImportModule(string module);
+
+        [DllImport("python27.dll")]
+        internal static extern IntPtr PyEval_GetGlobals();
 
         [DllImport("python27.dll")]
         internal static extern void Py_DecRef(IntPtr op);
@@ -237,7 +252,10 @@ namespace PythonBrowser.PySharp
         internal static extern IntPtr PyTuple_GetItem(IntPtr op, int index);
 
         [DllImport("python27.dll")]
-        internal static extern int PyRun_SimpleString(string s);
+        internal static extern IntPtr PyCode_NewEmpty(string filename, string funcname, int firstlineno);
+
+        [DllImport("python27.dll")]
+        internal static extern IntPtr PyFrame_New(IntPtr tstate, IntPtr code, IntPtr globals, IntPtr locals);
 
         [DllImport("python27.dll")]
         internal static extern int PyString_Size(IntPtr op);

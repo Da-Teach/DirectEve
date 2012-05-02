@@ -27,7 +27,7 @@ namespace DirectEve
         private int? _quantity;
         private int? _stacksize;
 
-        public DirectItem(DirectEve directEve) : base(directEve)
+        internal DirectItem(DirectEve directEve) : base(directEve)
         {
             PyItem = global::DirectEve.PySharp.PySharp.PyZero;
         }
@@ -296,6 +296,59 @@ namespace DirectEve
             data.Add(PyItem);
 
             return DirectEve.ThreadedLocalSvcCall("menu", "TryFit", data);
+        }
+
+        /// <summary>
+        ///   Inject the skill into your brain
+        /// </summary>
+        /// <returns></returns>
+        public bool InjectSkill()
+        {
+            if (CategoryId != (int) DirectEve.Const.CategorySkill)
+                return false;
+
+            if (!DirectEve.Session.StationId.HasValue || LocationId != DirectEve.Session.StationId)
+                return false;
+
+            if (ItemId == 0 || !PyItem.IsValid)
+                return false;
+
+            return DirectEve.ThreadedLocalSvcCall("menu", "InjectSkillIntoBrain", new List<PyObject> { PyItem });
+        }
+
+        /// <summary>
+        /// Set the name of an item.  Be sure to call DirectEve.ScatterEvent("OnItemNameChange") shortly after calling this function.  Do not call ScatterEvent from the same frame!!
+        /// </summary>
+        /// <seealso cref="menuSvc.SetName"/>
+        /// <param name="name">The new name for this item.</param>
+        /// <returns>true if successful.  false if not.</returns>
+        public bool SetName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return false;
+            }
+
+            if (CategoryId != (int)DirectEve.Const.CategoryShip && name.Length > 20)
+            {
+                return false;
+            }
+
+            if (CategoryId != (int)DirectEve.Const.CategoryStructure && name.Length > 32)
+            {
+                return false;
+            }
+
+            if (name.Length > 100)
+            {
+                return false;
+            }
+
+            if (ItemId == 0 || !PyItem.IsValid)
+                return false;
+
+            var pyCall = DirectEve.GetLocalSvc("invCache").Call("GetInventoryMgr").Attribute("SetLabel");
+            return DirectEve.ThreadedCall(pyCall, ItemId, name.Replace('\n', ' '));
         }
     }
 }
