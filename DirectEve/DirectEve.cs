@@ -15,6 +15,7 @@ namespace DirectEve
     using System.Reflection;
     using System.Security;
     using global::DirectEve.PySharp;
+    using D3DDetour;
 
     public class DirectEve : IDisposable
     {

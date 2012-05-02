@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -143,6 +143,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectEve.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\D3DDetour\D3DDetour.csproj">
+      <Project>{8224F5E1-93C7-450A-8F19-4BC86ABB13CB}</Project>
+      <Name>D3DDetour</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
