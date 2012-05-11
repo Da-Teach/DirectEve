@@ -32,6 +32,8 @@
                 var machoVersion = (int)pySharp.Import("macho").Attribute("version");
                 if (_version.Minor == machoVersion)
                     _isInitialized ^= CheckOne;
+                else
+                    System.Diagnostics.Debugger.Log(0, "", string.Format("machoVersion is {0}", machoVersion));
             }
         }
 

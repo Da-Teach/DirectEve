@@ -12,8 +12,6 @@ namespace DirectEve
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
-    using System.Security;
     using global::DirectEve.PySharp;
     using D3DDetour;
 
