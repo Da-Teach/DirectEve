@@ -157,7 +157,7 @@ namespace DirectEve
 
             if (!_security.IsValid)
             {
-                InnerSpaceAPI.InnerSpace.Echo("Incompatible EVE Online version detected");
+                Log("Incompatible EVE Online version detected");
                 return;
             }
             
@@ -1005,6 +1005,18 @@ namespace DirectEve
         {
             var scatterEvent = PySharp.Import("__builtin__").Attribute("sm").Attribute("ScatterEvent");
             return ThreadedCall(scatterEvent, evt);
+        }
+
+        public event EventHandler<LogEventArgs> LogEvent;
+
+        public void Log(string val)
+        {
+            // Copy to a temporary variable to be thread-safe.
+            EventHandler<LogEventArgs> temp = LogEvent;
+            if (temp != null)
+            {
+                temp(this, new LogEventArgs(val));
+            }
         }
     }
 }

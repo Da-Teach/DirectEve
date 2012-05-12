@@ -13,6 +13,7 @@ namespace DirectEveTester
     using System.Linq;
     using System.Threading;
     using DirectEve;
+    using InnerSpaceAPI;
 
     internal static class Program
     {
@@ -27,22 +28,27 @@ namespace DirectEveTester
         [STAThread]
         private static void Main()
         {
-            Log("Starting test...");
             _directEve = new DirectEve();
+            _directEve.LogEvent += OnLog;
             _directEve.OnFrame += OnFrame;
+            Log("Starting test...");
 
             // Sleep until we're done
             while (!_done)
                 Thread.Sleep(50);
 
-            _directEve.Dispose();
             Log("Test finished.");
+            _directEve.Dispose();
         }
 
         private static void Log(string format, params object[] parms)
         {
-            //InnerSpace.Echo(string.Format("{0:D} {1:HH:mm:ss} {2}", _frameCount, DateTime.Now, string.Format(format, parms)));
-            System.Diagnostics.Debugger.Log(0, null, string.Format("{0:D} {1:HH:mm:ss} {2}", _frameCount, DateTime.Now, string.Format(format, parms)));
+            _directEve.Log(string.Format("{0:D} {1:HH:mm:ss} {2}", _frameCount, DateTime.Now, string.Format(format, parms)));
+        }
+
+        private static void OnLog(object sender, LogEventArgs eventArgs)
+        {
+            InnerSpace.Echo(eventArgs.Message);
         }
 
         private static void OnFrame(object sender, EventArgs eventArgs)
