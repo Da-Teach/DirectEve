@@ -560,10 +560,8 @@ namespace DirectEve
         /// </summary>
         /// <returns></returns>
         public bool Jump()
-        {
-            var toCelestialId = _slimItem.Attribute("jumps").Item(0).Attribute("toCelestialID");
-            var locationId = _slimItem.Attribute("jumps").Item(0).Attribute("locationID");
-            return DirectEve.ThreadedLocalSvcCall("menu", "StargateJump", Id, toCelestialId, locationId);
+        {            
+            return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
         }
 
         /// <summary>
@@ -571,8 +569,8 @@ namespace DirectEve
         /// </summary>
         /// <returns></returns>
         public bool Activate()
-        {
-            return DirectEve.ThreadedLocalSvcCall("menu", "ActivateAccelerationGate", Id);
+        {            
+            return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
         }
 
         /// <summary>
