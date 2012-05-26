@@ -45,14 +45,11 @@
 
         private void PerformStartupChecks()
         {
-            // Check macho version vs minor version
-            PerformStartupCheck1();
-
             // Load DirectEve license
             LoadLicense();
 
             // Check DirectEve version on server
-            PerformStartupCheck2();
+            PerformStartupCheck();
         }
 
         /// <summary>
@@ -148,22 +145,9 @@
         }
 
         /// <summary>
-        ///   A quick check to see if machonet matches minor version of DirectEve
-        /// </summary>
-        private void PerformStartupCheck1()
-        {
-            using (var pySharp = new PySharp.PySharp(false))
-            {
-                var machoVersion = (int)pySharp.Import("macho").Attribute("version");
-                if (_version.Minor != machoVersion)
-                    throw new SecurityException(_obsoleteDirectEve);
-            }
-        }
-
-        /// <summary>
         ///   A check to see if 
         /// </summary>
-        private void PerformStartupCheck2()
+        private void PerformStartupCheck()
         {
             var startupRequest = new XElement("request",
                 new XElement("email", _email),
