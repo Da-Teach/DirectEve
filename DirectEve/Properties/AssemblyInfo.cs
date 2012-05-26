@@ -17,9 +17,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DirectEve")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("TheHackerWithin")]
 [assembly: AssemblyProduct("DirectEve")]
-[assembly: AssemblyCopyright("Copyright © The HackerWithin 2012")]
+[assembly: AssemblyCopyright("Copyright © TheHackerWithin 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

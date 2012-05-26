@@ -155,11 +155,13 @@ namespace DirectEve
         /// </summary>
         public DirectEve()
         {
-            _security = new DirectEveSecurity(this);
-
-            if (!_security.IsValid)
+            try
             {
-                InnerSpaceAPI.InnerSpace.Echo("Incompatible EVE Online version detected");
+                _security = new DirectEveSecurity(this);
+            }
+            catch (Exception ex)
+            {
+                InnerSpaceAPI.InnerSpace.Echo(ex.Message);
                 return;
             }
             
@@ -451,7 +453,7 @@ namespace DirectEve
                 PySharp = pySharp;
 
                 // Pulse security
-                if (!_security.Pulse())
+                if (_security == null || !_security.Pulse())
                     return;
 
                 // Get current target list
@@ -469,7 +471,7 @@ namespace DirectEve
                 }
 
                 // Check if we're still valid
-                if (OnFrame != null && _security.IsValid)
+                if (OnFrame != null)
                     OnFrame(this, new EventArgs());
 
                 // Clear any cache that we had during this frame

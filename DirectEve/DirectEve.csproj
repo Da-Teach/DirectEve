@@ -43,6 +43,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <DocumentationFile />
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -62,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Certificates\Certificates.cs" />
     <Compile Include="DirectEveSecurity.cs" />
     <Compile Include="DirectSkill.cs" />
     <Compile Include="DirectSystemScanResult.cs" />
@@ -125,8 +127,11 @@
     <Compile Include="PySharp\PyType.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Certificates\ClientToServer.pfx" />
+    <EmbeddedResource Include="Certificates\ServerToClient.cer" />
     <None Include="DirectEve.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyToInnerSpace" AfterTargets="AfterBuild">
