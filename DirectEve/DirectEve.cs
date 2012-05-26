@@ -20,6 +20,7 @@ namespace DirectEve
     public class DirectEve : IDisposable
     {
         private DirectEveSecurity _security;
+        private bool _securityCheckFailed;
 
         /// <summary>
         ///   ActiveShip cache
@@ -454,7 +455,20 @@ namespace DirectEve
 
                 // Pulse security
                 if (_security == null || !_security.Pulse())
+                {
+                    if (!_securityCheckFailed)
+                    {
+                        _securityCheckFailed = true;
+                        InnerSpaceAPI.InnerSpace.Echo("DirectEve supported instance check failed!");
+                    }
                     return;
+                }
+
+                if (_securityCheckFailed)
+                {
+                    _securityCheckFailed = false;
+                    InnerSpaceAPI.InnerSpace.Echo("DirectEve supported instance check succeeded, continuing...");
+                }
 
                 // Get current target list
                 var targets = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targets").ToList<long>();
