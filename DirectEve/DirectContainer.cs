@@ -376,7 +376,7 @@ namespace DirectEve
                 return new DirectContainer(directEve, global::DirectEve.PySharp.PySharp.PyZero, global::DirectEve.PySharp.PySharp.PyZero, string.Empty);
 
             var inventory = GetInventory(directEve, "GetInventoryFromId", itemId);
-            return new DirectContainer(directEve, inventory, flag, "corpHangar_" + itemId);
+            return new DirectContainer(directEve, inventory, flag, "(\"InventorySecondary_'StationCorpHangar'");
         }
 
         /// <summary>
