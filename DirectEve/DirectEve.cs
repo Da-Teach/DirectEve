@@ -523,10 +523,12 @@ namespace DirectEve
         /// <remarks>
         ///   Only works in a station!
         /// </remarks>
-        public bool OpenCorporationHangar()
+        /// 
+        // NOTE: method removed until e a tuple (int, string) can be formed. (long, string) does not work for some reason
+        /*public bool OpenCorporationHangar()
         {
             return ThreadedLocalSvcCall("window", "OpenCorpHangar", global::DirectEve.PySharp.PySharp.PyNone, global::DirectEve.PySharp.PySharp.PyNone, 1);
-        }
+        }*/
 
         public bool OpenCorpHangarArray(long itemID)
         {
