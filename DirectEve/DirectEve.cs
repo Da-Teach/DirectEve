@@ -530,6 +530,17 @@ namespace DirectEve
             return ThreadedLocalSvcCall("window", "OpenCorpHangar", global::DirectEve.PySharp.PySharp.PyNone, global::DirectEve.PySharp.PySharp.PyNone, 1);
         }*/
 
+        public int GetCorpHangarId(string divisionName)
+        {
+            var divisions = GetLocalSvc("corp").Call("GetDivisionNames");
+            for (var i = 0; i < 7; i ++)
+            {
+                if (string.Compare(divisionName, (string) divisions.DictionaryItem(i), true) == 0)
+                    return i;
+            }
+            return -1;
+        }
+
         public bool OpenCorpHangarArray(long itemID)
         {
             return ThreadedLocalSvcCall("menu", "OpenCorpHangarArray", itemID, global::DirectEve.PySharp.PySharp.PyNone);

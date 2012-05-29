@@ -142,5 +142,22 @@ namespace DirectEve
             return DirectEve.ThreadedCall(PyWindow.Attribute("OpenOrShow"), entry.First().Key);
 
         }
+
+        /// <summary>
+        ///   Select the tree entry with the given name and ID
+        /// </summary>
+        /// <param name = "entryName"></param>
+        /// <param name = "entryID"></param>
+        /// <returns></returns>
+        public bool SelectTreeEntry(string entryName, long entryID)
+        {
+            var dict = PyWindow.Attribute("treeEntryByID").ToDictionary();
+            var entry = dict.Where(d => (string)d.Key.ToList().First() == entryName && (long)d.Key.ToList().Last() == entryID);
+            if (entry == null) return false;
+            if (entry.Count() != 1) return false;
+
+            return DirectEve.ThreadedCall(PyWindow.Attribute("OpenOrShow"), entry.First().Key);
+
+        }
     }
 }
