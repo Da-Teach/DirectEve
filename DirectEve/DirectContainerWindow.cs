@@ -159,5 +159,29 @@ namespace DirectEve
             return DirectEve.ThreadedCall(PyWindow.Attribute("OpenOrShow"), entry.First().Key);
 
         }
+
+        /// <summary>
+        ///   Expand the tree entry with the given name and ID
+        /// </summary>
+        /// <param name = "entryName"></param>
+        /// <param name = "entryID"></param>
+        /// <returns></returns>
+        internal bool ExpandTreeEntry(string entryName)
+        {
+            var dict = PyWindow.Attribute("treeEntryByID").ToDictionary();
+            var entry = dict.Where(d => (string)d.Key.ToList().First() == entryName);
+            if (entry == null) return false;
+            if (entry.Count() != 1) return false;
+
+            entry.First().Value.Call("ExpandFromRoot");
+            PyWindow.Call("RefreshTree");
+
+            return true;
+        }
+
+        public bool ExpandCorpHangarView()
+        {
+            return ExpandTreeEntry("Corporation hangars");
+        }
     }
 }
