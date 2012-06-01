@@ -28,6 +28,8 @@
         private Guid _licenseKey;
         private Version _version;
         private Guid _instanceId;
+        private int _activeInstances;
+        private int _supportInstances;
 
         private Thread _pulseThread;
         private bool _pulseResult;
@@ -122,6 +124,10 @@
 
                 return result;
             }
+            catch(SecurityException)
+            {
+                throw;
+            }
             catch (Exception)
             {
                 return null;
@@ -160,6 +166,8 @@
                 throw new SecurityException(_verifyError);
 
             _instanceId = (Guid)startupResponse.Element("instanceid");
+            _activeInstances = (int?)startupResponse.Element("activeinstances") ?? 0;
+            _supportInstances = (int?)startupResponse.Element("supportinstances") ?? 0;
         }
 
         /// <summary>
@@ -221,7 +229,17 @@
                 new XElement("challenge", DateTime.Now));
 
             // Fire & forget
-            PerformServerCall(_shutdownUrl, shutdownRequest);
+            try
+            {
+                PerformServerCall(_shutdownUrl, shutdownRequest);
+            }
+            catch
+            { }
         }
+
+        internal Version Version { get { return _version; } }
+        internal string Email { get { return _email; } }
+        internal int ActiveInstances { get { return _activeInstances; } }
+        internal int SupportInstances { get { return _supportInstances; } }
     }
 }

@@ -159,6 +159,19 @@ namespace DirectEve
             try
             {
                 _security = new DirectEveSecurity(this);
+
+                InnerSpaceAPI.InnerSpace.Echo("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                InnerSpaceAPI.InnerSpace.Echo("Starting DirectEve v" + _security.Version);
+                if (_security.Email != "anonymous")
+                {
+                    InnerSpaceAPI.InnerSpace.Echo("Registered to " + _security.Email);
+                    InnerSpaceAPI.InnerSpace.Echo("You are currently using " + _security.ActiveInstances + " of " + _security.SupportInstances + " support instances");
+                }
+                else
+                    InnerSpaceAPI.InnerSpace.Echo("You are using the anonymous license, please consider upgrading to a support license (http://support.thehackerwithin.com)");
+                InnerSpaceAPI.InnerSpace.Echo("Copyright (c) 2012 - TheHackerWithin");
+                InnerSpaceAPI.InnerSpace.Echo("http://www.thehackerwithin.com");
+                InnerSpaceAPI.InnerSpace.Echo("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
             }
             catch (Exception ex)
             {
@@ -413,7 +426,8 @@ namespace DirectEve
         {
             LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
 
-            _security.QuitDirectEve();
+            if (_security != null)
+                _security.QuitDirectEve();
         }
 
         #endregion
