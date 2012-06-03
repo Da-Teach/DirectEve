@@ -209,12 +209,12 @@
                 _lastPulse = DateTime.Now;
             }
 
-            // We are in a station and pulse result is false
-            if (!_pulseResult && _directEve.Session.IsInSpace)
-                return false;
+            // We are in space, always return true
+            if (_directEve.Session.IsInSpace)
+                return true;
 
             // If we're not in a station, 
-            return true;
+            return _pulseResult;
         }
 
         /// <summary>
