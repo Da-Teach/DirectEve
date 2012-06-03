@@ -183,5 +183,11 @@ namespace DirectEve
         {
             return ExpandTreeEntry("Corporation hangars");
         }
+
+        public bool IsPrimary()
+        {
+            return (bool)PyWindow.Call("IsPrimaryInvWindow");
+        }
+
     }
 }
