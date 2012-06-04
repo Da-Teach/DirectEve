@@ -210,10 +210,10 @@
             }
 
             // We are in space, always return true
-            if (_directEve.Session.IsInSpace)
+            if (!_directEve.Session.IsInStation)
                 return true;
 
-            // If we're not in a station, 
+            // We're in station, return pulse result
             return _pulseResult;
         }
 
