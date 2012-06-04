@@ -539,10 +539,32 @@ namespace DirectEve
         /// </remarks>
         /// 
         // NOTE: method removed until e a tuple (int, string) can be formed. (long, string) does not work for some reason
-        /*public bool OpenCorporationHangar()
+        public bool OpenCorporationHangarBeta(int divisionID)
         {
-            return ThreadedLocalSvcCall("window", "OpenCorpHangar", global::DirectEve.PySharp.PySharp.PyNone, global::DirectEve.PySharp.PySharp.PyNone, 1);
-        }*/
+            var invName = Py.PyString_FromString("StationCorpHangar");
+            var itemID = GetLocalSvc("corp").Call("GetOffice", Session.CorporationId).Attribute("itemID");
+            var pyDivisionID = Py.PyLong_FromLongLong(divisionID);
+            var invID = new PyObject(PySharp, Py.Py_BuildValue("(s,i,i)", invName, itemID, pyDivisionID), true);
+            //invID.Add("StationShips");
+            //invID.Add(Session.StationId2 ?? -1); 
+            var form = PySharp.Import("form");
+            var keywords = new Dictionary<string, object>();
+            keywords.Add("invID", invID);
+            return ThreadedCallWithKeywords(form.Attribute("Inventory").Attribute("Open"), keywords);
+        }
+
+        public bool OpenInventory()
+        {
+            var first = Py.PyUnicodeUCS2_FromString("ShipCargo");
+            var second = Py.PyLong_FromLongLong(Session.ShipId.Value);
+            var invID = new PyObject(PySharp, Py.Py_BuildValue("(s,i)", first, second), true);
+            //invID.Add("StationShips");
+            //invID.Add(Session.StationId2 ?? -1); 
+            var form = PySharp.Import("form");
+            var keywords = new Dictionary<string, object>();
+            keywords.Add("invID", invID);
+            return ThreadedCallWithKeywords(form.Attribute("Inventory").Attribute("Open"), keywords);    
+        }
 
         public int GetCorpHangarId(string divisionName)
         {
