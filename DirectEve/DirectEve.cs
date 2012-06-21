@@ -17,6 +17,8 @@ namespace DirectEve
     using global::DirectEve.PySharp;
     using LavishScriptAPI;
 
+    public delegate void LoggingDelegate(string msg);
+
     public class DirectEve : IDisposable
     {
         private DirectEveSecurity _security;
@@ -151,31 +153,39 @@ namespace DirectEve
         /// </summary>
         private List<DirectWindow> _windows;
 
+        public LoggingDelegate Logger { get; private set; }
+
         /// <summary>
-        ///   Create a DirectEve object
+        /// Create a DirectEve object
         /// </summary>
-        public DirectEve()
+        /// <param name="logger">A delegate to call with log messages.</param>
+        public DirectEve(LoggingDelegate logger = null)
         {
+            if (logger != null)
+            {
+                Logger = logger;
+            }
+
             try
             {
                 _security = new DirectEveSecurity(this);
 
-                InnerSpaceAPI.InnerSpace.Echo("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
-                InnerSpaceAPI.InnerSpace.Echo("Starting DirectEve v" + _security.Version);
+                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                Log("Starting DirectEve v" + _security.Version);
                 if (_security.Email != "anonymous")
                 {
-                    InnerSpaceAPI.InnerSpace.Echo("Registered to " + _security.Email);
-                    InnerSpaceAPI.InnerSpace.Echo("You are currently using " + _security.ActiveInstances + " of " + _security.SupportInstances + " support instances");
+                    Log("Registered to " + _security.Email);
+                    Log("You are currently using " + _security.ActiveInstances + " of " + _security.SupportInstances + " support instances");
                 }
                 else
-                    InnerSpaceAPI.InnerSpace.Echo("You are using the anonymous license, please consider upgrading to a support license (http://support.thehackerwithin.com)");
-                InnerSpaceAPI.InnerSpace.Echo("Copyright (c) 2012 - TheHackerWithin");
-                InnerSpaceAPI.InnerSpace.Echo("http://www.thehackerwithin.com");
-                InnerSpaceAPI.InnerSpace.Echo("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                    Log("You are using the anonymous license, please consider upgrading to a support license (http://support.thehackerwithin.com)");
+                Log("Copyright (c) 2012 - TheHackerWithin");
+                Log("http://www.thehackerwithin.com");
+                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
             }
             catch (Exception ex)
             {
-                InnerSpaceAPI.InnerSpace.Echo(ex.Message);
+                Log(ex.Message);
                 return;
             }
             
@@ -473,7 +483,7 @@ namespace DirectEve
                     if (!_securityCheckFailed)
                     {
                         _securityCheckFailed = true;
-                        InnerSpaceAPI.InnerSpace.Echo("DirectEve supported instance check failed!");
+                        Log("DirectEve supported instance check failed!");
                     }
                     return;
                 }
@@ -481,7 +491,7 @@ namespace DirectEve
                 if (_securityCheckFailed)
                 {
                     _securityCheckFailed = false;
-                    InnerSpaceAPI.InnerSpace.Echo("DirectEve supported instance check succeeded, continuing...");
+                    Log("DirectEve supported instance check succeeded, continuing...");
                 }
 
                 // Get current target list
@@ -1055,10 +1065,31 @@ namespace DirectEve
             ThreadedCall(form.Attribute("FittingMgmt").Attribute("Open"));
         }
 
+        /// <summary>
+        /// Broadcast scatter events.  Use with caution.
+        /// </summary>
+        /// <param name="evt">The event name.</param>
+        /// <returns></returns>
         public bool ScatterEvent(string evt)
         {
             var scatterEvent = PySharp.Import("__builtin__").Attribute("sm").Attribute("ScatterEvent");
             return ThreadedCall(scatterEvent, evt);
+        }
+
+        /// <summary>
+        /// Log a message.
+        /// </summary>
+        /// <param name="msg">A string to output to the loggers.</param>
+        public void Log(string msg)
+        {
+            if (Logger != null)
+            {
+                Logger(msg);
+            }
+            else
+            {
+                System.Diagnostics.Debugger.Log(0, "", msg);
+            }
         }
     }
 }
