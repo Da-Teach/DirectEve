@@ -16,6 +16,7 @@ namespace DirectEve
     using System.Security;
     using global::DirectEve.PySharp;
     using LavishScriptAPI;
+    using InnerSpaceAPI;
 
     public delegate void LoggingDelegate(string msg);
 
@@ -165,6 +166,7 @@ namespace DirectEve
             {
                 Logger = logger;
             }
+            else Logger = null;
 
             try
             {
@@ -1088,7 +1090,8 @@ namespace DirectEve
             }
             else
             {
-                System.Diagnostics.Debugger.Log(0, "", msg);
+                //System.Diagnostics.Debugger.Log(0, "", msg);
+                InnerSpace.Echo(msg);
             }
         }
     }
