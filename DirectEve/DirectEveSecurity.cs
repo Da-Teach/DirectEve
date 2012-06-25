@@ -52,6 +52,9 @@
 
             // Check DirectEve version on server
             PerformStartupCheck();
+
+            //Check if directeve is obsolete
+            CheckVersion();
         }
 
         /// <summary>
@@ -168,6 +171,19 @@
             _instanceId = (Guid)startupResponse.Element("instanceid");
             _activeInstances = (int?)startupResponse.Element("activeinstances") ?? 0;
             _supportInstances = (int?)startupResponse.Element("supportinstances") ?? 0;
+        }
+
+        /// <summary>
+        ///   A quick check to see if machonet matches minor version of DirectEve
+        /// </summary>
+        private void CheckVersion()
+        {
+            using (var pySharp = new PySharp.PySharp(false))
+            {
+                var machoVersion = (int)pySharp.Import("macho").Attribute("version");
+                if (_version.Minor != machoVersion)
+                    throw new SecurityException(_obsoleteDirectEve);
+            }
         }
 
         /// <summary>
