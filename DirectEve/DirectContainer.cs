@@ -87,6 +87,7 @@ namespace DirectEve
             : this(directEve, pyInventory, pyFlag)
         {
             _itemId = itemId;
+            _windowName = string.Empty;
         }
 
         /// <summary>
@@ -120,10 +121,11 @@ namespace DirectEve
                     _items = DirectItem.GetItems(DirectEve, _pyInventory, _pyFlag);
 
                     // Special case
-                    var categoryShip = (int) DirectEve.Const.CategoryShip;
-                    if (_windowName == "hangarFloor")
+                    var categoryShip = (int)DirectEve.Const.CategoryShip;
+
+                    if (_windowName.Contains("StationItems"))                        
                         _items.RemoveAll(i => i.CategoryId == categoryShip);
-                    if (_windowName == "shipHangar")
+                    if (_windowName.Contains("StationShips"))                        
                         _items.RemoveAll(i => i.CategoryId != categoryShip);
 
                     // Special case #2 (filter out hi/med/low slots)
@@ -156,11 +158,30 @@ namespace DirectEve
                     return null;
 
                 if (_window == null && !string.IsNullOrEmpty(_windowName))
-                    _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name == _windowName);
+                {
+                    _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name.Contains(_windowName));
+                    //look for a secondary inventory window first, then for the main inventory window
+                    if (_windowName.Contains("Secondary") && _window == null)
+                    {
+                        
+                        _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name.StartsWith("('Inventory'"));
+                        if (_window != null)
+                        {                            
+                            if (!_windowName.Contains(_window.currInvIdName))
+                                _window = null;
+                        }
+                    }
+                }
 
                 if (_window == null && _itemId != 0)
-                    _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.ItemId == _itemId);
+                {
+                    _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name.Contains("Secondary") && w.currInvIdItem == _itemId);
+                    if (_window == null)
+                        _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.currInvIdItem == _itemId);
 
+                }
+
+                
                 return _window;
             }
         }
@@ -308,7 +329,7 @@ namespace DirectEve
 
             var itemId = (long) directEve.GetLocalSvc("corp").Call("GetOffice", directEve.Session.CorporationId).Attribute("itemID");
             var inventory = GetInventory(directEve, "GetInventoryFromId", itemId);
-            return new DirectContainer(directEve, inventory, flag, "corpHangar_" + itemId);
+            return new DirectContainer(directEve, inventory, flag, "('InventorySecondary_StationCorpHangar', '" + itemId + "_" + (divisionId - 1));
         }
 
         internal static DirectContainer GetCorporationHangarArray(DirectEve directEve, long itemId, string divisionName)
@@ -355,7 +376,7 @@ namespace DirectEve
                 return new DirectContainer(directEve, global::DirectEve.PySharp.PySharp.PyZero, global::DirectEve.PySharp.PySharp.PyZero, string.Empty);
 
             var inventory = GetInventory(directEve, "GetInventoryFromId", itemId);
-            return new DirectContainer(directEve, inventory, flag, "corpHangar_" + itemId);
+            return new DirectContainer(directEve, inventory, flag, "('InventorySecondary_POSCorpHangar', '" + itemId + "_" + (divisionId - 1));
         }
 
         /// <summary>
@@ -365,8 +386,9 @@ namespace DirectEve
         /// <returns></returns>
         internal static DirectContainer GetItemHangar(DirectEve directEve)
         {
-            var inventory = GetInventory(directEve, "GetInventory", (long) directEve.Const.ContainerHangar);
-            return new DirectContainer(directEve, inventory, directEve.Const.FlagHangar, "hangarFloor");
+            var inventory = GetInventory(directEve, "GetInventory", (long)directEve.Const.ContainerHangar);
+            return new DirectContainer(directEve, inventory, directEve.Const.FlagHangar, "('InventorySecondary_StationItems");
+            //return new DirectContainer(directEve, inventory, directEve.Const.FlagHangar, "('Inventory'");
         }
 
         /// <summary>
@@ -376,8 +398,9 @@ namespace DirectEve
         /// <returns></returns>
         internal static DirectContainer GetShipHangar(DirectEve directEve)
         {
-            var inventory = GetInventory(directEve, "GetInventory", (long) directEve.Const.ContainerHangar);
-            return new DirectContainer(directEve, inventory, directEve.Const.FlagHangar, "shipHangar");
+            var inventory = GetInventory(directEve, "GetInventory", (long)directEve.Const.ContainerHangar);
+            return new DirectContainer(directEve, inventory, directEve.Const.FlagHangar, "('InventorySecondary_StationShips");
+            //return new DirectContainer(directEve, inventory, directEve.Const.FlagHangar, "('Inventory'");
         }
 
         /// <summary>
@@ -391,7 +414,8 @@ namespace DirectEve
                 return new DirectContainer(directEve, global::DirectEve.PySharp.PySharp.PyZero, global::DirectEve.PySharp.PySharp.PyZero, string.Empty);
 
             var inventory = GetInventory(directEve, "GetInventoryFromId", directEve.Session.ShipId.Value);
-            return new DirectContainer(directEve, inventory, directEve.Const.FlagCargo, "shipCargo_" + directEve.Session.ShipId);
+            return new DirectContainer(directEve, inventory, directEve.Const.FlagCargo, "('InventorySecondary_ShipCargo_" + directEve.Session.ShipId.Value);
+            //return new DirectContainer(directEve, inventory, directEve.Const.FlagCargo, "('Inventory'");
         }
 
         /// <summary>
@@ -419,7 +443,8 @@ namespace DirectEve
                 return new DirectContainer(directEve, global::DirectEve.PySharp.PySharp.PyZero, global::DirectEve.PySharp.PySharp.PyZero, string.Empty);
 
             var inventory = GetInventory(directEve, "GetInventoryFromId", directEve.Session.ShipId.Value);
-            return new DirectContainer(directEve, inventory, directEve.Const.FlagDroneBay, "drones_" + directEve.Session.ShipId);
+            return new DirectContainer(directEve, inventory, directEve.Const.FlagDroneBay, "('InventorySecondary_ShipDroneBay_" + directEve.Session.ShipId.Value);
+            //return new DirectContainer(directEve, inventory, directEve.Const.FlagDroneBay, "('Inventory'");
         }
 
         /// <summary>

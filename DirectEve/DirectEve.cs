@@ -14,10 +14,14 @@ namespace DirectEve
     using System.Linq;
     using global::DirectEve.PySharp;
     using D3DDetour;
+    using InnerSpaceAPI;
+
+    public delegate void LoggingDelegate(string msg);
 
     public class DirectEve : IDisposable
     {
         private DirectEveSecurity _security;
+        private bool _securityCheckFailed;
 
         /// <summary>
         ///   ActiveShip cache
@@ -149,15 +153,30 @@ namespace DirectEve
         private List<DirectWindow> _windows;
 
         /// <summary>
-        ///   Create a DirectEve object
+        /// Create a DirectEve object
         /// </summary>
         public DirectEve()
         {
-            _security = new DirectEveSecurity(this);
-
-            if (!_security.IsValid)
+            try
             {
-                Log("Incompatible EVE Online version detected");
+                _security = new DirectEveSecurity(this);
+
+                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                Log("Starting DirectEve v" + _security.Version);
+                if (_security.Email != "anonymous")
+                {
+                    Log("Registered to " + _security.Email);
+                    Log("You are currently using " + _security.ActiveInstances + " of " + _security.SupportInstances + " support instances");
+                }
+                else
+                    Log("You are using the anonymous license, please consider upgrading to a support license (http://support.thehackerwithin.com)");
+                Log("Copyright (c) 2012 - TheHackerWithin");
+                Log("http://www.thehackerwithin.com");
+                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+            }
+            catch (Exception ex)
+            {
+                Log(ex.Message);
                 return;
             }
             
@@ -420,7 +439,8 @@ namespace DirectEve
         {
             //LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
 
-            _security.QuitDirectEve();
+            if (_security != null)
+                _security.QuitDirectEve();
         }
 
         #endregion
@@ -462,8 +482,21 @@ namespace DirectEve
                 PySharp = pySharp;
 
                 // Pulse security
-                if (!_security.Pulse())
+                if (_security == null || !_security.Pulse())
+                {
+                    if (!_securityCheckFailed)
+                    {
+                        _securityCheckFailed = true;
+                        Log("DirectEve supported instance check failed!");
+                    }
                     return;
+                }
+
+                if (_securityCheckFailed)
+                {
+                    _securityCheckFailed = false;
+                    Log("DirectEve supported instance check succeeded, continuing...");
+                }
 
                 // Get current target list
                 var targets = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targets").ToList<long>();
@@ -480,7 +513,7 @@ namespace DirectEve
                 }
 
                 // Check if we're still valid
-                if (OnFrame != null && _security.IsValid)
+                if (OnFrame != null)
                     OnFrame(this, new EventArgs());
 
                 // Clear any cache that we had during this frame
@@ -518,9 +551,44 @@ namespace DirectEve
         /// <remarks>
         ///   Only works in a station!
         /// </remarks>
-        public bool OpenCorporationHangar()
+        /// 
+        // NOTE: method removed until e a tuple (int, string) can be formed. (long, string) does not work for some reason
+        public bool OpenCorporationHangarBeta(int divisionID)
         {
-            return ThreadedLocalSvcCall("window", "OpenCorpHangar", global::DirectEve.PySharp.PySharp.PyNone, global::DirectEve.PySharp.PySharp.PyNone, 1);
+            var invName = Py.PyString_FromString("StationCorpHangar");
+            var itemID = GetLocalSvc("corp").Call("GetOffice", Session.CorporationId).Attribute("itemID");
+            var pyDivisionID = Py.PyLong_FromLongLong(divisionID);
+            var invID = new PyObject(PySharp, Py.Py_BuildValue("(s,i,i)", invName, itemID, pyDivisionID), true);
+            //invID.Add("StationShips");
+            //invID.Add(Session.StationId2 ?? -1); 
+            var form = PySharp.Import("form");
+            var keywords = new Dictionary<string, object>();
+            keywords.Add("invID", invID);
+            return ThreadedCallWithKeywords(form.Attribute("Inventory").Attribute("Open"), keywords);
+        }
+
+        public bool OpenInventory()
+        {
+            var first = Py.PyUnicodeUCS2_FromString("ShipCargo");
+            var second = Py.PyLong_FromLongLong(Session.ShipId.Value);
+            var invID = new PyObject(PySharp, Py.Py_BuildValue("(s,i)", first, second), true);
+            //invID.Add("StationShips");
+            //invID.Add(Session.StationId2 ?? -1); 
+            var form = PySharp.Import("form");
+            var keywords = new Dictionary<string, object>();
+            keywords.Add("invID", invID);
+            return ThreadedCallWithKeywords(form.Attribute("Inventory").Attribute("Open"), keywords);    
+        }
+
+        public int GetCorpHangarId(string divisionName)
+        {
+            var divisions = GetLocalSvc("corp").Call("GetDivisionNames");
+            for (var i = 0; i < 7; i ++)
+            {
+                if (string.Compare(divisionName, (string) divisions.DictionaryItem(i), true) == 0)
+                    return i;
+            }
+            return -1;
         }
 
         public bool OpenCorpHangarArray(long itemID)
@@ -1001,6 +1069,11 @@ namespace DirectEve
             ThreadedCall(form.Attribute("FittingMgmt").Attribute("Open"));
         }
 
+        /// <summary>
+        /// Broadcast scatter events.  Use with caution.
+        /// </summary>
+        /// <param name="evt">The event name.</param>
+        /// <returns></returns>
         public bool ScatterEvent(string evt)
         {
             var scatterEvent = PySharp.Import("__builtin__").Attribute("sm").Attribute("ScatterEvent");

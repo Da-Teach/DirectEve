@@ -14,7 +14,7 @@ namespace DirectEve
 
     public class DirectLoyaltyPointOffer : DirectInvType
     {
-        private PyObject _pyOfferId;
+        private PyObject _pyOfferId, _offer;
 
         internal DirectLoyaltyPointOffer(DirectEve directEve, PyObject offer) : base(directEve)
         {
@@ -24,6 +24,7 @@ namespace DirectEve
             Quantity = (long) offer.Attribute("qty");
             _pyOfferId = offer.Attribute("offerID");
             OfferId = (int) _pyOfferId;
+            _offer = offer;
 
             RequiredItems = new List<DirectLoyaltyPointOfferRequiredItem>();
             foreach (var item in offer.Attribute("reqItems").ToList())
@@ -36,7 +37,7 @@ namespace DirectEve
         public long Quantity { get; private set; }
         public List<DirectLoyaltyPointOfferRequiredItem> RequiredItems { get; private set; }
 
-        public bool AcceptOffer()
+        /*public bool AcceptOffer()
         {
             if (!_pyOfferId.IsValid)
                 return false;
@@ -48,6 +49,11 @@ namespace DirectEve
             // Dangerous shitz: Get the RemoteSvc and call TakeOffer
             var takeOffer = PySharp.Import("__builtin__").Attribute("sm").Call("RemoteSvc", "LPSvc").Attribute("TakeOffer");
             return DirectEve.ThreadedCall(takeOffer, corpId, _pyOfferId);
+        }*/
+
+        public bool AcceptOfferFromWindow()
+        {                        
+            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("lpstore").Attribute("AcceptOffer"), _offer);
         }
     }
 }
