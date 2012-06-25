@@ -9,6 +9,7 @@
     using System.Threading;
     using System.Xml.Linq;
     using Certs = global::DirectEve.Certificates.Certificates;
+    using InnerSpaceAPI;
 
     internal class DirectEveSecurity
     {
@@ -178,11 +179,21 @@
         /// </summary>
         private void CheckVersion()
         {
-            using (var pySharp = new PySharp.PySharp(false))
+            try
             {
-                var machoVersion = (int)pySharp.Import("macho").Attribute("version");
-                if (_version.Minor != machoVersion)
-                    throw new SecurityException(_obsoleteDirectEve);
+                using (var pySharp = new PySharp.PySharp(false))
+                {
+                    var machoVersion = (int)pySharp.Import("macho").Attribute("version");
+                    if (_version.Minor != machoVersion)
+                    {
+                        InnerSpace.Echo("DirectEve: Debug: version mismatch. Directeve minor = " + _version.Minor + " Eve version = " + machoVersion);
+                        //throw new SecurityException(_obsoleteDirectEve);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                InnerSpace.Echo("DirectEve: Debug: Exception during CheckVersion(): " + e.StackTrace);
             }
         }
 
