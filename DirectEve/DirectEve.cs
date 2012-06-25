@@ -154,20 +154,11 @@ namespace DirectEve
         /// </summary>
         private List<DirectWindow> _windows;
 
-        public LoggingDelegate Logger { get; private set; }
-
         /// <summary>
         /// Create a DirectEve object
         /// </summary>
-        /// <param name="logger">A delegate to call with log messages.</param>
-        public DirectEve(LoggingDelegate logger = null)
+        public DirectEve()
         {
-            if (logger != null)
-            {
-                Logger = logger;
-            }
-            else Logger = null;
-
             try
             {
                 _security = new DirectEveSecurity(this);
@@ -1084,15 +1075,7 @@ namespace DirectEve
         /// <param name="msg">A string to output to the loggers.</param>
         public void Log(string msg)
         {
-            if (Logger != null)
-            {
-                Logger(msg);
-            }
-            else
-            {
-                //System.Diagnostics.Debugger.Log(0, "", msg);
-                InnerSpace.Echo(msg);
-            }
+           InnerSpace.Echo(msg);
         }
     }
 }
