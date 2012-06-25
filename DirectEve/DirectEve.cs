@@ -14,9 +14,6 @@ namespace DirectEve
     using System.Linq;
     using global::DirectEve.PySharp;
     using D3DDetour;
-    using InnerSpaceAPI;
-
-    public delegate void LoggingDelegate(string msg);
 
     public class DirectEve : IDisposable
     {
