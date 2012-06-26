@@ -37,8 +37,9 @@
         private DateTime _lastPulse;
 
         internal DirectEveSecurity(DirectEve directEve)
-        {
+        {            
             _directEve = directEve;
+            _directEve.Log("DirectEve: Debug: Starting security");
             _version = Assembly.GetExecutingAssembly().GetName().Version;
             _pulseResult = true;
             _lastPulse = DateTime.Now;
@@ -48,12 +49,15 @@
 
         private void PerformStartupChecks()
         {
+            _directEve.Log("DirectEve: Debug: loading license");
             // Load DirectEve license
             LoadLicense();
 
+            _directEve.Log("DirectEve: Debug: startup check");
             // Check DirectEve version on server
             PerformStartupCheck();
 
+            _directEve.Log("DirectEve: Debug: checking version");
             //Check if directeve is obsolete
             CheckVersion();
         }
@@ -179,22 +183,22 @@
         /// </summary>
         private void CheckVersion()
         {
-            try
+            /*try
             {
                 using (var pySharp = new PySharp.PySharp(false))
                 {
                     var machoVersion = (int)pySharp.Import("macho").Attribute("version");
                     if (_version.Minor != machoVersion)
                     {
-                        InnerSpace.Echo("DirectEve: Debug: version mismatch. Directeve minor = " + _version.Minor + " Eve version = " + machoVersion);
+                        _directEve.Log("DirectEve: Debug: version mismatch. Directeve minor = " + _version.Minor + " Eve version = " + machoVersion);
                         //throw new SecurityException(_obsoleteDirectEve);
                     }
                 }
             }
             catch (Exception e)
             {
-                InnerSpace.Echo("DirectEve: Debug: Exception during CheckVersion(): " + e.StackTrace);
-            }
+                _directEve.Log("DirectEve: Debug: Exception during CheckVersion(): " + e.StackTrace);
+            }*/
         }
 
         /// <summary>

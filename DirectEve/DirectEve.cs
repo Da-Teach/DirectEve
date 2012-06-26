@@ -153,23 +153,17 @@ namespace DirectEve
         ///   Cache the GetWindows call
         /// </summary>
         private List<DirectWindow> _windows;
-
-        public LoggingDelegate Logger { get; private set; }
+        
 
         /// <summary>
         /// Create a DirectEve object
         /// </summary>
-        /// <param name="logger">A delegate to call with log messages.</param>
-        public DirectEve(LoggingDelegate logger = null)
-        {
-            if (logger != null)
-            {
-                Logger = logger;
-            }
-            else Logger = null;
-
+       
+        public DirectEve()
+        {            
             try
             {
+                Log("DirectEve: Debug: Checking license");
                 _security = new DirectEveSecurity(this);
 
                 Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
@@ -187,16 +181,25 @@ namespace DirectEve
             }
             catch (Exception ex)
             {
-                Log(ex.Message);
+                Log("DirectEve: Debug: Exception during license check: "+ex.Message+" stacktrace: "+ex.StackTrace);
                 return;
             }
-            
-            _localSvcCache = new Dictionary<string, PyObject>();
-            _containers = new Dictionary<long, DirectContainer>();
-            _lastKnownTargets = new Dictionary<long, DateTime>();
 
-            _innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
-            LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
+            try
+            {
+                _localSvcCache = new Dictionary<string, PyObject>();
+                _containers = new Dictionary<long, DirectContainer>();
+                _lastKnownTargets = new Dictionary<long, DateTime>();
+
+                Log("Registering OnFrame event");
+                _innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
+                LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
+            }
+            catch (Exception e)
+            {
+                Log("DirectEve: Debug: Exception after license check: " + e.Message + " stacktrace: " + e.StackTrace);
+                return;
+            }
         }
 
         /// <summary>
@@ -466,6 +469,7 @@ namespace DirectEve
         ///   OnFrame event, use this to do your eve-stuff
         /// </summary>
         public event EventHandler OnFrame;
+        private bool firstFrame = true;
 
         /// <summary>
         ///   Internal "OnFrame" handler
@@ -474,6 +478,11 @@ namespace DirectEve
         /// <param name = "e"></param>
         private void InnerspaceOnFrame(object sender, LSEventArgs e)
         {
+            if (firstFrame)
+            {
+                Log("Executing first directeve onframe event");
+                firstFrame = false;
+            }
             using (var pySharp = new PySharp.PySharp(true))
             {
                 // Make the link to the instance
@@ -1083,16 +1092,8 @@ namespace DirectEve
         /// </summary>
         /// <param name="msg">A string to output to the loggers.</param>
         public void Log(string msg)
-        {
-            if (Logger != null)
-            {
-                Logger(msg);
-            }
-            else
-            {
-                //System.Diagnostics.Debugger.Log(0, "", msg);
-                InnerSpace.Echo(msg);
-            }
+        {            
+           InnerSpace.Echo(msg);           
         }
     }
 }
