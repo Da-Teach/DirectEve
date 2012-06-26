@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using SlimDX;
-using SlimDX.DXGI;
 using WhiteMagic;
 
 namespace D3DDetour
@@ -39,7 +37,7 @@ namespace D3DDetour
         Direct3D10_1,
         Direct3D11,
     }
-
+#if FALSE
     [StructLayout(LayoutKind.Sequential)]
     public struct DXGI_MODE_DESC
     {
@@ -50,4 +48,5 @@ namespace D3DDetour
         public DisplayModeScanlineOrdering ScanlineOrdering;
         public DisplayModeScaling Scaling;
     }
+#endif
 }
