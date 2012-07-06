@@ -154,6 +154,7 @@ namespace DirectEve
         /// </summary>
         public DirectEve()
         {
+#if !NO_DIRECTEVE_SECURITY
             try
             {
                 _security = new DirectEveSecurity(this);
@@ -176,7 +177,7 @@ namespace DirectEve
                 Log(ex.Message);
                 return;
             }
-            
+#endif            
             _localSvcCache = new Dictionary<string, PyObject>();
             _containers = new Dictionary<long, DirectContainer>();
             _lastKnownTargets = new Dictionary<long, DateTime>();
@@ -477,7 +478,7 @@ namespace DirectEve
             {
                 // Make the link to the instance
                 PySharp = pySharp;
-
+#if !NO_DIRECTEVE_SECURITY
                 // Pulse security
                 if (_security == null || !_security.Pulse())
                 {
@@ -494,7 +495,7 @@ namespace DirectEve
                     _securityCheckFailed = false;
                     Log("DirectEve supported instance check succeeded, continuing...");
                 }
-
+#endif
                 // Get current target list
                 var targets = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targets").ToList<long>();
                 targets.AddRange(pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targeting").ToList<long>());
