@@ -180,159 +180,159 @@ namespace DirectEve.PySharp
             return prevFrame;
         }
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyImport_ImportModule(string module);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyEval_GetGlobals();
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void Py_DecRef(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void Py_IncRef(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyObject_GetAttrString(IntPtr op, string attr);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyObject_SetAttrString(IntPtr op, string attr, IntPtr v);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyObject_HasAttrString(IntPtr op, string attr);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyEval_CallObjectWithKeywords(IntPtr op, IntPtr args, IntPtr kw);
 
         // Sadly enough C# doesnt support vararg dllimport's, so we simply made a list of overrides with 7 parameters, 
         // if more get added then this needs to be extended
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr Py_BuildValue(string format);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr Py_BuildValue(string format, IntPtr parm1);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr Py_BuildValue(string format, IntPtr parm1, IntPtr parm2);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr Py_BuildValue(string format, IntPtr parm1, IntPtr parm2, IntPtr parm3);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr Py_BuildValue(string format, IntPtr parm1, IntPtr parm2, IntPtr parm3, IntPtr parm4);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr Py_BuildValue(string format, IntPtr parm1, IntPtr parm2, IntPtr parm3, IntPtr parm4, IntPtr parm5);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr Py_BuildValue(string format, IntPtr parm1, IntPtr parm2, IntPtr parm3, IntPtr parm4, IntPtr parm5, IntPtr parm6);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr Py_BuildValue(string format, IntPtr parm1, IntPtr parm2, IntPtr parm3, IntPtr parm4, IntPtr parm5, IntPtr parm6, IntPtr parm7);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyList_New(int size);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyList_Size(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyList_GetItem(IntPtr op, int index);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyList_SetItem(IntPtr op, int index, IntPtr item);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyList_SetSlice(IntPtr op, int low, int high, IntPtr list);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyTuple_Size(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyTuple_GetItem(IntPtr op, int index);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyCode_NewEmpty(string filename, string funcname, int firstlineno);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyFrame_New(IntPtr tstate, IntPtr code, IntPtr globals, IntPtr locals);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyString_Size(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyString_AsString(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyString_FromString(string s);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyString_FromStringAndSize(byte[] s, int len);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern string PyUnicodeUCS2_AsRawUnicodeEscapeString(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyUnicodeUCS2_GetSize(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyUnicodeUCS2_AsUnicode(IntPtr op);
 
-        [DllImport("python27.dll", CharSet = CharSet.Unicode)]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
         internal static extern IntPtr PyUnicodeUCS2_FromString(string op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyBool_FromLong(int op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyLong_AsLong(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyLong_FromLong(int op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern long PyLong_AsLongLong(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyLong_FromLongLong(long op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern ulong PyLong_AsUnsignedLongLong(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyLong_FromUnsignedLongLong(ulong op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern double PyFloat_AsDouble(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyFloat_FromDouble(double op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyObject_Dir(IntPtr op);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyObject_CallMethod(IntPtr op, string call, string parm1, IntPtr parm2, IntPtr parm3);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void PyErr_Clear();
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyErr_Occurred();
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyDict_New();
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyDict_GetItemString(IntPtr op, string key);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyDict_GetItem(IntPtr op, IntPtr key);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyDict_SetItem(IntPtr op, IntPtr key, IntPtr val);
 
-        [DllImport("python27.dll")]
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyDict_DelItem(IntPtr op, IntPtr key);
     }
 }
