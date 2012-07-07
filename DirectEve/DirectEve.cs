@@ -153,6 +153,8 @@ namespace DirectEve
         ///   Cache the GetWindows call
         /// </summary>
         private List<DirectWindow> _windows;
+
+        public bool debug { get { return false; } private set { } }
         
 
         /// <summary>
@@ -163,8 +165,7 @@ namespace DirectEve
         {            
 #if !NO_DIRECTEVE_SECURITY
             try
-            {
-                Log("DirectEve: Debug: Checking license");
+            {                
                 _security = new DirectEveSecurity(this);
 
                 Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
@@ -182,7 +183,7 @@ namespace DirectEve
             }
             catch (Exception ex)
             {
-                Log("DirectEve: Debug: Exception during license check: "+ex.Message+" stacktrace: "+ex.StackTrace);
+                if(debug) Log("DirectEve: Debug: Exception during license check: "+ex.Message+" stacktrace: "+ex.StackTrace);
                 return;
             }
 #endif
@@ -192,13 +193,13 @@ namespace DirectEve
                 _containers = new Dictionary<long, DirectContainer>();
                 _lastKnownTargets = new Dictionary<long, DateTime>();
 
-                Log("Registering OnFrame event");
+                if(debug) Log("Registering OnFrame event");
                 _innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
                 LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
             }
             catch (Exception e)
             {
-                Log("DirectEve: Debug: Exception after license check: " + e.Message + " stacktrace: " + e.StackTrace);
+                if(debug) Log("DirectEve: Debug: Exception after license check: " + e.Message + " stacktrace: " + e.StackTrace);
                 return;
             }
         }
@@ -481,7 +482,7 @@ namespace DirectEve
         {
             if (firstFrame)
             {
-                Log("Executing first directeve onframe event");
+                if(debug) Log("Executing first directeve onframe event");
                 firstFrame = false;
             }
             using (var pySharp = new PySharp.PySharp(true))
@@ -562,7 +563,7 @@ namespace DirectEve
         /// </remarks>
         /// 
         // NOTE: method removed until e a tuple (int, string) can be formed. (long, string) does not work for some reason
-        public bool OpenCorporationHangarBeta(int divisionID)
+        private bool OpenCorporationHangarBeta(int divisionID)
         {
             var invName = Py.PyString_FromString("StationCorpHangar");
             var itemID = GetLocalSvc("corp").Call("GetOffice", Session.CorporationId).Attribute("itemID");
