@@ -154,7 +154,7 @@ namespace DirectEve
         /// </summary>
         private List<DirectWindow> _windows;
 
-        public bool debug { get { return false; } private set { } }
+        internal bool debug { get { return false; } private set { } }
         
 
         /// <summary>
