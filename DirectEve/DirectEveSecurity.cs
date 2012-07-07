@@ -187,7 +187,7 @@
         /// </summary>
         private void CheckVersion()
         {
-            try
+            /*try
             {
                 using (var pySharp = new PySharp.PySharp(false))
                 {
@@ -202,7 +202,7 @@
             catch (Exception e)
             {
                 _directEve.Log("DirectEve: Debug: Exception during CheckVersion(): " + e.StackTrace);
-            }
+            }*/
         }
 
         /// <summary>
