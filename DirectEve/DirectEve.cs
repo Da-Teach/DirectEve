@@ -183,8 +183,8 @@ namespace DirectEve
             }
             catch (Exception ex)
             {
-                if(debug) Log("DirectEve: Debug: Exception during license check: "+ex.Message+" stacktrace: "+ex.StackTrace);
-                return;
+                if(debug) Log("DirectEve: Debug: Exception during license check: "+ex.Message);
+                throw ex;
             }
 #endif
             try
@@ -498,6 +498,7 @@ namespace DirectEve
                     {
                         _securityCheckFailed = true;
                         Log("DirectEve supported instance check failed!");
+                        throw new SecurityException("DirectEve instance check failed");
                     }
                     return;
                 }
@@ -505,7 +506,7 @@ namespace DirectEve
                 if (_securityCheckFailed)
                 {
                     _securityCheckFailed = false;
-                    Log("DirectEve supported instance check succeeded, continuing...");
+                    if(debug) Log("DirectEve supported instance check succeeded, continuing...");
                 }
 #endif
                 // Get current target list
