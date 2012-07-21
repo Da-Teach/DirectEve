@@ -183,7 +183,7 @@ namespace DirectEve
             }
             catch (Exception ex)
             {
-                if(debug) Log("DirectEve: Debug: Exception during license check: "+ex.Message);
+                Log("DirectEve: Exception during license check: "+ex.Message);
                 throw ex;
             }
 #endif
