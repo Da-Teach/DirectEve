@@ -498,7 +498,7 @@ namespace DirectEve
                     {
                         _securityCheckFailed = true;
                         Log("DirectEve supported instance check failed!");
-                        throw new SecurityException("DirectEve instance check failed");
+                        //throw new SecurityException("DirectEve instance check failed");
                     }
                     return;
                 }
