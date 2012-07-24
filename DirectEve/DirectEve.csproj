@@ -119,6 +119,8 @@
     <Compile Include="DirectStation.cs" />
     <Compile Include="DirectTelecomWindow.cs" />
     <Compile Include="DirectWindow.cs" />
+    <Compile Include="Frameworks\IFramework.cs" />
+    <Compile Include="Frameworks\InnerSpace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PySharp\IntPtrExtension.cs" />
     <Compile Include="PySharp\Py.cs" />

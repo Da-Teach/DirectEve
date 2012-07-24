@@ -9,7 +9,6 @@
     using System.Threading;
     using System.Xml.Linq;
     using Certs = global::DirectEve.Certificates.Certificates;
-    using InnerSpaceAPI;
 
     internal class DirectEveSecurity
     {

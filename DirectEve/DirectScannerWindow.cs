@@ -12,7 +12,6 @@ namespace DirectEve
     using System;
     using System.Collections.Generic;
     using global::DirectEve.PySharp;
-    using InnerSpaceAPI;
 
     public class DirectScannerWindow : DirectWindow
     {
@@ -68,6 +67,7 @@ namespace DirectEve
                 return _scanResults;
             }
         }
+
 #if SYSTEM_SCANNER_ENABLED  // This is broken and can lead to bans.  Don't enable unless you know what you are doing.
         /// <summary>
         /// List of all the system scanner results
@@ -93,15 +93,11 @@ namespace DirectEve
             }
         }
 #endif
-        private static void Log(string line)
-        {
-            InnerSpace.Echo(string.Format("{0:D} {1:HH:mm:ss} {2}", -1, DateTime.Now, line));
-        }
 
         /// <summary>
         ///   Selects the next tab
         /// </summary>
-        /// <returns>true if sucessfull, false otherwise</returns>
+        /// <returns>true if successful, false otherwise</returns>
         public bool NextTab()
         {
             return DirectEve.ThreadedCall(PyWindow.Attribute("sr").Attribute("tabs").Attribute("SelectNext"));

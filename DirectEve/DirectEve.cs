@@ -15,8 +15,6 @@ namespace DirectEve
     using System.Reflection;
     using System.Security;
     using global::DirectEve.PySharp;
-    using LavishScriptAPI;
-    using InnerSpaceAPI;
 
     public delegate void LoggingDelegate(string msg);
 
@@ -155,14 +153,21 @@ namespace DirectEve
         private List<DirectWindow> _windows;
 
         internal bool debug { get { return false; } private set { } }
+
+        /// <summary>
+        /// The framework object that wraps OnFrame and Log
+        /// </summary>
+        private IFramework _framework;
         
 
         /// <summary>
         /// Create a DirectEve object
         /// </summary>
-       
         public DirectEve()
-        {            
+        {
+            // create an instance of IFramework
+            _framework = new InnerSpaceFramework();
+
 #if !NO_DIRECTEVE_SECURITY
             try
             {                
@@ -194,8 +199,7 @@ namespace DirectEve
                 _lastKnownTargets = new Dictionary<long, DateTime>();
 
                 if(debug) Log("Registering OnFrame event");
-                _innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
-                LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
+                _framework.RegisterFrameHook(FrameworkOnFrame);
             }
             catch (Exception e)
             {
@@ -441,8 +445,6 @@ namespace DirectEve
         /// </summary>
         public void Dispose()
         {
-            LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
-
             if (_security != null)
                 _security.QuitDirectEve();
         }
@@ -478,7 +480,7 @@ namespace DirectEve
         /// </summary>
         /// <param name = "sender"></param>
         /// <param name = "e"></param>
-        private void InnerspaceOnFrame(object sender, LSEventArgs e)
+        private void FrameworkOnFrame(object sender, EventArgs e)
         {
             if (firstFrame)
             {
@@ -1096,8 +1098,8 @@ namespace DirectEve
         /// </summary>
         /// <param name="msg">A string to output to the loggers.</param>
         public void Log(string msg)
-        {            
-           InnerSpace.Echo(msg);           
+        {
+            _framework.Log(msg);
         }
     }
 }
