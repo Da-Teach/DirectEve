@@ -1,52 +1,27 @@
 ﻿namespace DirectEve
 {
     using System;
-    using LavishScriptAPI;
-    using InnerSpaceAPI;
+    using D3DDetour;
 
-    public class InnerSpaceFramework : IFramework
+    public class StandaloneFramework : IFramework
     {
-        // remember the hook so we can dispose it later
-        private uint _innerspaceOnFrameId;
-
-        // remember the user's frame hook so we can call it
-        private event EventHandler<EventArgs> _frameHook;
-
-        /// <summary>
-        /// This internal frame hook function works around the rigid InnerSpace type requirements.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FrameHook(object sender, LSEventArgs e)
-        {
-            var handler = _frameHook;
-            if (handler != null)
-            {
-                handler(sender, e);
-            }
-        }
-
         public void RegisterFrameHook(EventHandler<EventArgs> frameHook)
         {
-            _frameHook = frameHook;
-            _innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
-            LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, FrameHook);
+            Pulse.Initialize(D3DVersion.Direct3D9);
+            D3DHook.OnFrame += frameHook;
         }
 
         public void RegisterLogger(EventHandler<EventArgs> logger)
         {
-            // no logger needed for InnerSpace
         }
 
         public void Log(string msg)
         {
-            InnerSpace.Echo(msg);
         }
 
         #region IDisposable Members
         public void Dispose()
         {
-            LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, FrameHook);
         }
         #endregion
     }

@@ -7,7 +7,7 @@ namespace D3DDetour
     public abstract class D3DHook
     {
         protected static readonly object _frameLock = new object();
-        public static event EventHandler OnFrame;
+        public static event EventHandler<EventArgs> OnFrame;
 
         public delegate void OnFrameDelegate();
         public static event OnFrameDelegate OnFrameOnce;

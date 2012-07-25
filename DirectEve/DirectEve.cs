@@ -13,7 +13,6 @@ namespace DirectEve
     using System.Collections.Generic;
     using System.Linq;
     using global::DirectEve.PySharp;
-    using D3DDetour;
 
     public class DirectEve : IDisposable
     {
@@ -150,10 +149,18 @@ namespace DirectEve
         private List<DirectWindow> _windows;
 
         /// <summary>
+        /// The framework object that wraps OnFrame and Log
+        /// </summary>
+        private IFramework _framework;
+
+        /// <summary>
         /// Create a DirectEve object
         /// </summary>
         public DirectEve()
         {
+            // create an instance of IFramework
+            _framework = new StandaloneFramework();
+
 #if !NO_DIRECTEVE_SECURITY
             try
             {
@@ -181,21 +188,6 @@ namespace DirectEve
             _localSvcCache = new Dictionary<string, PyObject>();
             _containers = new Dictionary<long, DirectContainer>();
             _lastKnownTargets = new Dictionary<long, DateTime>();
-
-            //_innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
-            //LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, InnerspaceOnFrame);
-
-            // Initialize the hook
-            Pulse.Initialize(D3DVersion.Direct3D9);
-
-            // Set something that will only run 1 time in an OnFrame
-            D3DHook.OnFrameOnce += delegate
-            {
-                System.Diagnostics.Debugger.Log(0, null, "OnFrameOnce hook." + Environment.NewLine);
-            };
-
-            // Make the hook call our method each frame
-            D3DHook.OnFrame += new EventHandler(D3DHook_OnFrame);
         }
 
         /// <summary>
