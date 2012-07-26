@@ -1,6 +1,12 @@
 ﻿namespace DirectEve
 {
     using System;
+#if WIP
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+#endif
     using LavishScriptAPI;
     using InnerSpaceAPI;
 
@@ -11,6 +17,18 @@
 
         // remember the user's frame hook so we can call it
         private event EventHandler<EventArgs> _frameHook;
+
+#if WIP
+        /// <summary>
+        /// The LavishScriptAPI.dll assembly
+        /// </summary>
+        private Assembly _lavishScriptAPI;
+        
+        /// <summary>
+        /// The InnerSpaceAPI.dll assembly
+        /// </summary>
+        private Assembly _innerSpaceAPI;
+#endif
 
         /// <summary>
         /// This internal frame hook function works around the rigid InnerSpace type requirements.
@@ -25,7 +43,44 @@
                 handler(sender, e);
             }
         }
+#if WIP
+        public InnerSpaceFramework()
+        {
+            AssemblyName name = new AssemblyName();
 
+            string assemblyDirectory = null;
+
+            // figure out where our assembly was loaded from
+            Process[] innerSpaceProcesses = Process.GetProcessesByName("InnderSpace"); 
+            if (innerSpaceProcesses.Length > 0)
+            {   // should only be one
+                Process innerSpaceProcess = innerSpaceProcesses[0];
+                assemblyDirectory = innerSpaceProcess.MainModule.FileName;
+                assemblyDirectory = Directory.GetParent(assemblyDirectory).FullName;
+            }
+            else
+            {   // if the above code failed something really strange happened.  
+                // try something else for good measure.
+                Assembly myAssembly = Assembly.GetExecutingAssembly();
+                string myAssemblyDir = Directory.GetParent(myAssembly.Location).FullName;
+                string root = Path.GetPathRoot(myAssemblyDir);
+                string[] parts = myAssemblyDir.Split(Path.DirectorySeparatorChar);
+                int index = Array.FindIndex(parts, x => x.ToLower().Contains(".net programs"));
+                if (index > 0)
+                {   // get all parts up to the .Net Programs directory
+                    assemblyDirectory = root+Path.Combine(parts.Skip(1).Take(index-1).ToArray());
+                }
+            }
+
+
+
+            // load the InnerSpace assemblies
+            //Assembly assemblyInstance = Assembly.LoadFrom(@"c:\AssemblyDir\SomeControls.dll");
+            
+            // use reflection to get all the InnerSpace classes and types at runtime
+
+        }
+#endif
         public void RegisterFrameHook(EventHandler<EventArgs> frameHook)
         {
             _frameHook = frameHook;
