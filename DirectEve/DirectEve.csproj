@@ -132,6 +132,7 @@
     <EmbeddedResource Include="Certificates\ClientToServer.pfx" />
     <EmbeddedResource Include="Certificates\ServerToClient.cer" />
     <None Include="DirectEve.snk" />
+    <None Include="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />

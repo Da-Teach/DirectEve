@@ -6,9 +6,10 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-#endif
+#else
     using LavishScriptAPI;
     using InnerSpaceAPI;
+#endif
 
     public class InnerSpaceFramework : IFramework
     {
@@ -20,14 +21,15 @@
 
 #if WIP
         /// <summary>
-        /// The LavishScriptAPI.dll assembly
+        /// The Lavish.InnerSpace.dll assembly
         /// </summary>
-        private Assembly _lavishScriptAPI;
-        
-        /// <summary>
-        /// The InnerSpaceAPI.dll assembly
-        /// </summary>
-        private Assembly _innerSpaceAPI;
+        private Assembly _lavishInnerSpaceAssembly;
+
+        private Type _innerSpace;
+        private Type _lavishScript;
+        private Type _lsEventArgs;
+        private Type _lavishScriptEvents;
+        private Delegate _frameHookDelegate;
 #endif
 
         /// <summary>
@@ -35,7 +37,7 @@
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FrameHook(object sender, LSEventArgs e)
+        public void FrameHook(object sender, EventArgs e)
         {
             var handler = _frameHook;
             if (handler != null)
@@ -46,12 +48,9 @@
 #if WIP
         public InnerSpaceFramework()
         {
-            AssemblyName name = new AssemblyName();
-
             string assemblyDirectory = null;
 
-            // figure out where our assembly was loaded from
-            Process[] innerSpaceProcesses = Process.GetProcessesByName("InnderSpace"); 
+            Process[] innerSpaceProcesses = Process.GetProcessesByName("InnerSpace"); 
             if (innerSpaceProcesses.Length > 0)
             {   // should only be one
                 Process innerSpaceProcess = innerSpaceProcesses[0];
@@ -72,20 +71,41 @@
                 }
             }
 
+            if (string.IsNullOrEmpty(assemblyDirectory) == false)
+            {
+                // load the InnerSpace assembly
+                _lavishInnerSpaceAssembly = Assembly.LoadFrom(Path.Combine(assemblyDirectory, "Lavish.InnerSpace.dll"));
 
+                // use reflection to get all the InnerSpace classes and types at runtime
+                Module[] mods = _lavishInnerSpaceAssembly.GetModules();
+                Type[] types = _lavishInnerSpaceAssembly.GetTypes();
 
-            // load the InnerSpace assemblies
-            //Assembly assemblyInstance = Assembly.LoadFrom(@"c:\AssemblyDir\SomeControls.dll");
-            
-            // use reflection to get all the InnerSpace classes and types at runtime
-
+                _lavishScript = _lavishInnerSpaceAssembly.GetType("LavishScriptAPI.LavishScript");
+                _lavishScriptEvents = _lavishScript.GetNestedType("Events");
+                _innerSpace = _lavishInnerSpaceAssembly.GetType("InnerSpaceAPI.InnerSpace");
+                _lsEventArgs = _lavishInnerSpaceAssembly.GetType("LavishScriptAPI.LSEventArgs");
+                Type evType = typeof(EventHandler<>);
+                Type[] typeArgs = { _lsEventArgs };
+                Type lsEvType = evType.MakeGenericType(typeArgs);
+                MethodInfo mi = typeof(InnerSpaceFramework).GetMethod("FrameHook", BindingFlags.Public | BindingFlags.Instance);
+                _frameHookDelegate = Delegate.CreateDelegate(lsEvType, this, mi);
+            }
         }
 #endif
         public void RegisterFrameHook(EventHandler<EventArgs> frameHook)
         {
             _frameHook = frameHook;
+#if WIP
+            _innerspaceOnFrameId = (uint)_lavishScriptEvents.InvokeMember("RegisterEvent",
+                BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
+                null, null, new Object[] { "OnFrame" });
+            _lavishScriptEvents.InvokeMember("AttachEventTarget",
+                BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
+                null, null, new Object[] { _innerspaceOnFrameId, _frameHookDelegate });
+#else
             _innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
             LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, FrameHook);
+#endif
         }
 
         public void RegisterLogger(EventHandler<EventArgs> logger)
@@ -95,13 +115,25 @@
 
         public void Log(string msg)
         {
-            InnerSpace.Echo(msg);           
+#if WIP
+            _innerSpace.InvokeMember("Echo",
+                BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
+                null, null, new Object[] { msg });
+#else
+            InnerSpace.Echo(msg);
+#endif
         }
 
         #region IDisposable Members
         public void Dispose()
         {
+#if WIP
+            _lavishScriptEvents.InvokeMember("DetachEventTarget",
+                BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
+                null, null, new Object[] { _innerspaceOnFrameId, _frameHookDelegate });
+#else
             LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, FrameHook);
+#endif
         }
         #endregion
     }
