@@ -163,10 +163,17 @@ namespace DirectEve
         /// <summary>
         /// Create a DirectEve object
         /// </summary>
-        public DirectEve()
+        public DirectEve(IFramework framework = null)
         {
             // create an instance of IFramework
-            _framework = new InnerSpaceFramework();
+            if (framework != null)
+            {
+                _framework = framework;
+            }
+            else
+            {
+                _framework = new InnerSpaceFramework();
+            }
 
 #if !NO_DIRECTEVE_SECURITY
             try

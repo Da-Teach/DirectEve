@@ -1,39 +1,60 @@
 ﻿namespace DirectEve
 {
     using System;
-#if WIP
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
-#else
-    using LavishScriptAPI;
-    using InnerSpaceAPI;
-#endif
 
     public class InnerSpaceFramework : IFramework
     {
-        // remember the hook so we can dispose it later
+        /// <summary>
+        /// The event ID we register with InnerSpace.
+        /// </summary>
         private uint _innerspaceOnFrameId;
 
-        // remember the user's frame hook so we can call it
+        /// <summary>
+        /// The user supplied FrameHook event handler.
+        /// </summary>
         private event EventHandler<EventArgs> _frameHook;
 
-#if WIP
         /// <summary>
         /// The Lavish.InnerSpace.dll assembly
         /// </summary>
         private Assembly _lavishInnerSpaceAssembly;
 
+        /// <summary>
+        /// The reflected InnerSpaceAPI.InnerSpace class.
+        /// </summary>
         private Type _innerSpace;
-        private Type _lavishScript;
-        private Type _lsEventArgs;
-        private Type _lavishScriptEvents;
-        private Delegate _frameHookDelegate;
-#endif
 
         /// <summary>
-        /// This internal frame hook function works around the rigid InnerSpace type requirements.
+        /// The reflected LavishScriptAPI.LavishScript class.
+        /// </summary>
+        private Type _lavishScript;
+
+        /// <summary>
+        /// The reflected LavishScriptAPI.LavishScript.Events class.
+        /// </summary>
+        private Type _lavishScriptEvents;
+
+        /// <summary>
+        /// The reflected LavishScriptAPI.LSEventArgs  class.
+        /// </summary>
+        private Type _lsEventArgs;
+
+        /// <summary>
+        /// A delegate that maps our FrameHook to EventHandler<LSEventArgs>
+        /// </summary>
+        private Delegate _frameHookDelegate;
+
+        /// <summary>
+        /// The reflected InnerSpaceAPI.InnerSpace.Echo method.
+        /// </summary>
+        private MethodInfo _echoMethod;
+
+        /// <summary>
+        /// Internal frame hook function.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -45,12 +66,50 @@
                 handler(sender, e);
             }
         }
-#if WIP
+
+        /// <summary>
+        /// The IFramework constructor.  This method will perform runtime
+        /// binding of all the types and methods we need from InnerSpace.
+        /// </summary>
         public InnerSpaceFramework()
         {
-            string assemblyDirectory = null;
+            string assemblyDirectory = GetInnerSpaceDirectory();
 
-            Process[] innerSpaceProcesses = Process.GetProcessesByName("InnerSpace"); 
+            if (string.IsNullOrEmpty(assemblyDirectory) == false)
+            {
+                // load the InnerSpace assembly
+                _lavishInnerSpaceAssembly = Assembly.LoadFrom(Path.Combine(assemblyDirectory, "Lavish.InnerSpace.dll"));
+
+                // use reflection to get all the InnerSpace classes and types at runtime
+                _lavishScript = _lavishInnerSpaceAssembly.GetType("LavishScriptAPI.LavishScript");
+                _lavishScriptEvents = _lavishScript.GetNestedType("Events");
+                _innerSpace = _lavishInnerSpaceAssembly.GetType("InnerSpaceAPI.InnerSpace");
+                _lsEventArgs = _lavishInnerSpaceAssembly.GetType("LavishScriptAPI.LSEventArgs");
+
+                // Reflect the Echo() method so we can call it efficiently later
+                _echoMethod = _innerSpace.GetMethod("Echo", BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public);
+
+                // Build a delegate for our frame hook which makes InnerSpace think we passed it
+                // an EventHandler<LSEventArgs> function instead of a generic event handler.
+                Type evType = typeof(EventHandler<>);               // Get the EventHandler<T> type
+                Type[] typeArgs = { _lsEventArgs };                 // Create a type array containing the LSEventArgs type
+                Type lsEvType = evType.MakeGenericType(typeArgs);   // Make an EventHandler<LSEventArgs> type
+                MethodInfo mi = typeof(InnerSpaceFramework).GetMethod("FrameHook", BindingFlags.Public | BindingFlags.Instance);
+                _frameHookDelegate = Delegate.CreateDelegate(lsEvType, this, mi);   //  << Delegate for an instance method
+            }
+        }
+
+        /// <summary>
+        /// Attempt to find the directory where Lavish.InnerSpace.dll.  First find the InnerSpace.exe 
+        /// process and get that directory.  If the InnerSpace process has been renamed assume that our 
+        /// process is run from somewhere under the .NET Programs directory and find the directory 
+        /// containing the .NET Programs directory.
+        /// </summary>
+        /// <returns>The directory where InnerSpace is installed or null.</returns>
+        private static string GetInnerSpaceDirectory()
+        {
+            string assemblyDirectory = null;
+            Process[] innerSpaceProcesses = Process.GetProcessesByName("InnerSpace");
             if (innerSpaceProcesses.Length > 0)
             {   // should only be one
                 Process innerSpaceProcess = innerSpaceProcesses[0];
@@ -67,45 +126,26 @@
                 int index = Array.FindIndex(parts, x => x.ToLower().Contains(".net programs"));
                 if (index > 0)
                 {   // get all parts up to the .Net Programs directory
-                    assemblyDirectory = root+Path.Combine(parts.Skip(1).Take(index-1).ToArray());
+                    assemblyDirectory = root + Path.Combine(parts.Skip(1).Take(index - 1).ToArray());
                 }
             }
-
-            if (string.IsNullOrEmpty(assemblyDirectory) == false)
-            {
-                // load the InnerSpace assembly
-                _lavishInnerSpaceAssembly = Assembly.LoadFrom(Path.Combine(assemblyDirectory, "Lavish.InnerSpace.dll"));
-
-                // use reflection to get all the InnerSpace classes and types at runtime
-                Module[] mods = _lavishInnerSpaceAssembly.GetModules();
-                Type[] types = _lavishInnerSpaceAssembly.GetTypes();
-
-                _lavishScript = _lavishInnerSpaceAssembly.GetType("LavishScriptAPI.LavishScript");
-                _lavishScriptEvents = _lavishScript.GetNestedType("Events");
-                _innerSpace = _lavishInnerSpaceAssembly.GetType("InnerSpaceAPI.InnerSpace");
-                _lsEventArgs = _lavishInnerSpaceAssembly.GetType("LavishScriptAPI.LSEventArgs");
-                Type evType = typeof(EventHandler<>);
-                Type[] typeArgs = { _lsEventArgs };
-                Type lsEvType = evType.MakeGenericType(typeArgs);
-                MethodInfo mi = typeof(InnerSpaceFramework).GetMethod("FrameHook", BindingFlags.Public | BindingFlags.Instance);
-                _frameHookDelegate = Delegate.CreateDelegate(lsEvType, this, mi);
-            }
+            return assemblyDirectory;
         }
-#endif
+
         public void RegisterFrameHook(EventHandler<EventArgs> frameHook)
         {
+            // save the user's frame hook
             _frameHook = frameHook;
-#if WIP
+
+            // Register for the InnerSpace OnFrame event
             _innerspaceOnFrameId = (uint)_lavishScriptEvents.InvokeMember("RegisterEvent",
                 BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
                 null, null, new Object[] { "OnFrame" });
+            
+            // Attach our frame hook delegate to the OnFrame event
             _lavishScriptEvents.InvokeMember("AttachEventTarget",
                 BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
                 null, null, new Object[] { _innerspaceOnFrameId, _frameHookDelegate });
-#else
-            _innerspaceOnFrameId = LavishScript.Events.RegisterEvent("OnFrame");
-            LavishScript.Events.AttachEventTarget(_innerspaceOnFrameId, FrameHook);
-#endif
         }
 
         public void RegisterLogger(EventHandler<EventArgs> logger)
@@ -115,25 +155,17 @@
 
         public void Log(string msg)
         {
-#if WIP
-            _innerSpace.InvokeMember("Echo",
-                BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
-                null, null, new Object[] { msg });
-#else
-            InnerSpace.Echo(msg);
-#endif
+            // Invoke InnerSpaceAPI.InnerSpace.Echo()
+            _echoMethod.Invoke(null, new Object[] { msg });
         }
 
         #region IDisposable Members
         public void Dispose()
         {
-#if WIP
+            // Detach our frame hook delegate from the OnFrame event
             _lavishScriptEvents.InvokeMember("DetachEventTarget",
                 BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
                 null, null, new Object[] { _innerspaceOnFrameId, _frameHookDelegate });
-#else
-            LavishScript.Events.DetachEventTarget(_innerspaceOnFrameId, FrameHook);
-#endif
         }
         #endregion
     }

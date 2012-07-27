@@ -54,6 +54,7 @@ namespace DirectEveTester
 
             try
             {
+                _directEve.Log("This is a message from DirectEve.Log()");
                 var items = _directEve.GetItemHangar().Items;
                 foreach(var item in items)
                 {
