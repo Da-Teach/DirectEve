@@ -185,7 +185,8 @@ namespace DirectEve
                 if (_security.Email != "anonymous")
                 {
                     Log("Registered to " + _security.Email);
-                    Log("You are currently using " + _security.ActiveInstances + " of " + _security.SupportInstances + " support instances");
+                    if (_security.ActiveInstances != -1 && _security.SupportInstances != -1)
+                        Log("You are currently using " + _security.ActiveInstances + " of " + _security.SupportInstances + " support instances");
                 }
                 else
                     Log("You are using the anonymous license, please consider upgrading to a support license (http://support.thehackerwithin.com)");
