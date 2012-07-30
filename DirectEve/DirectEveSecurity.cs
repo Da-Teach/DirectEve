@@ -1,13 +1,16 @@
 ﻿namespace DirectEve
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Reflection;
     using System.Security;
+    using System.ServiceModel;
     using System.Threading;
     using System.Xml.Linq;
+    using global::DirectEve.LicenseServer;
     using Certs = global::DirectEve.Certificates.Certificates;
 
     internal class DirectEveSecurity
@@ -15,9 +18,7 @@
         private DirectEve _directEve;
 
         private const string _retrieveLicenseUrl = "http://support.thehackerwithin.com/Subscription/GenerateLicense";
-        private const string _startupUrl = "http://support.thehackerwithin.com/DirectEve/Startup";
-        private const string _keepAliveUrl = "http://support.thehackerwithin.com/DirectEve/KeepAlive";
-        private const string _shutdownUrl = "http://support.thehackerwithin.com/DirectEve/Shutdown";
+        private const string _licenseServer = "http://license.thehackerwithin.com/LicenseV1.svc";
         private const int _pulseInterval = 60;
 
         private const string _obsoleteDirectEve = "Your DirectEve version is obsolete, please download a new version from http://support.thehackerwithin.com !";
@@ -38,8 +39,9 @@
         internal DirectEveSecurity(DirectEve directEve)
         {            
             _directEve = directEve;
-            if(_directEve.debug)
-                _directEve.Log("DirectEve: Debug: Starting security");
+#if DEBUG
+            _directEve.Log("DirectEve: Debug: Starting security");
+#endif
             _version = Assembly.GetExecutingAssembly().GetName().Version;
             _pulseResult = true;
             _lastPulse = DateTime.Now;
@@ -49,18 +51,21 @@
 
         private void PerformStartupChecks()
         {
-            if(_directEve.debug)
-                _directEve.Log("DirectEve: Debug: loading license");
+#if DEBUG
+            _directEve.Log("DirectEve: Debug: loading license");
+#endif
             // Load DirectEve license
             LoadLicense();
 
-            if(_directEve.debug)
-                _directEve.Log("DirectEve: Debug: startup check");
+#if DEBUG
+            _directEve.Log("DirectEve: Debug: startup check");
+#endif
             // Check DirectEve version on server
             PerformStartupCheck();
 
-            if(_directEve.debug)
-                _directEve.Log("DirectEve: Debug: checking version");
+#if DEBUG
+            _directEve.Log("DirectEve: Debug: checking version");
+#endif
             //Check if directeve is obsolete
             CheckVersion();
         }
@@ -166,19 +171,31 @@
         /// </summary>
         private void PerformStartupCheck()
         {
-            var startupRequest = new XElement("request",
-                new XElement("email", _email),
-                new XElement("licensekey", _licenseKey),
-                new XElement("version", _version.ToString()),
-                new XElement("challenge", DateTime.Now));
+            var version = _version.ToString();
+            var challenge = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            var signature = Certs.SignData(_email, _licenseKey, version, challenge);
 
-            var startupResponse = PerformServerCall(_startupUrl, startupRequest);
-            if (startupResponse == null)
+            try
+            {
+                StartupResponseV1 response;
+                using (var client = new LicenseV1Client(new BasicHttpBinding(), new EndpointAddress(_licenseServer)))
+                    response = client.Startup(_email, _licenseKey, version, challenge, signature);
+
+                if (!Certs.VerifyData(response.Signature, response.InstanceId, response.Email, response.LicenseKey, response.ActiveInstances, response.SupportInstances, response.Challenge))
+                    throw new Exception();
+
+                _instanceId = response.InstanceId;
+                _activeInstances = response.ActiveInstances;
+                _supportInstances = response.SupportInstances;
+            }
+            catch (FaultException<LicenseFault> exception)
+            {
+                throw new SecurityException(exception.Detail.Fault);
+            }
+            catch (Exception)
+            {
                 throw new SecurityException(_verifyError);
-
-            _instanceId = (Guid)startupResponse.Element("instanceid");
-            _activeInstances = (int?)startupResponse.Element("activeinstances") ?? 0;
-            _supportInstances = (int?)startupResponse.Element("supportinstances") ?? 0;
+            }
         }
 
         /// <summary>
@@ -211,14 +228,14 @@
         {
             try
             {
-                var pulseRequest = new XElement("request",
-                    new XElement("email", _email),
-                    new XElement("licensekey", _licenseKey),
-                    new XElement("instanceid", _instanceId),
-                    new XElement("challenge", DateTime.Now));
+                var challenge = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+                var signature = Certs.SignData(_email, _licenseKey, _instanceId, challenge);
 
-                var result = PerformServerCall(_keepAliveUrl, pulseRequest);
-                _pulseResult = result != null;
+                UpdateResponseV1 response;
+                using (var client = new LicenseV1Client(new BasicHttpBinding(), new EndpointAddress(_licenseServer)))
+                    response = client.KeepAlive(_email, _licenseKey, _instanceId, challenge, signature);
+
+                _pulseResult = Certs.VerifyData(response.Signature, response.InstanceId, response.Challenge);
             }
             catch (Exception)
             {
@@ -256,16 +273,14 @@
         /// </summary>
         internal void QuitDirectEve()
         {
-            var shutdownRequest = new XElement("request",
-                new XElement("email", _email),
-                new XElement("licensekey", _licenseKey),
-                new XElement("instanceid", _instanceId),
-                new XElement("challenge", DateTime.Now));
-
             // Fire & forget
             try
             {
-                PerformServerCall(_shutdownUrl, shutdownRequest);
+                var challenge = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+                var signature = Certs.SignData(_email, _licenseKey, _instanceId, challenge);
+
+                using (var client = new LicenseV1Client(new BasicHttpBinding(), new EndpointAddress(_licenseServer)))
+                    client.Shutdown(_email, _licenseKey, _instanceId, challenge, signature);
             }
             catch
             { }

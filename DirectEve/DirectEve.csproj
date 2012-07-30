@@ -33,7 +33,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -54,6 +55,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -124,14 +127,52 @@
     <Compile Include="PySharp\PyObject.cs" />
     <Compile Include="PySharp\PySharp.cs" />
     <Compile Include="PySharp\PyType.cs" />
+    <Compile Include="Service References\LicenseServer\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Certificates\ClientToServer.pfx" />
     <EmbeddedResource Include="Certificates\ServerToClient.cer" />
     <None Include="DirectEve.snk" />
-    <None Include="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
+    <None Include="Service References\LicenseServer\DirectEve.LicenseServer.StartupResponseV1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\LicenseServer\DirectEve.LicenseServer.UpdateResponseV1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\LicenseServer\LicenseV1.wsdl" />
+    <None Include="Service References\LicenseServer\LicenseV1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\LicenseServer\LicenseV11.wsdl" />
+    <None Include="Service References\LicenseServer\LicenseV11.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\LicenseServer\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\LicenseServer\LicenseV1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\LicenseServer\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\LicenseServer\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\LicenseServer\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyToInnerSpace" AfterTargets="AfterBuild">
