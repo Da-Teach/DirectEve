@@ -152,13 +152,10 @@ namespace DirectEve
         /// </summary>
         private List<DirectWindow> _windows;
 
-        internal bool debug { get { return false; } private set { } }
-
         /// <summary>
         /// The framework object that wraps OnFrame and Log
         /// </summary>
         private IFramework _framework;
-        
 
         /// <summary>
         /// Create a DirectEve object
@@ -206,13 +203,17 @@ namespace DirectEve
                 _containers = new Dictionary<long, DirectContainer>();
                 _lastKnownTargets = new Dictionary<long, DateTime>();
 
-                if(debug) Log("Registering OnFrame event");
+#if DEBUG
+                Log("Registering OnFrame event");
+#endif
                 _framework.RegisterFrameHook(FrameworkOnFrame);
             }
             catch (Exception e)
             {
-                if(debug) Log("DirectEve: Debug: Exception after license check: " + e.Message + " stacktrace: " + e.StackTrace);
-                return;
+#if DEBUG
+                Log("DirectEve: Debug: Exception after license check: " + e.Message + " stacktrace: " + e.StackTrace);
+#endif
+                throw;
             }
         }
 
@@ -453,8 +454,14 @@ namespace DirectEve
         /// </summary>
         public void Dispose()
         {
+            if (_framework != null)
+                _framework.Dispose();
+
             if (_security != null)
                 _security.QuitDirectEve();
+
+            _security = null;
+            _framework = null;
         }
 
         #endregion
@@ -481,7 +488,6 @@ namespace DirectEve
         ///   OnFrame event, use this to do your eve-stuff
         /// </summary>
         public event EventHandler OnFrame;
-        private bool firstFrame = true;
 
         /// <summary>
         ///   Internal "OnFrame" handler
@@ -490,11 +496,6 @@ namespace DirectEve
         /// <param name = "e"></param>
         private void FrameworkOnFrame(object sender, EventArgs e)
         {
-            if (firstFrame)
-            {
-                if(debug) Log("Executing first directeve onframe event");
-                firstFrame = false;
-            }
             using (var pySharp = new PySharp.PySharp(true))
             {
                 // Make the link to the instance
@@ -508,7 +509,6 @@ namespace DirectEve
                     {
                         _securityCheckFailed = true;
                         Log("DirectEve supported instance check failed!");
-                        //throw new SecurityException("DirectEve instance check failed");
                     }
                     return;
                 }
@@ -516,7 +516,7 @@ namespace DirectEve
                 if (_securityCheckFailed)
                 {
                     _securityCheckFailed = false;
-                    if(debug) Log("DirectEve supported instance check succeeded, continuing...");
+                    Log("DirectEve supported instance check succeeded, continuing...");
                 }
 #endif
                 // Get current target list
