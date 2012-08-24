@@ -181,6 +181,11 @@ namespace DirectEve
             }
         }
 
+        public double AveragePrice()
+        {
+            return (double)PySharp.Import("util").Call("GetAveragePrice", PyItem);
+        }
+
         internal static bool RefreshItems(DirectEve directEve, PyObject inventory, PyObject flag)
         {
             var list = inventory.Attribute("List");

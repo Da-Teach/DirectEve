@@ -127,6 +127,7 @@
     <Compile Include="PySharp\PyObject.cs" />
     <Compile Include="PySharp\PySharp.cs" />
     <Compile Include="PySharp\PyType.cs" />
+    <Compile Include="DirectRepairShopWindow.cs" />
     <Compile Include="Service References\LicenseServer\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -44,6 +44,7 @@ namespace DirectEve
                                                        new WindowType("__guid__", "form.Scanner", (directEve, pyWindow) => new DirectScannerWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.ReprocessingDialog", (directEve, pyWindow) => new DirectReprocessingWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.LPStore", (directEve, pyWindow) => new DirectLoyaltyPointStoreWindow(directEve, pyWindow)),
+                                                       new WindowType("__guid__", "form.RepairShopWindow", (directEve, pyWindow) => new DirectRepairShopWindow(directEve, pyWindow))
                                                    };
 
         internal PyObject PyWindow;

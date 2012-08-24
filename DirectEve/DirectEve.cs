@@ -1091,6 +1091,34 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Open the repairshop window
+        /// </summary>
+        public void OpenRepairShop()
+        {
+            if (!Session.IsInStation)
+                return;
+            var form = PySharp.Import("form");
+            ThreadedCall(form.Attribute("RepairShopWindow").Attribute("Open"));            
+        }
+
+        internal long getServiceMask()
+        {
+            if (!Session.IsInStation)
+                return 0;
+            return (long)PySharp.Import("__builtin__").Attribute("eve").Attribute("stationItem").Attribute("serviceMask");
+        }
+
+        public bool hasRepairFacility()
+        {
+            if (!Session.IsInStation || !Session.IsReady)
+            {                
+                return false;
+            }
+            long serviceMask = getServiceMask();
+            return (serviceMask & (long)Const["stationServiceRepairFacilities"]) != 0;
+        }
+
+        /// <summary>
         /// Broadcast scatter events.  Use with caution.
         /// </summary>
         /// <param name="evt">The event name.</param>
