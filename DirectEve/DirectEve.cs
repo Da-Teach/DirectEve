@@ -1137,5 +1137,26 @@ namespace DirectEve
         {
             _framework.Log(msg);
         }
+
+        /// <summary>
+        /// Does this user have available support instances?
+        /// 
+        /// NOTE: Do not use this function to gate mission critical features
+        /// which may cause loss of assets in the event of a license server
+        /// error!
+        /// </summary>
+        /// <returns>True if the user has support instances.</returns>
+        public bool HasSupportInstances()
+        {
+            bool rval = false;
+
+            if (_security.Email != "anonymous" && _security.SupportInstances >= 0 && 
+                _security.ActiveInstances <= _security.SupportInstances)
+            {
+                rval = true;
+            }
+
+            return rval;
+        }
     }
 }

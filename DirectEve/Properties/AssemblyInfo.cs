@@ -45,3 +45,8 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 
 [assembly: AssemblyVersion("1.330.*")]
+
+// use fixed version when debugging without a license
+//[assembly: AssemblyVersion("1.330.4619.38451")]
+
+

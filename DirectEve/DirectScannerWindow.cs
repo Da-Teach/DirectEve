@@ -68,7 +68,6 @@ namespace DirectEve
             }
         }
 
-#if SYSTEM_SCANNER_ENABLED  // This is broken and can lead to bans.  Don't enable unless you know what you are doing.
         /// <summary>
         /// List of all the system scanner results
         /// </summary>
@@ -76,23 +75,29 @@ namespace DirectEve
         {
             get
             {
-                var charId = DirectEve.Session.CharacterId;
-                if (_systemScanResults == null && charId != null)
-                {
-                    _systemScanResults = new List<DirectSystemScanResult>();
-                    foreach (var node in PyWindow.Attribute("sr").Attribute("resultscroll").Call("GetNodes").ToList())
+                if (DirectEve.HasSupportInstances())
+                {   // only fetch results for paid users
+                    var charId = DirectEve.Session.CharacterId;
+                    if (_systemScanResults == null && charId != null)
                     {
-                        if (node.Attribute("result").IsValid)
+                        _systemScanResults = new List<DirectSystemScanResult>();
+                        foreach (var node in PyWindow.Attribute("sr").Attribute("resultscroll").Call("GetNodes").ToList())
                         {
-                            _systemScanResults.Add(new DirectSystemScanResult(DirectEve, node));
+                            if (node.Attribute("result").IsValid)
+                            {
+                                _systemScanResults.Add(new DirectSystemScanResult(DirectEve, node));
+                            }
                         }
                     }
+                }
+                else
+                {
+                    _systemScanResults = null;
                 }
 
                 return _systemScanResults;
             }
         }
-#endif
 
         /// <summary>
         ///   Selects the next tab
@@ -106,7 +111,7 @@ namespace DirectEve
         /// <summary>
         ///   Selects the previous tab
         /// </summary>
-        /// <returns>true if sucessfull, false otherwise</returns>
+        /// <returns>true if successful, false otherwise</returns>
         public bool PrevTab()
         {
             return DirectEve.ThreadedCall(PyWindow.Attribute("sr").Attribute("tabs").Attribute("SelectPrev"));
@@ -115,7 +120,7 @@ namespace DirectEve
         /// <summary>
         ///   Selects a tab by index
         /// </summary>
-        /// <returns>true if sucessfull, false otherwise</returns>
+        /// <returns>true if successful, false otherwise</returns>
         public bool SelectByIdx(int tab)
         {
             return DirectEve.ThreadedCall(PyWindow.Attribute("sr").Attribute("tabs").Attribute("SelectByIdx"), tab);
@@ -133,30 +138,31 @@ namespace DirectEve
         /// <summary>
         ///   Performs a directional scan
         /// </summary>
-        /// <returns>true if sucessfull, false otherwise</returns>
+        /// <returns>true if successful, false otherwise</returns>
         public bool DirectionSearch()
         {
             _scanResults = null; // free old results
             return DirectEve.ThreadedCall(PyWindow.Attribute("DirectionSearch"));
         }
-#if SYSTEM_SCANNER_ENABLED  // This is broken and can lead to bans.  Don't enable unless you know what you are doing.
         /// <summary>
         /// Start a system scan; i.e. click the Analyze button.
         /// </summary>
         /// <returns>false if scan already running.  true if new scan was started</returns>
         public bool Analyze()
         {
-            var scanningProbes = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("scanSvc").Attribute("scanningProbes");
+            if (DirectEve.HasSupportInstances())
+            {   // only perform a scan for paid users
+                var scanningProbes = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("scanSvc").Attribute("scanningProbes");
 
-            // Check for an active scan.  If we call Analyze while a scan is running Eve will throw an exception
-            if (scanningProbes.IsValid == false)
-            {
-                _systemScanResults = null; // free old results
-                return DirectEve.ThreadedCall(PyWindow.Attribute("Analyze"));
+                // Check for an active scan.  If we call Analyze while a scan is running Eve will throw an exception
+                if (scanningProbes.IsValid == false)
+                {
+                    _systemScanResults = null; // free old results
+                    return DirectEve.ThreadedCall(PyWindow.Attribute("Analyze"));
+                }
             }
 
             return false;
         }
-#endif
     }
 }

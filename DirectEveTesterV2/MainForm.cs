@@ -6,6 +6,7 @@
     using DirectEve;
     using System.Windows.Forms;
     using InnerSpaceAPI;
+    using System.Collections.Generic;
 
     public partial class MainForm : Form
     {
@@ -490,7 +491,7 @@
                 Log("scanner not ready");
             }
         }
-#if SYSTEM_SCANNER_ENABLED
+
         [Test]
         private void DoSystemScan()
         {
@@ -509,15 +510,19 @@
             var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
             if (scanner != null && scanner.IsReady)
             {
-                foreach (var result in scanner.SystemScanResults)
+                List<DirectSystemScanResult> results = scanner.SystemScanResults;
+                if (results != null)
                 {
-                    Log("ID = {0}",result.ID);
-                    Log("ScanGroup = {0}", result.ScanGroup);
-                    Log("Group = {0}", result.Group);
-                    Log("Type = {0}", result.Type);
-                    Log("SignalStrength = {0}", result.SignalStrength);
-                    Log("Distance = {0}", result.Distance);
-                    Log(result.DumpData());
+                    foreach (var result in scanner.SystemScanResults)
+                    {
+                        Log("ID = {0}", result.ID);
+                        Log("ScanGroup = {0}", result.ScanGroup);
+                        Log("Group = {0}", result.Group);
+                        Log("Type = {0}", result.Type);
+                        Log("SignalStrength = {0}", result.SignalStrength);
+                        Log("Distance = {0}", result.Distance);
+                        Log(result.DumpData());
+                    }
                 }
             }
         }
@@ -539,7 +544,7 @@
                 }
             }
         }
-#endif
+
         [Test]
         private void CloseScanner()
         {
