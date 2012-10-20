@@ -57,6 +57,14 @@ namespace DirectEve
         public int VolumeRemaining { get; set; }
         public double Price { get; set; }
 
+
+        public bool Buy(int quantity, DirectOrderRange range)
+        {
+            var pyRange = DirectEve.GetRange(range);
+            return DirectEve.ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange);
+        }
+        
+        
         // def CancelOrder(self, orderID, regionID):
         public bool CancelOrder()
         {
