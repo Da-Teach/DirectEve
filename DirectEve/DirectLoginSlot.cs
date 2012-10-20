@@ -47,6 +47,12 @@ namespace DirectEve
         /// <returns></returns>
         public bool Activate()
         {
+            if (!DirectEve.HasSupportInstances())
+            {
+                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+                return false;
+            }
+            
             var selectSlot = PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("charsel").Attribute("SelectSlot");
             return DirectEve.ThreadedCall(selectSlot, _pySlot);
         }

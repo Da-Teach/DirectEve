@@ -1158,5 +1158,59 @@ namespace DirectEve
 
             return rval;
         }
+
+        public bool Sell(DirectItem item, int StationId, int quantity, double price, int duration, bool useCorp)
+        {            
+            if (!item.PyItem.IsValid)
+                return false;
+            if (!HasSupportInstances())
+            {
+                Log("DirectEve: Error: This method requires a support instance.");
+                return false;
+            }
+            //var pyRange = GetRange(range);
+            //def SellStuff(self, stationID, typeID, itemID, price, quantity, duration = 0, useCorp = False, located = None):
+            return ThreadedLocalSvcCall("marketQuote", "SellStuff", StationId, item.TypeId, item.ItemId, price, quantity, duration, useCorp);//pyRange);
+        }
+
+        internal PyObject GetRange(DirectOrderRange range)
+        {
+            switch (range)
+            {
+                case DirectOrderRange.SolarSystem:
+                    return Const.RangeSolarSystem;
+                case DirectOrderRange.Constellation:
+                    return Const.RangeConstellation;
+                case DirectOrderRange.Region:
+                    return Const.RangeRegion;
+                default:
+                    return Const.RangeStation;
+            }
+        }
+
+        public bool Buy(int StationId, int TypeId, double Price, int quantity, DirectOrderRange range, int minVolume, int duration, bool useCorp)
+        {
+            if (!HasSupportInstances())
+            {
+                Log("DirectEve: Error: This method requires a support instance.");
+                return false;
+            }
+            var pyRange = GetRange(range);
+            //def BuyStuff(self, stationID, typeID, price, quantity, orderRange = None, minVolume = 1, duration = 0, useCorp = False):
+            return ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange, minVolume, duration, useCorp);
+        }
+
+        public IEnumerable<DirectOrder> GetMyOrders()
+        {
+            if (!HasSupportInstances())
+            {
+                Log("DirectEve: Error: This method requires a support instance.");
+                return null;
+            }
+            var mq = GetLocalSvc("marketQuote");
+            IEnumerable<DirectOrder> orders = mq.Call("GetMyOrders").ToList().Select(o => new DirectOrder(this, o));
+            return orders;
+
+        }
     }
 }

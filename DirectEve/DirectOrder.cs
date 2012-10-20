@@ -57,34 +57,28 @@ namespace DirectEve
         public int VolumeRemaining { get; set; }
         public double Price { get; set; }
 
-        private PyObject GetRange(DirectOrderRange range)
+        // def CancelOrder(self, orderID, regionID):
+        public bool CancelOrder()
         {
-            switch (range)
+            if (!DirectEve.HasSupportInstances())
             {
-                case DirectOrderRange.SolarSystem:
-                    return DirectEve.Const.RangeSolarSystem;
-                case DirectOrderRange.Constellation:
-                    return DirectEve.Const.RangeConstellation;
-                case DirectOrderRange.Region:
-                    return DirectEve.Const.RangeRegion;
-                default:
-                    return DirectEve.Const.RangeStation;
-            }
-        }
-
-        public bool Sell(DirectItem item, int quantity, DirectOrderRange range)
-        {
-            if (!item.PyItem.IsValid)
+                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
-
-            var pyRange = GetRange(range);
-            return DirectEve.ThreadedLocalSvcCall("marketQuote", "SellStuff", StationId, TypeId, item.PyItem, quantity, pyRange);
+            }
+            
+            return DirectEve.ThreadedLocalSvcCall("marketQuote", "CancelOrder", OrderId, RegionId);
         }
 
-        public bool Buy(int quantity, DirectOrderRange range)
+        //def ModifyOrder(self, order, newPrice):
+        public bool ModifyOrder(double newPrice)
         {
-            var pyRange = GetRange(range);
-            return DirectEve.ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange);
+            if (!DirectEve.HasSupportInstances())
+            {
+                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+                return false;
+            }
+            
+            return DirectEve.ThreadedLocalSvcCall("marketQuote", "ModifyOrder", PyOrder, newPrice);
         }
     }
 }

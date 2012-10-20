@@ -42,7 +42,14 @@ namespace DirectEve
                 mission.State = (int)pyMission.Item(0);
                 mission.Important = (bool)pyMission.Item(1);
                 mission.Type = (string)pyMission.Item(2);
-                mission.Name = (string)directEve.PySharp.Import("localization").Call("GetByMessageID", (int)pyMission.Item(3));
+
+                if ((int)pyMission.Item(3) > 0)
+                    mission.Name = (string)directEve.PySharp.Import("localization").Call("GetByMessageID", (int)pyMission.Item(3));
+                else
+                {
+                    mission.Name = "none";
+                    continue;
+                }                
                 
                 mission._pyAgentId = pyMission.Item(4);
                 mission.AgentId = (long)pyMission.Item(4);
