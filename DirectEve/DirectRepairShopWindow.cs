@@ -8,20 +8,18 @@ namespace DirectEve
     using global::DirectEve.PySharp;
 
     public class DirectRepairShopWindow : DirectWindow
-    {
-        private DirectEve _directEve;
+    {        
         
         internal DirectRepairShopWindow(DirectEve directEve, PyObject pyWindow)
             : base(directEve, pyWindow)
-        {
-            _directEve = directEve;
+        {            
         }
 
         public bool RepairItems(List<DirectItem> items)
         {
-            if (!_directEve.HasSupportInstances())
+            if (!DirectEve.HasSupportInstances())
             {
-                _directEve.Log("DirectEve: Error: This method requires a support instance.");
+                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
             var PyItems = items.Select(i => i.PyItem);
@@ -30,9 +28,9 @@ namespace DirectEve
 
         public bool RepairAll()
         {
-            if (!_directEve.HasSupportInstances())
+            if (!DirectEve.HasSupportInstances())
             {
-                _directEve.Log("DirectEve: Error: This method requires a support instance.");
+                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
             return DirectEve.ThreadedCall(PyWindow.Attribute("RepairAll"));
@@ -40,9 +38,9 @@ namespace DirectEve
 
         public string AvgDamage()
         {
-            if (!_directEve.HasSupportInstances())
+            if (!DirectEve.HasSupportInstances())
             {
-                _directEve.Log("DirectEve: Error: This method requires a support instance.");
+                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return null;
             }
             
