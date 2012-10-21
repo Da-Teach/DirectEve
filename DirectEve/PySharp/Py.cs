@@ -231,6 +231,10 @@ namespace DirectEve.PySharp
         internal static extern IntPtr Py_BuildValue(string format, IntPtr parm1, IntPtr parm2, IntPtr parm3, IntPtr parm4, IntPtr parm5, IntPtr parm6, IntPtr parm7);
 
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr Py_BuildValue(string format, IntPtr parm1, IntPtr parm2, IntPtr parm3, IntPtr parm4, IntPtr parm5, IntPtr parm6, IntPtr parm7, IntPtr parm8);
+
+
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyList_New(int size);
 
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]

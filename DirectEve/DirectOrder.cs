@@ -19,6 +19,7 @@ namespace DirectEve
         internal DirectOrder(DirectEve directEve, PyObject pyOrder) : base(directEve)
         {
             PyOrder = pyOrder;
+            OrderId = -1;
             Price = (double) pyOrder.Attribute("price");
             VolumeRemaining = (int) pyOrder.Attribute("volRemaining");
             TypeId = (int) pyOrder.Attribute("typeID");
@@ -73,7 +74,11 @@ namespace DirectEve
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            
+            if (OrderId == -1 || !PyOrder.IsValid)
+            {
+                DirectEve.Log("Trying to cancel a invalid order");
+                return false;
+            }
             return DirectEve.ThreadedLocalSvcCall("marketQuote", "CancelOrder", OrderId, RegionId);
         }
 
@@ -83,6 +88,12 @@ namespace DirectEve
             if (!DirectEve.HasSupportInstances())
             {
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+                return false;
+            }
+
+            if (OrderId == -1 || !PyOrder.IsValid)
+            {
+                DirectEve.Log("Trying to modify a invalid order");
                 return false;
             }
             

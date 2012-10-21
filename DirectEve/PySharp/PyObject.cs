@@ -412,6 +412,8 @@ namespace DirectEve.PySharp
                 pyArgs = new PyObject(_pySharp, Py.Py_BuildValue(format, pyParms[0], pyParms[1], pyParms[2], pyParms[3], pyParms[4], pyParms[5]), true);
             if (pyParms.Count == 7)
                 pyArgs = new PyObject(_pySharp, Py.Py_BuildValue(format, pyParms[0], pyParms[1], pyParms[2], pyParms[3], pyParms[4], pyParms[5], pyParms[6]), true);
+            if (pyParms.Count == 8)
+                pyArgs = new PyObject(_pySharp, Py.Py_BuildValue(format, pyParms[0], pyParms[1], pyParms[2], pyParms[3], pyParms[4], pyParms[5], pyParms[6], pyParms[7]), true);
 
             if (pyArgs == null)
                 throw new NotImplementedException();
