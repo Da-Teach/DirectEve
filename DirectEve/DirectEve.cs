@@ -1200,39 +1200,6 @@ namespace DirectEve
             return ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange, minVolume, duration);//, useCorp);
         }
 
-        public IEnumerable<DirectOrder> GetMyOrders(DirectMarketWindow window, bool bid = false)
-        {
-            if (!HasSupportInstances())
-            {
-                Log("DirectEve: Error: This method requires a support instance.");
-                return null;
-            }
-            
-            var mq = GetLocalSvc("marketQuote");
-            var mu = GetLocalSvc("marketutils");
-            if (!window.IsReady)
-                return null;
-            //IEnumerable<DirectOrder> orders = mq.Call("GetMyOrders").ToList().Select(o => new DirectOrder(this, o));
-            if (!bid)
-                return window.PyWindow.Attribute("sr").Attribute("market").Attribute("sr").Attribute("myorders").Attribute("sr").Attribute("sellScroll").Attribute("sr").Attribute("entries").ToList().Select(o => new DirectOrder(this, o.Attribute("order")));
-            else
-                return window.PyWindow.Attribute("sr").Attribute("market").Attribute("sr").Attribute("myorders").Attribute("sr").Attribute("buyScroll").Attribute("sr").Attribute("entries").ToList().Select(o => new DirectOrder(this, o.Attribute("order")));
-        }
-
-        public bool LoadOrders(DirectMarketWindow window)
-        {
-            if (!HasSupportInstances())
-            {
-                Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
-            
-            var mu = GetLocalSvc("marketutils");
-            var mq = GetLocalSvc("marketQuote");
-            if (!window.IsReady)
-                return false;
-            return ThreadedCall(window.PyWindow.Attribute("sr").Attribute("market").Attribute("LoadOrders"));
-            //return ThreadedLocalSvcCall("marketQuote", "RefreshOrderCache");
-        }
+        
     }
 }
