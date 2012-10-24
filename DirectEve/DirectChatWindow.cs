@@ -28,13 +28,21 @@ namespace DirectEve
             if (id.GetPyType() == PyType.IntType)
                 ChannelId = ((long) id).ToString();
 
-            MemberCount = (int) pyWindow.Attribute("memberCount");
-            Usermode = (int) pyWindow.Attribute("usermode");
+            MemberCount = (int) pyWindow.Attribute("memberCount");      // deprecated by CCP
+            Usermode = (int)pyWindow.Attribute("usermode");             // deprecated by CCP
+            EveMemberCount = (int)pyWindow.Attribute("eveMemberCount");
+            DustMemberCount = (int)pyWindow.Attribute("dustMemberCount");
+            ShowUserList = (bool)pyWindow.Attribute("showUserList");
+
+            
         }
 
         public string ChannelId { get; private set; }
         public int MemberCount { get; private set; }
+        public int EveMemberCount { get; private set; }
+        public int DustMemberCount { get; private set; }
         public int Usermode { get; private set; }
+        public bool ShowUserList { get; private set; }
 
         public List<DirectChatMessage> Messages
         {
@@ -55,8 +63,8 @@ namespace DirectEve
                 {
                     _members = new List<DirectCharacter>();
 
-                    // Only do this if usermode == 2
-                    if (Usermode == 2)
+                    // Only do this if user list is shown
+                    if (ShowUserList)
                     {
                         var channelId = PyWindow.Attribute("channelID");
                         var members = DirectEve.GetLocalSvc("LSC").Attribute("channels").DictionaryItem(channelId).Attribute("memberList");
