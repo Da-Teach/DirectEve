@@ -93,6 +93,8 @@ namespace DirectEve
         OpenDroneBayOfActiveShip,
         OpenCargoHoldOfActiveShip,
         OpenPeopleAndPlaces,
-        OpenCharactersheet
+        OpenCharactersheet,
+        OpenCorpHangar,
+        OpenInventory
     }
 }

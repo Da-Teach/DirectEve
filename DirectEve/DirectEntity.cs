@@ -366,10 +366,10 @@ namespace DirectEve
                 entity.IsActiveTarget = true;
 
             var target = directEve.GetLocalSvc("target");
-            var targets = target.Attribute("targets").ToList<long>();
+            var targets = target.Attribute("targetsByID").ToDictionary().Keys;
             foreach (var targetId in targets)
             {
-                if (!entitiesById.TryGetValue(targetId, out entity))
+                if (!entitiesById.TryGetValue((long)targetId, out entity))
                     continue;
 
                 entity.IsTarget = true;

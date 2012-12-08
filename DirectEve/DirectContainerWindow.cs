@@ -186,7 +186,7 @@ namespace DirectEve
 
         public bool IsPrimary()
         {
-            return (bool)PyWindow.Call("IsPrimaryInvWindow");
+            return this.Type == "form.InventoryPrimary";
         }
 
     }

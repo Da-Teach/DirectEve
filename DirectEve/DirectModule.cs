@@ -15,7 +15,7 @@ namespace DirectEve
 
     public class DirectModule : DirectItem
     {
-        private List<DirectItem> _matchingAmmo;
+        //private List<DirectItem> _matchingAmmo;
         private PyObject _pyModule;
 
         internal DirectModule(DirectEve directEve, PyObject pyModule) : base(directEve)
@@ -53,8 +53,8 @@ namespace DirectEve
                 if (Charge != null && Charge.Volume > 0)
                     return (int) (Capacity/Charge.Volume);
 
-                if (MatchingAmmo.Count > 0)
-                    return (int) (Capacity/MatchingAmmo[0].Volume);
+                /*if (MatchingAmmo.Count > 0)
+                    return (int) (Capacity/MatchingAmmo[0].Volume);*/
 
                 return 0;
             }
@@ -67,7 +67,7 @@ namespace DirectEve
             get { return Attributes.TryGet<double>("maxRange"); }
         }
 
-        public List<DirectItem> MatchingAmmo
+        /*public List<DirectItem> MatchingAmmo
         {
             get
             {
@@ -86,7 +86,7 @@ namespace DirectEve
 
                 return _matchingAmmo;
             }
-        }
+        }*/
 
         internal static List<DirectModule> GetModules(DirectEve directEve)
         {
@@ -141,7 +141,14 @@ namespace DirectEve
             if (charge.Stacksize <= 0)
                 return false;
 
-            return DirectEve.ThreadedCall(_pyModule.Attribute("ChangeAmmoType"), charge.TypeId, charge.Stacksize);
+            var realoadInfo = _pyModule.Call("GetChargeReloadInfo").ToList();
+            if (charge.TypeId == (int)realoadInfo[0])
+                return ReloadAmmo(charge);
+            else
+            {
+                _pyModule.Attribute("stateManager").Call("ChangeAmmoTypeForModule", ItemId, charge.TypeId);
+                return ReloadAmmo(charge);
+            }
         }
 
         public bool ReloadAmmo(DirectItem charge)

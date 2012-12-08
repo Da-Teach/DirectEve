@@ -193,24 +193,23 @@ namespace DirectEve
         }
 
         internal static bool RefreshItems(DirectEve directEve, PyObject inventory, PyObject flag)
-        {
-            var list = inventory.Attribute("List");
-            return flag.IsValid ? directEve.ThreadedCall(list, flag) : directEve.ThreadedCall(list);
+        {            
+            return directEve.ThreadedCall(inventory.Attribute("InvalidateCache"));
         }
 
         internal static List<DirectItem> GetItems(DirectEve directEve, PyObject inventory, PyObject flag)
-        {
-            var list = inventory.Attribute("List");
+        {            
             var items = new List<DirectItem>();
-
-            var pyItems = (flag.IsValid ? list.CallThis() : list.CallThis(flag)).ToList();
+            var cachedItems = inventory.Attribute("cachedItems").ToDictionary();
+            var pyItems = cachedItems.Values;
+            
             foreach (var pyItem in pyItems)
             {
                 var item = new DirectItem(directEve);
                 item.PyItem = pyItem;
 
                 // Do not add the item if the flags do not coincide
-                if (flag.IsValid && (int) flag != item.FlagId)
+                if (flag.IsValid && (int)flag != item.FlagId)
                     continue;
 
                 items.Add(item);

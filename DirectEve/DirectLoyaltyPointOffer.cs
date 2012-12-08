@@ -51,9 +51,9 @@ namespace DirectEve
             return DirectEve.ThreadedCall(takeOffer, corpId, _pyOfferId);
         }*/
 
-        public bool AcceptOfferFromWindow()
-        {                        
-            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("lpstore").Attribute("AcceptOffer"), _offer);
+        public bool AcceptOfferFromWindow(int quantity = 1)
+        {
+            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("lpstore").Attribute("AcceptOffer"), _offer, quantity);
         }
     }
 }
