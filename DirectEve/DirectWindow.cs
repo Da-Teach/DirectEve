@@ -27,6 +27,7 @@ namespace DirectEve
                                                        new WindowType("__guid__", "invCont.StationItems", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "invCont.StationShips", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.Inventory", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+                                                       new WindowType("__guid__", "form.InventoryPrimary", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.InventorySecondary", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.StationItems", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.StationShips", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
