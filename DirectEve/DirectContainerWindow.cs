@@ -50,12 +50,12 @@ namespace DirectEve
         /// </summary>        
         /// <returns></returns>        
         public bool OpenAsSecondary()
-        {           
+        {
             PyObject invID = PyWindow.Attribute("currInvID");
             //check if it's already open, in that case do nothing.
-            var windows = DirectEve.Windows;
+            var windows = DirectEve.Windows.OfType<DirectContainerWindow>();
             string lookForInvID = (string)invID.ToList().First();
-            var alreadyOpened = windows.FirstOrDefault(w => w.Name.Contains(lookForInvID));
+            var alreadyOpened = windows.FirstOrDefault(w => w.Name.Contains(lookForInvID) && !w.IsPrimary());
             if (alreadyOpened != null)
                 return true;
 
@@ -63,8 +63,8 @@ namespace DirectEve
             var form = PySharp.Import("form");
             var keywords = new Dictionary<string, object>();
             keywords.Add("invID", invID);
-            return DirectEve.ThreadedCallWithKeywords(form.Attribute("Inventory").Attribute("OpenSecondary"), keywords);
-            //or pywindow.opensecondary
+            keywords.Add("usePrimary", false);
+            return DirectEve.ThreadedCallWithKeywords(form.Attribute("Inventory").Attribute("OpenOrShow"), keywords);
         }
 
 
