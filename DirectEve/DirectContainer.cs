@@ -318,7 +318,7 @@ namespace DirectEve
 
             var itemId = (long) directEve.GetLocalSvc("corp").Call("GetOffice", directEve.Session.CorporationId).Attribute("itemID");
             var inventory = GetInventory(directEve, "GetInventoryFromId", itemId);
-            return new DirectContainer(directEve, inventory, flag, "('StationCorpHangar_" + itemId + "_" + (divisionId - 1));
+            return new DirectContainer(directEve, inventory, flag, "('StationCorpHangars_");
         }
 
         internal static DirectContainer GetCorporationHangarArray(DirectEve directEve, long itemId, string divisionName)
