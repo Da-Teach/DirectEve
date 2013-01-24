@@ -75,15 +75,6 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The server status string
-        /// </summary>
-        public string ServerStatus
-        {
-
-            get { return (string)LoginLayer.Attribute("serverStatusTextControl").Attribute("text"); }
-        }
-
-        /// <summary>
         ///   Return the 3 character slots
         /// </summary>
         public List<DirectLoginSlot> CharacterSlots

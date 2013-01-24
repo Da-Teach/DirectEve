@@ -121,16 +121,6 @@ namespace DirectEve
         private DirectContainer _shipsCargo;
 
         /// <summary>
-        ///   Ship's ore hold container cache
-        /// </summary>
-        private DirectContainer _shipsOreHold;
-
-        /// <summary>
-        ///   Global Assets cache
-        /// </summary>
-        private List<DirectItem> _listGlobalAssets;
-
-        /// <summary>
         ///   Ship's drone bay cache
         /// </summary>
         private DirectContainer _shipsDroneBay;
@@ -560,10 +550,8 @@ namespace DirectEve
                 _itemHangar = null;
                 _shipHangar = null;
                 _shipsCargo = null;
-                _shipsOreHold = null;
                 _shipsModules = null;
                 _shipsDroneBay = null;
-                _listGlobalAssets = null;
                 _me = null;
                 _activeShip = null;
                 _standings = null;
@@ -687,45 +675,6 @@ namespace DirectEve
         public DirectContainer GetShipsCargo()
         {
             return _shipsCargo ?? (_shipsCargo = DirectContainer.GetShipsCargo(this));
-        }
-
-        /// <summary>
-        ///   Ship's ore hold container
-        /// </summary>
-        /// <returns></returns>
-        public DirectContainer GetShipsOreHold()
-        {
-            return _shipsOreHold ?? (_shipsOreHold = DirectContainer.GetShipsOreHold(this));
-        }
-
-        // If this is not the right place to do the calls themself, let me know. I thought placing them in DirectContainer was not neat ~ Ferox
-        /// <summary>
-        ///   Assets list
-        /// </summary>
-        /// <returns></returns>
-        public List<DirectItem> GetAssets()
-        {
-            if (_listGlobalAssets == null)
-            {
-                var pyItemDict = GetLocalSvc("invCache").Call("GetInventory", Const.ContainerGlobal).Attribute("cachedItems").ToDictionary<long>();
-                foreach (var pyItem in pyItemDict)
-                {
-                    var item = new DirectItem(this);
-                    item.PyItem = pyItem.Value;
-                    _listGlobalAssets.Add(item);
-                }
-            }
-
-            return _listGlobalAssets;
-        }
-
-        /// <summary>
-        ///   Refresh global assets list (note: 5min delay in assets)
-        /// </summary>
-        /// <returns></returns>
-        public bool RefreshAssets()
-        {
-            return ThreadedCall(GetLocalSvc("invCache").Call("GetInventory", Const.ContainerGlobal).Attribute("List"));
         }
 
         /// <summary>
