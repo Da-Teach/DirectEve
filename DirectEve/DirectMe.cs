@@ -40,22 +40,5 @@ namespace DirectEve
         {
             get { return (double) DirectEve.GetLocalSvc("wallet").Attribute("wealth"); }
         }
-
-
-        public bool IsAtWar
-        {
-            get
-            {
-                int id = DirectEve.Session.AllianceId;
-                if (id == null)
-                    id = DirectEve.Session.CorporationId;
-
-                var atWar = (int)DirectEve.GetLocalSvc("war").Attribute("wars").Call("AreInAnyHostileWarStates", id);
-                if (atWar == 1)
-                    return true;
-                else
-                    return false;
-            }
-        }
     }
 }

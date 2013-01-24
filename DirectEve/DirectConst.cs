@@ -72,16 +72,6 @@ namespace DirectEve
             get { return Const.Attribute("flagCargo"); }
         }
 
-        public PyObject FlagOreHold
-        {
-            get { return Const.Attribute("flagSpecializedOreHold") }
-        }
-
-        public PyObject ContainerGlobal
-        {
-            get { return Const.Attribute("containerGlobal") }
-        }
-
         public PyObject FlagDroneBay
         {
             get { return Const.Attribute("flagDroneBay"); }

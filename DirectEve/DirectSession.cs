@@ -43,11 +43,6 @@ namespace DirectEve
             get { return (long?) Session.Attribute("corpid"); }
         }
 
-        public long? AllianceId
-        {
-            get { return (long?)Session.Attribute("allianceid"); }
-        }
-
         public long? ShipId
         {
             get { return (long?) DirectEve.PySharp.Import("util").Call("GetActiveShip"); }
