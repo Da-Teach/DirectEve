@@ -121,6 +121,16 @@ namespace DirectEve
         private DirectContainer _shipsCargo;
 
         /// <summary>
+        ///   Ship's ore hold container cache
+        /// </summary>
+        private DirectContainer _shipsOreHold;
+
+        /// <summary>
+        ///   Global Assets cache
+        /// </summary>
+        private List<DirectItem> _listGlobalAssets;
+
+        /// <summary>
         ///   Ship's drone bay cache
         /// </summary>
         private DirectContainer _shipsDroneBay;
@@ -550,8 +560,10 @@ namespace DirectEve
                 _itemHangar = null;
                 _shipHangar = null;
                 _shipsCargo = null;
+                _shipsOreHold = null;
                 _shipsModules = null;
                 _shipsDroneBay = null;
+                _listGlobalAssets = null;
                 _me = null;
                 _activeShip = null;
                 _standings = null;
@@ -675,6 +687,41 @@ namespace DirectEve
         public DirectContainer GetShipsCargo()
         {
             return _shipsCargo ?? (_shipsCargo = DirectContainer.GetShipsCargo(this));
+        }
+
+        /// <summary>
+        ///   Ship's ore hold container
+        /// </summary>
+        /// <returns></returns>
+        public DirectContainer GetShipsOreHold()
+        {
+            return _shipsOreHold ?? (_shipsOreHold = DirectContainer.GetShipsOreHold(this));
+        }
+
+        // If this is not the right place to do the calls themself, let me know. I thought placing them in DirectContainer was not neat ~ Ferox
+        /// <summary>
+        ///   Assets list
+        /// </summary>
+        /// <returns></returns>
+        public DirectContainer GetAssets()
+        {
+            if (_listGlobalAssets == null)
+            {
+                var itemList = directEve.GetLocalSvc("invCache").Attribute("containerGlobal").Attribute("cachedItems").ToDictionary<long>();
+                foreach (var item in itemList)
+                    _listGlobalAssets.Add(item.Value);
+            }
+
+            return _listGlobalAssets;
+        }
+
+        /// <summary>
+        ///   Refresh global assets list (note: 5min delay in assets)
+        /// </summary>
+        /// <returns></returns>
+        public DirectContainer RefreshAssets()
+        {
+            return directEve.ThreadedCall(directEve.GetLocalSvc("invCache").Attribute("containerGlobal").Attribute("List"))
         }
 
         /// <summary>

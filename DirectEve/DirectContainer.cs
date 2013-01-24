@@ -405,6 +405,20 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Get the ship's ore hold
+        /// </summary>
+        /// <param name = "directEve"></param>
+        /// <returns></returns>
+        internal static DirectContainer GetShipsOreHold(DirectEve directEve)
+        {
+            if (!directEve.Session.ShipId.HasValue)
+                return new DirectContainer(directEve, global::DirectEve.PySharp.PySharp.PyZero, global::DirectEve.PySharp.PySharp.PyZero, string.Empty);
+
+            var inventory = GetInventory(directEve, "GetInventoryFromId", directEve.Session.ShipId.Value);
+            return new DirectContainer(directEve, inventory, directEve.Const.FlagOreHold, "('ShipOreHold', ");
+        }
+
+        /// <summary>
         ///   Get the ship's modules 'container'
         /// </summary>
         /// <param name = "directEve"></param>
