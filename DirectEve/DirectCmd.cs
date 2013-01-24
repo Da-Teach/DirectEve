@@ -92,6 +92,7 @@ namespace DirectEve
         CmdExitStation,
         OpenDroneBayOfActiveShip,
         OpenCargoHoldOfActiveShip,
+        OpenOreHoldOfActiveShip,
         OpenPeopleAndPlaces,
         OpenCharactersheet,
         OpenCorpHangar,
