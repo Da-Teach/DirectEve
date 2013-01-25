@@ -84,7 +84,6 @@ namespace DirectEve
             }
         }
 
-        //PySharp.UnicodeFrom(string op) creates a python unicode object of the first character, i can't figure out what's going wrong here ~ Ferox
         public bool Speak(string message)
         {
             return DirectEve.ThreadedCall(PyWindow.Attribute("Speak"), PySharp.UnicodeFrom(message), DirectEve.Session.CharacterId, true);

@@ -278,7 +278,7 @@ namespace DirectEve.PySharp
             PyObject result;
             if (!_unicodeCache.TryGetValue(value, out result))
             {
-                result = new PyObject(this, Py.PyUnicodeUCS2_FromString(value), true);
+                result = new PyObject(this, Py.PyUnicodeUCS2_FromUnicode(value, value.Length), true);
                 _unicodeCache[value] = result;
             }
             return result;
