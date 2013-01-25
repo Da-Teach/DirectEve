@@ -283,7 +283,7 @@ namespace DirectEve.PySharp
         internal static extern IntPtr PyUnicodeUCS2_AsUnicode(IntPtr op);
 
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr PyUnicodeUCS2_FromUnicode(string op, int size);
+        internal static extern IntPtr PyUnicodeUCS2_FromUnicode([MarshalAs(UnmanagedType.LPWStr)]string op, int size)
 
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyBool_FromLong(int op);
