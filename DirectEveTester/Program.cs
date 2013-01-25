@@ -55,15 +55,10 @@ namespace DirectEveTester
             try
             {
                 _directEve.Log("This is a message from DirectEve.Log()");
-                var items = _directEve.GetItemHangar().Items;
-                foreach(var item in items)
-                {
-                    if (item.TypeName != "Small Tractor Beam II")
-                        continue;
-                    
-                    Log("{0} {1} {2}", item.TypeName, item.TypeId, item.GroupId);
-                }
-
+                System.Diagnostics.Debugger.Launch();
+                var window = _directEve.Windows[10];
+                window.AnswerModal("Yes");
+                //window.AnswerMessageBox("Yes");
                 _done = true;
             }
             catch(Exception e)

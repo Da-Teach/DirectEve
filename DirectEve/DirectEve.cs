@@ -1234,6 +1234,36 @@ namespace DirectEve
             return ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange, minVolume, duration);//, useCorp);
         }
 
-        
+        public bool InviteToFleet(long CharID)
+        {
+            return ThreadedLocalSvcCall("menu", "InviteToFleet", CharID);
+        }
+
+        public bool KickMember(long CharID)
+        {
+            return ThreadedLocalSvcCall("menu", "KickMember", CharID);
+        }
+
+        public bool LeaveFleet()
+        {
+            return ThreadedLocalSvcCall("menu", "LeaveFleet");
+        }
+
+        public bool MakeFleetBoss(long CharID)
+        {
+            return ThreadedLocalSvcCall("menu", "MakeLeader", CharID);
+        }
+
+        public List<DirectFleetMember> GetFleetMembers()
+        {
+            List<DirectFleetMember> fleetMembers = new List<DirectFleetMember>();
+            var pyMembers = GetLocalSvc("fleet").Attribute("members").ToDictionary<long>();
+            foreach (var pyMember in pyMembers)
+            {
+                fleetMembers.Add(new DirectFleetMember(this, pyMember.Value));
+            }
+            return fleetMembers;
+        }
+
     }
 }

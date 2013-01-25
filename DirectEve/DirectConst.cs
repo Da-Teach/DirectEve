@@ -141,5 +141,30 @@ namespace DirectEve
         {
             get { return Const.Attribute("rangeStation"); }
         }
+
+        public PyObject FleetJobCreator
+        {
+            get { return Const.Attribute("fleetJobCreator"); }
+        }
+
+        public PyObject FleetRoleLeader
+        {
+            get { return Const.Attribute("fleetRoleLeader"); }
+        }
+
+        public PyObject FleetRoleWingCmdr
+        {
+            get { return Const.Attribute("fleetRoleWingCmdr"); }
+        }
+
+        public PyObject FleetRoleSquadCmdr
+        {
+            get { return Const.Attribute("fleetRoleSquadCmdr"); }
+        }
+
+        public PyObject FleetRoleMember
+        {
+            get { return Const.Attribute("fleetRoleMember"); }
+        }
     }
 }

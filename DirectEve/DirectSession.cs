@@ -45,12 +45,17 @@ namespace DirectEve
 
         public long? AllianceId
         {
-            get { return (long?)Session.Attribute("allianceid"); }
+            get { return (long?) Session.Attribute("allianceid"); }
         }
 
         public long? ShipId
         {
             get { return (long?) DirectEve.PySharp.Import("util").Call("GetActiveShip"); }
+        }
+
+        public long? FleetId
+        {
+            get { return (long?) Session.Attribute("fleetid"); }
         }
 
         public long? StationId
