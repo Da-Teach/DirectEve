@@ -41,7 +41,12 @@ namespace DirectEve
             get { return (double) DirectEve.GetLocalSvc("wallet").Attribute("wealth"); }
         }
 
+       
 
+        /// <summary>
+        /// Are we in an active war?
+        /// </summary>
+        /// <returns></returns>
         public bool IsAtWar
         {
             get

@@ -707,7 +707,8 @@ namespace DirectEve
         {
             if (_listGlobalAssets == null)
             {
-                var pyItemDict = GetLocalSvc("invCache").Call("GetInventory", Const.ContainerGlobal).Attribute("cachedItems").ToDictionary<long>();
+                _listGlobalAssets = new List<DirectItem>();
+                var pyItemDict = GetLocalSvc("invCache").Attribute("containerGlobal").Attribute("cachedItems").ToDictionary<long>();
                 foreach (var pyItem in pyItemDict)
                 {
                     var item = new DirectItem(this);
