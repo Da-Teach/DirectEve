@@ -1234,14 +1234,14 @@ namespace DirectEve
             return ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange, minVolume, duration);//, useCorp);
         }
 
-        public bool InviteToFleet(long CharID)
+        public bool InviteToFleet(long charId)
         {
-            return ThreadedLocalSvcCall("menu", "InviteToFleet", CharID);
+            return ThreadedLocalSvcCall("menu", "InviteToFleet", charId);
         }
 
-        public bool KickMember(long CharID)
+        public bool KickMember(long charId)
         {
-            return ThreadedLocalSvcCall("menu", "KickMember", CharID);
+            return ThreadedLocalSvcCall("menu", "KickMember", charId);
         }
 
         public bool LeaveFleet()
@@ -1249,20 +1249,23 @@ namespace DirectEve
             return ThreadedLocalSvcCall("menu", "LeaveFleet");
         }
 
-        public bool MakeFleetBoss(long CharID)
+        public bool MakeFleetBoss(long charId)
         {
-            return ThreadedLocalSvcCall("menu", "MakeLeader", CharID);
+            return ThreadedLocalSvcCall("menu", "MakeLeader", charId);
         }
 
-        public List<DirectFleetMember> GetFleetMembers()
+        public List<DirectFleetMember> GetFleetMembers
         {
-            List<DirectFleetMember> fleetMembers = new List<DirectFleetMember>();
-            var pyMembers = GetLocalSvc("fleet").Attribute("members").ToDictionary<long>();
-            foreach (var pyMember in pyMembers)
+            get
             {
-                fleetMembers.Add(new DirectFleetMember(this, pyMember.Value));
+                List<DirectFleetMember> fleetMembers = new List<DirectFleetMember>();
+                var pyMembers = GetLocalSvc("fleet").Attribute("members").ToDictionary<long>();
+                foreach (var pyMember in pyMembers)
+                {
+                    fleetMembers.Add(new DirectFleetMember(this, pyMember.Value));
+                }
+                return fleetMembers;
             }
-            return fleetMembers;
         }
 
     }

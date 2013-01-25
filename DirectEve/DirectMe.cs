@@ -41,7 +41,22 @@ namespace DirectEve
             get { return (double) DirectEve.GetLocalSvc("wallet").Attribute("wealth"); }
         }
 
-       
+        /// <summary>
+        /// Retrieves days left on account after login
+        /// </summary>
+        public int DaysLeftOnAccount
+        {
+            get
+            {
+                long? charid = DirectEve.Session.CharacterId;
+                var details = PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("charsel").Attribute("details").ToDictionary<long>();
+
+                if (charid.HasValue)
+                    return (int)details[charid.Value].Attribute("daysLeft");
+                else
+                    return -1;
+            }
+        }
 
         /// <summary>
         /// Are we in an active war?

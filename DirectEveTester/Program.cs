@@ -56,9 +56,8 @@ namespace DirectEveTester
             {
                 _directEve.Log("This is a message from DirectEve.Log()");
                 System.Diagnostics.Debugger.Launch();
-                var window = _directEve.Windows[10];
-                window.AnswerModal("Yes");
-                //window.AnswerMessageBox("Yes");
+                var unassembledShip = _directEve.GetShipHangar().Items.FirstOrDefault(i => i.TypeId == 601);
+                unassembledShip.AssembleShip();
                 _done = true;
             }
             catch(Exception e)

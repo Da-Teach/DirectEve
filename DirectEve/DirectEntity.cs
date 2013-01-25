@@ -528,6 +528,22 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Warp fleet to target, make sure you have the fleetposition to warp the fleet
+        /// </summary>
+        /// <returns></returns>
+        public bool WarpFleetTo()
+        {
+            if (DirectEve.Session.FleetId == null)
+                return false;
+
+            var myDirectFleetMember = DirectEve.GetFleetMembers.FirstOrDefault(i => i.CharacterId == DirectEve.Session.CharacterId);
+            if (myDirectFleetMember.Role == DirectFleetMember.FleetRole.Member)
+                return false;
+
+            return DirectEve.ThreadedLocalSvcCall("menu", "WarpFleet", Id);
+        }
+
+        /// <summary>
         ///   Warp to target and dock
         /// </summary>
         /// <returns></returns>

@@ -301,6 +301,29 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Assembles this ship
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        ///   Fails if the current location is not the same as the current station and if its not a CategoryShip and is not allready assembled
+        /// </remarks>
+        /// 
+        public bool AssembleShip()
+        {
+            if (LocationId != DirectEve.Session.StationId)
+                return false;
+
+            if (CategoryId != (int)DirectEve.Const.CategoryShip)
+                return false;
+
+            if (IsSingleton)
+                return false;
+
+            return DirectEve.ThreadedLocalSvcCall("menu", "AssembleShip", new List<PyObject>() { this.PyItem });
+        }
+
+
+        /// <summary>
         ///   Fit this item to your ship
         /// </summary>
         /// <returns></returns>
@@ -369,6 +392,13 @@ namespace DirectEve
 
             var pyCall = DirectEve.GetLocalSvc("invCache").Call("GetInventoryMgr").Attribute("SetLabel");
             return DirectEve.ThreadedCall(pyCall, ItemId, name.Replace('\n', ' '));
+        }
+
+        public bool ActivatePLEX()
+        {
+            if (this.TypeId != 29668)
+                return false;
+            return DirectEve.ThreadedLocalSvcCall("menu", "ApplyPilotLicence", ItemId);
         }
     }
 }

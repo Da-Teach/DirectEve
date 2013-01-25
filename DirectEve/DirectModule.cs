@@ -67,6 +67,11 @@ namespace DirectEve
             get { return Attributes.TryGet<double>("maxRange"); }
         }
 
+        public double? FallOff
+        {
+            get { return Attributes.TryGet<double>("falloff"); }
+        }
+
         /*public List<DirectItem> MatchingAmmo
         {
             get
