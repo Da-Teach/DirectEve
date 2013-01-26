@@ -18,8 +18,21 @@ namespace DirectEve
 
         internal DirectTradeWindow(DirectEve directEve, PyObject pyWindow)
             : base(directEve, pyWindow)
-        {   
+        {
+            MyAccepted = (int)PyWindow.Attribute("sr").Attribute("myAccept").Attribute("state") == 1;
+            HerAccepted = (int)PyWindow.Attribute("sr").Attribute("herAccept").Attribute("state") == 1;
+            HerCharacterId = (int)PyWindow.Attribute("sr").Attribute("herinfo").Attribute("ownerID");
+            HerName = (string)PyWindow.Attribute("sr").Attribute("herinfo").Attribute("ownerName").ToUnicodeString();
+            MyOfferedIsk = (string)PyWindow.Attribute("sr").Attribute("myMoney").Attribute("text").ToUnicodeString();
+            HerOfferedIsk = (string)PyWindow.Attribute("sr").Attribute("herMoney").Attribute("text").ToUnicodeString();
         }
+
+        public bool MyAccepted { get; internal set; }
+        public bool HerAccepted { get; internal set; }
+        public int HerCharacterId { get; internal set; }
+        public string HerName { get; internal set; }
+        public string MyOfferedIsk { get; internal set; }
+        public string HerOfferedIsk { get; internal set; }
 
         public List<DirectItem> MyTradeItems
         {
@@ -76,54 +89,6 @@ namespace DirectEve
         public bool ToggleAccept()
         {
             return DirectEve.ThreadedCall(PyWindow.Attribute("OnClickAccept"));
-        }
-
-        public bool MyAccepted
-        {
-            get
-            {
-                return (int)PyWindow.Attribute("sr").Attribute("myAccept").Attribute("state") == 1;
-            }
-        }
-
-        public bool HerAccepted
-        {
-            get
-            {
-                return (int)PyWindow.Attribute("sr").Attribute("herAccept").Attribute("state") == 1;
-            }
-        }
-
-        public int HerCharacterId
-        {
-            get
-            {
-                return (int)PyWindow.Attribute("sr").Attribute("herinfo").Attribute("ownerID");
-            }
-        }
-
-        public string HerName
-        {
-            get
-            {
-                return (string)PyWindow.Attribute("sr").Attribute("herinfo").Attribute("ownerName").ToUnicodeString();
-            }
-        }
-
-        public string MyOfferedIsk
-        {
-            get
-            {
-                return (string)PyWindow.Attribute("sr").Attribute("myMoney").Attribute("text").ToUnicodeString();
-            }
-        }
-
-        public string HerOfferedIsk
-        {
-            get
-            {
-                return (string)PyWindow.Attribute("sr").Attribute("herMoney").Attribute("text").ToUnicodeString();
-            }
         }
 
     }
