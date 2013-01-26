@@ -23,6 +23,7 @@ namespace DirectEve
                                                        new WindowType("__guid__", "form.AgentDialogueWindow", (directEve, pyWindow) => new DirectAgentWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.VirtualInvWindow", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.PVPOfferView", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+                                                       new WindowType("__guid__", "form.PVPTrade", (directEve, pyWindow) => new DirectTradeWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "form.SpyHangar", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "invCont.StationItems", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
                                                        new WindowType("__guid__", "invCont.StationShips", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
