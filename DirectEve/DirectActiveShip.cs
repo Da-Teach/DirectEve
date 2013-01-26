@@ -222,7 +222,7 @@ namespace DirectEve
             if (!canGroupAll)
                 return false;
 
-            return DirectEve.ThreadedCall(dogmaLocation.Call("LinkAllWeapons", DirectEve.Session.ShipId));
+            return DirectEve.ThreadedCall(dogmaLocation.Attribute("LinkAllWeapons"), DirectEve.Session.ShipId.Value);
         }
 
         /// <summary>
@@ -233,11 +233,11 @@ namespace DirectEve
         public bool UngroupAllWeapons()
         {
             var dogmaLocation = DirectEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation");
-            var canGroupAll = (bool)dogmaLocation.Call("CanGroupAll", DirectEve.Session.ShipId);
+            var canGroupAll = (bool)dogmaLocation.Call("CanGroupAll", DirectEve.Session.ShipId.Value);
             if (canGroupAll)
                 return false;
 
-            return DirectEve.ThreadedCall(dogmaLocation.Call("UnlinkAllWeapons", DirectEve.Session.ShipId));
+            return DirectEve.ThreadedCall(dogmaLocation.Attribute("UnlinkAllWeapons"), DirectEve.Session.ShipId.Value);
         }
     }
 }
