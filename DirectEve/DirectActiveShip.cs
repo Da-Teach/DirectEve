@@ -209,5 +209,35 @@ namespace DirectEve
             var invItems = drones.Where(d => d.PyItem.IsValid).Select(d => d.PyItem);
             return DirectEve.ThreadedLocalSvcCall("menu", "LaunchDrones", invItems);
         }
+
+        /// <summary>
+        /// Groups all weapons if possible
+        /// </summary>
+        /// <returns>Fails if it's not allowed to group (because there is nothing to group)</returns>
+        /// <remarks>Only works in space</remarks>
+        public bool GroupAllWeapons()
+        {
+            var dogmaLocation = DirectEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation");
+            var canGroupAll = (bool)dogmaLocation.Call("CanGroupAll", DirectEve.Session.ShipId);
+            if (!canGroupAll)
+                return false;
+
+            return DirectEve.ThreadedCall(dogmaLocation.Call("LinkAllWeapons", DirectEve.Session.ShipId));
+        }
+
+        /// <summary>
+        /// Ungroups all weapons
+        /// </summary>
+        /// <returns>Fails if anything can still be grouped. Execute GroupAllWeapons first if not everything is grouped, this is done to mimic client behavior.</returns>
+        /// <remarks>Only works in space</remarks>
+        public bool UngroupAllWeapons()
+        {
+            var dogmaLocation = DirectEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation");
+            var canGroupAll = (bool)dogmaLocation.Call("CanGroupAll", DirectEve.Session.ShipId);
+            if (canGroupAll)
+                return false;
+
+            return DirectEve.ThreadedCall(dogmaLocation.Call("UnlinkAllWeapons", DirectEve.Session.ShipId));
+        }
     }
 }

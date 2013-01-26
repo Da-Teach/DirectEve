@@ -33,6 +33,10 @@ namespace DirectEve
         public bool IsReloadingAmmo { get; internal set; }
         public bool IsChangingAmmo { get; internal set; }
 
+        public bool IsOverloaded { get; internal set; }
+        public bool IsPendingOverloading { get; internal set; }
+        public bool IsPendingStopOverloading { get; internal set; }
+
         public DirectItem Charge { get; internal set; }
 
         public double Damage { get; internal set; }
@@ -75,6 +79,11 @@ namespace DirectEve
             get { return Attributes.TryGet<double>("falloff"); }
         }
 
+        public double? Duration
+        {
+            get { return Attributes.TryGet<double>("duration"); }
+        }
+
         /*public List<DirectItem> MatchingAmmo
         {
             get
@@ -108,13 +117,17 @@ namespace DirectEve
             {
                 var module = new DirectModule(directEve, pyModule.Value);
                 module.PyItem = pyModule.Value.Attribute("sr").Attribute("moduleInfo");
-                module.Damage = (double)pyModule.Value.Attribute("sr").Attribute("damage");
-                module.Hp = (double)pyModule.Value.Attribute("sr").Attribute("hp");
                 module.ItemId = pyModule.Key;
                 module.IsOnline = (bool) pyModule.Value.Attribute("online");
                 module.IsGoingOnline = (bool) pyModule.Value.Attribute("goingOnline");
                 module.IsReloadingAmmo = (bool) pyModule.Value.Attribute("reloadingAmmo");
                 module.IsChangingAmmo = (bool) pyModule.Value.Attribute("changingAmmo");
+
+                module.Damage = (double)pyModule.Value.Attribute("sr").Attribute("damage");
+                module.Hp = (double)pyModule.Value.Attribute("sr").Attribute("hp");
+                module.IsOverloaded = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 1 || (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 3;
+                module.IsPendingOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 2;
+                module.IsPendingStopOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 3;
 
                 var effect = pyModule.Value.Attribute("def_effect");
                 module.IsActivatable = effect.IsValid;

@@ -1268,8 +1268,19 @@ namespace DirectEve
             }
         }
 
-        public bool CreateTrade(long charId)
+        /// <summary>
+        /// Initiates trade window
+        /// </summary>
+        /// <param name="charId"></param>
+        /// <returns>Fails if char is not in station, if charId is not in station and if the service is not active yet</returns>
+        public bool InitiateTrade(long charId)
         {
+            if (!Session.IsInStation)
+                return false;
+
+            if (!GetStationGuests.Any(i => i == charId))
+                return false;
+
             var tradeService = GetLocalSvc("pvptrade");
             if (!tradeService.IsValid)
                 return false;
