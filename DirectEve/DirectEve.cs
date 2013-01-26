@@ -1268,5 +1268,15 @@ namespace DirectEve
             }
         }
 
+        public bool CreateTrade(long charId)
+        {
+            var tradeService = GetLocalSvc("pvptrade");
+            if (!tradeService.IsValid)
+                return false;
+            
+            return ThreadedCall(tradeService.Attribute("StartTradeSession"), charId);
+        }
+
+
     }
 }
