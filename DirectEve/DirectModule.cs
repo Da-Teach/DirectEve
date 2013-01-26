@@ -36,6 +36,7 @@ namespace DirectEve
         public bool IsOverloaded { get; internal set; }
         public bool IsPendingOverloading { get; internal set; }
         public bool IsPendingStopOverloading { get; internal set; }
+        public bool IsBeingRepaired { get; internal set; }
 
         public DirectItem Charge { get; internal set; }
 
@@ -128,6 +129,7 @@ namespace DirectEve
                 module.IsOverloaded = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 1 || (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 3;
                 module.IsPendingOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 2;
                 module.IsPendingStopOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 3;
+                module.IsBeingRepaired = (bool)pyModule.Value.Attribute("isBeingRepaired");
 
                 var effect = pyModule.Value.Attribute("def_effect");
                 module.IsActivatable = effect.IsValid;
@@ -151,6 +153,33 @@ namespace DirectEve
         public bool Click()
         {
             return DirectEve.ThreadedCall(_pyModule.Attribute("Click"));
+        }
+
+        /// <summary>
+        /// Toggles overload of the DirectModule. If it's not allowed it will fail silently.
+        /// </summary>
+        /// <returns></returns>
+        public bool ToggleOverload()
+        {
+            return DirectEve.ThreadedCall(_pyModule.Attribute("ToggleOverload"));
+        }
+
+        /// <summary>
+        /// Repairs a DirectModule in space with nanite paste
+        /// </summary>
+        /// <returns></returns>
+        public bool Repair()
+        {
+            return DirectEve.ThreadedCall(_pyModule.Attribute("RepairModule"));
+        }
+
+        /// <summary>
+        /// Cancels the repairing of DirectModule in space
+        /// </summary>
+        /// <returns></returns>
+        public bool CancelRepair()
+        {
+            return DirectEve.ThreadedCall(_pyModule.Attribute("CancelRepair"));
         }
 
         public bool ChangeAmmo(DirectItem charge)

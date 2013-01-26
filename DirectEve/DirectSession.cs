@@ -104,6 +104,11 @@ namespace DirectEve
             get { return LocationId.HasValue && LocationId == StationId; }
         }
 
+        public int UserType
+        {
+            get { return (int) Session.Attribute("userType"); }
+        }
+
         public bool IsReady
         {
             get

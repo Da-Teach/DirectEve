@@ -41,6 +41,14 @@ namespace DirectEve
             get { return (double) DirectEve.GetLocalSvc("wallet").Attribute("wealth"); }
         }
 
+        public bool IsTrialAccount
+        {
+            get
+            {
+                return DirectEve.Session.UserType == 23;
+            }
+        }
+
         /// <summary>
         /// Retrieves days left on account after login
         /// </summary>
