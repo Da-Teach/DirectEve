@@ -56,7 +56,7 @@ namespace DirectEveTester
             {
                 _directEve.Log("This is a message from DirectEve.Log()");
                 System.Diagnostics.Debugger.Launch();
-                var window = _directEve.Windows.OfType<DirectTradeWindow>().FirstOrDefault();;
+                var guests = _directEve.GetStationGuests.Any(i => i == _directEve.Session.CharacterId);
                 //var window2 = _directEve.Windows[1];
                 //window2.AnswerModal("Ok");
                 //window.Add(items.FirstOrDefault());

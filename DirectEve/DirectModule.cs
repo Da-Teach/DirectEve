@@ -35,8 +35,8 @@ namespace DirectEve
 
         public DirectItem Charge { get; internal set; }
 
-        public double ModuleDamage { get; internal set; }
-        public double ModuleHP { get; internal set; }
+        public double Damage { get; internal set; }
+        public double Hp { get; internal set; }
 
         private DateTime lastActivation = DateTime.MinValue;
         private long lastTarget = 0;
@@ -108,8 +108,8 @@ namespace DirectEve
             {
                 var module = new DirectModule(directEve, pyModule.Value);
                 module.PyItem = pyModule.Value.Attribute("sr").Attribute("moduleInfo");
-                module.ModuleDamage = (double)pyModule.Value.Attribute("sr").Attribute("damage");
-                module.ModuleHP = (double)pyModule.Value.Attribute("sr").Attribute("hp");
+                module.Damage = (double)pyModule.Value.Attribute("sr").Attribute("damage");
+                module.Hp = (double)pyModule.Value.Attribute("sr").Attribute("hp");
                 module.ItemId = pyModule.Key;
                 module.IsOnline = (bool) pyModule.Value.Attribute("online");
                 module.IsGoingOnline = (bool) pyModule.Value.Attribute("goingOnline");

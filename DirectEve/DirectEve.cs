@@ -1277,6 +1277,18 @@ namespace DirectEve
             return ThreadedCall(tradeService.Attribute("StartTradeSession"), charId);
         }
 
+        public List<long> GetStationGuests
+        {
+            get
+            {
+            List<long> charIds = new List<long>();
+            var pyCharIds = GetLocalSvc("station").Attribute("guests").ToDictionary();
+            foreach(var pyChar in pyCharIds)
+                charIds.Add((long)pyChar.Key);
+            return charIds;
+            }
+        }
+
 
     }
 }
