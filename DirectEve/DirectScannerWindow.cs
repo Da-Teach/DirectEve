@@ -75,6 +75,27 @@ namespace DirectEve
         {
             get
             {
+                if (DirectEve.HasSupportInstances() && _systemScanResults == null)
+                {
+                    _systemScanResults = new List<DirectSystemScanResult>();
+                    var pyResults = DirectEve.GetLocalSvc("scanSvc").Attribute("lastResults").ToList();
+                    foreach (var pyResult in pyResults)
+                        _systemScanResults.Add(new DirectSystemScanResult(DirectEve, pyResult));
+                }
+                else
+                    _systemScanResults = null;
+
+                return _systemScanResults;
+            }
+        }
+
+            /// Old anomaly code
+            /// I don't see any reason why we should read out the UI instead of the cached probeData.
+            /// The X,Y,Z values are not available in the UI, but i need them for scan probing to work.
+            /// If it's an issue using probeData instead of the current UI reading, let me know asap and we revert it ~ Ferox
+            /*
+            get
+            {
                 if (DirectEve.HasSupportInstances())
                 {   // only fetch results for paid users
                     var charId = DirectEve.Session.CharacterId;
@@ -97,7 +118,8 @@ namespace DirectEve
 
                 return _systemScanResults;
             }
-        }
+             * */
+        
 
         /// <summary>
         ///   Selects the next tab
@@ -163,6 +185,16 @@ namespace DirectEve
             }
 
             return false;
+        }
+
+        public List<DirectScannerProbe> GetProbes()
+        {
+            var Probes = new List<DirectScannerProbe>();
+            var pyProbes = DirectEve.GetLocalSvc("scanSvc").Attribute("probeData").ToDictionary<long>();
+            foreach (var pyProbe in pyProbes)
+                Probes.Add(new DirectScannerProbe(DirectEve, pyProbe.Value));
+
+            return Probes;
         }
     }
 }

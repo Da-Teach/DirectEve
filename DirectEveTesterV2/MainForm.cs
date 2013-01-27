@@ -515,13 +515,13 @@
                 {
                     foreach (var result in scanner.SystemScanResults)
                     {
-                        Log("ID = {0}", result.ID);
-                        Log("ScanGroup = {0}", result.ScanGroup);
-                        Log("Group = {0}", result.Group);
-                        Log("Type = {0}", result.Type);
+                        Log("ID = {0}", result.Id);
+                        Log("ScanGroup = {0}", result.ScanGroupName);
+                        Log("Group = {0}", result.GroupName);
+                        Log("Type = {0}", result.TypeName);
                         Log("SignalStrength = {0}", result.SignalStrength);
                         Log("Distance = {0}", result.Distance);
-                        Log(result.DumpData());
+                        //Log(result.DumpData());
                     }
                 }
             }

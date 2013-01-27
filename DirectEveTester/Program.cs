@@ -56,7 +56,12 @@ namespace DirectEveTester
             {
                 _directEve.Log("This is a message from DirectEve.Log()");
                 System.Diagnostics.Debugger.Launch();
-                var guests = _directEve.Modules.FirstOrDefault(i => i.TypeName.Contains("LADAR")).ToggleOverload();
+
+
+                var scanwindow = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+                var result = scanwindow.SystemScanResults.FirstOrDefault(i => i.SignalStrength == 1);
+                result.WarpTo();
+                
                 //var window2 = _directEve.Windows[1];
                 //window2.AnswerModal("Ok");
                 //window.Add(items.FirstOrDefault());

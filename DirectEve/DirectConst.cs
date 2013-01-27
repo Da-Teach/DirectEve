@@ -166,5 +166,10 @@ namespace DirectEve
         {
             get { return Const.Attribute("fleetRoleMember"); }
         }
+
+        public PyObject AU
+        {
+            get { return Const.Attribute("AU"); }
+        }
     }
 }

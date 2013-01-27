@@ -11,9 +11,64 @@ namespace DirectEve
 {
     using System.Collections.Generic;
     using global::DirectEve.PySharp;
+    using System;
 
     public class DirectSystemScanResult : DirectObject
     {
+        internal PyObject PyResult;
+
+        internal DirectSystemScanResult(DirectEve directEve, PyObject pyResult)
+            : base(directEve)
+        {
+            PyResult = pyResult;
+            Id = (string)pyResult.Attribute("id");
+            ScanGroupName = (string)pyResult.Attribute("scanGroupName").ToUnicodeString();
+            GroupName = (string)pyResult.Attribute("groupName").ToUnicodeString();
+            TypeName = (string)pyResult.Attribute("typeName").ToUnicodeString();
+            SignalStrength = (double)pyResult.Attribute("certainty");
+            Deviation = (double)pyResult.Attribute("deviation");
+            if (SignalStrength == 1)
+            {
+                X = (double?)pyResult.Attribute("data").Attribute("x");
+                Y = (double?)pyResult.Attribute("data").Attribute("y");
+                Z = (double?)pyResult.Attribute("data").Attribute("z");
+                var myship = directEve.ActiveShip.Entity;
+                Distance = Math.Sqrt((X.Value - myship.X)*(X.Value - myship.X) + (Y.Value - myship.Y)*(Y.Value - myship.Y) + (Z.Value - myship.Z)*(Z.Value - myship.Z));
+            }
+            else
+            {
+                X = null;
+                Y = null;
+                Z = null;
+                Distance = (double)pyResult.Attribute("data");
+            }
+        }
+
+        public string Id { get; internal set; }
+        public string ScanGroupName { get; internal set; }
+        public string GroupName { get; internal set; }
+        public double SignalStrength { get; internal set; }
+        public string TypeName { get; internal set; }
+        public double Distance { get; internal set; }
+        public double? X { get; internal set; }
+        public double? Y { get; internal set; }
+        public double? Z { get; internal set; }
+        public double Deviation { get; internal set; }
+
+        public bool WarpTo()
+        {
+            if (SignalStrength == 1)
+            {
+                return DirectEve.ThreadedLocalSvcCall("menu", "WarpToScanResult", Id);
+            }
+            return false;
+        }
+
+        /// I don't see any reason why we should read out the UI instead of the cached probeData.
+        /// The X,Y,Z values are not available in the UI, but i need them for scan probing to work.
+        /// If it's an issue using probeData instead of the current UI reading, let me know asap and we revert it ~ Ferox
+        /// 
+        /*
         private Dictionary<string, PyObject> _node;
         private string _id;
         private string _scanGroup;
@@ -121,7 +176,7 @@ namespace DirectEve
                 return _distance.Value;
             }
         }
-
+         
         public bool WarpTo()
         {
             if( _node.ContainsKey("result") )
@@ -158,5 +213,7 @@ namespace DirectEve
 
             return str;
         }
+
+        */
     }
 }
