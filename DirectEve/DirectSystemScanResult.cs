@@ -27,20 +27,13 @@ namespace DirectEve
             TypeName = (string)pyResult.Attribute("typeName").ToUnicodeString();
             SignalStrength = (double)pyResult.Attribute("certainty");
             Deviation = (double)pyResult.Attribute("deviation");
-            if (SignalStrength == 1)
+            X = (double?)pyResult.Attribute("data").Attribute("x");
+            Y = (double?)pyResult.Attribute("data").Attribute("y");
+            Z = (double?)pyResult.Attribute("data").Attribute("z");
+            if (X.HasValue && Y.HasValue && Z.HasValue)
             {
-                X = (double?)pyResult.Attribute("data").Attribute("x");
-                Y = (double?)pyResult.Attribute("data").Attribute("y");
-                Z = (double?)pyResult.Attribute("data").Attribute("z");
                 var myship = directEve.ActiveShip.Entity;
-                Distance = Math.Sqrt((X.Value - myship.X)*(X.Value - myship.X) + (Y.Value - myship.Y)*(Y.Value - myship.Y) + (Z.Value - myship.Z)*(Z.Value - myship.Z));
-            }
-            else
-            {
-                X = null;
-                Y = null;
-                Z = null;
-                Distance = (double)pyResult.Attribute("data");
+                Distance = Math.Sqrt((X.Value - myship.X) * (X.Value - myship.X) + (Y.Value - myship.Y) * (Y.Value - myship.Y) + (Z.Value - myship.Z) * (Z.Value - myship.Z));
             }
         }
 

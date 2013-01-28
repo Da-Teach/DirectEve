@@ -59,8 +59,10 @@ namespace DirectEveTester
 
 
                 var scanwindow = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
-                var result = scanwindow.SystemScanResults.FirstOrDefault(i => i.SignalStrength == 1);
-                result.WarpTo();
+                //scanwindow.GetProbes().FirstOrDefault().SetLocation(0, 0, 0);
+                var probe = scanwindow.SystemScanResults.FirstOrDefault(i => i.SignalStrength != 1);
+                var distance = probe.Distance / 149000000000;
+                var dev = probe.Deviation / 149000000000;
                 
                 //var window2 = _directEve.Windows[1];
                 //window2.AnswerModal("Ok");
