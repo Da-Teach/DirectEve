@@ -35,6 +35,8 @@ namespace DirectEve
                 var myship = directEve.ActiveShip.Entity;
                 Distance = Math.Sqrt((X.Value - myship.X) * (X.Value - myship.X) + (Y.Value - myship.Y) * (Y.Value - myship.Y) + (Z.Value - myship.Z) * (Z.Value - myship.Z));
             }
+
+            IsPointResult = (string)PyResult.Attribute("data").Attribute("__class__").Attribute("__name__") == "Vector3";
         }
 
         public string Id { get; internal set; }
@@ -42,11 +44,12 @@ namespace DirectEve
         public string GroupName { get; internal set; }
         public double SignalStrength { get; internal set; }
         public string TypeName { get; internal set; }
-        public double Distance { get; internal set; }
+        public double? Distance { get; internal set; }
         public double? X { get; internal set; }
         public double? Y { get; internal set; }
         public double? Z { get; internal set; }
         public double Deviation { get; internal set; }
+        public bool IsPointResult { get; internal set; }
 
         public bool WarpTo()
         {
