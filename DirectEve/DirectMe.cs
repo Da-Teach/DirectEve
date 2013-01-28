@@ -57,10 +57,13 @@ namespace DirectEve
             get
             {
                 long? charid = DirectEve.Session.CharacterId;
-                var details = PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("charsel").Attribute("details").ToDictionary<long>();
+                if (!charid.HasValue)
+                    return -1;
 
-                if (charid.HasValue)
-                    return (int)details[charid.Value].Attribute("daysLeft");
+                var daysLeft = (int?)PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("charsel").Attribute("details").ToDictionary<long>()[charid.Value].Attribute("daysLeft");
+
+                if (daysLeft.HasValue)
+                    return daysLeft.Value;
                 else
                     return -1;
             }
