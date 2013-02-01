@@ -239,5 +239,14 @@ namespace DirectEve
 
             return DirectEve.ThreadedCall(dogmaLocation.Attribute("UnlinkAllWeapons"), DirectEve.Session.ShipId.Value);
         }
+
+        /// <summary>
+        /// Eject from your current ship
+        /// </summary>
+        /// <returns></returns>
+        public bool EjectFromShip()
+        {
+            return DirectEve.ThreadedLocalSvcCall("menu", "Eject");
+        }
     }
 }

@@ -30,13 +30,13 @@ namespace DirectEve
             X = (double?)pyResult.Attribute("data").Attribute("x");
             Y = (double?)pyResult.Attribute("data").Attribute("y");
             Z = (double?)pyResult.Attribute("data").Attribute("z");
+            IsPointResult = (string)PyResult.Attribute("data").Attribute("__class__").Attribute("__name__") == "Vector3";
             if (X.HasValue && Y.HasValue && Z.HasValue)
             {
                 var myship = directEve.ActiveShip.Entity;
                 Distance = Math.Sqrt((X.Value - myship.X) * (X.Value - myship.X) + (Y.Value - myship.Y) * (Y.Value - myship.Y) + (Z.Value - myship.Z) * (Z.Value - myship.Z));
             }
 
-            IsPointResult = (string)PyResult.Attribute("data").Attribute("__class__").Attribute("__name__") == "Vector3";
         }
 
         public string Id { get; internal set; }

@@ -126,7 +126,7 @@ namespace DirectEve
 
                 module.Damage = (double)pyModule.Value.Attribute("sr").Attribute("damage");
                 module.Hp = (double)pyModule.Value.Attribute("sr").Attribute("hp");
-                module.IsOverloaded = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 1 || (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 3;
+                module.IsOverloaded = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 1;
                 module.IsPendingOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 2;
                 module.IsPendingStopOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 3;
                 module.IsBeingRepaired = (bool)pyModule.Value.Attribute("isBeingRepaired");

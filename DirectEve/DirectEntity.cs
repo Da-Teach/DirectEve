@@ -36,6 +36,11 @@ namespace DirectEve
         private PyObject _slimItem;
         private double? _structurePct;
         private double? _velocity;
+        private double? _transversalVelocity;
+        private double? _angularVelocity;
+        private double? _vx;
+        private double? _vy;
+        private double? _vz;
         private double? _x;
         private double? _y;
         private double? _z;
@@ -220,7 +225,7 @@ namespace DirectEve
             get
             {
                 if (!_x.HasValue)
-                    _x = (double) _ball.Attribute("x");
+                    _x = (double)_ball.Attribute("x");
 
                 return _x.Value;
             }
@@ -231,7 +236,7 @@ namespace DirectEve
             get
             {
                 if (!_y.HasValue)
-                    _y = (double) _ball.Attribute("y");
+                    _y = (double)_ball.Attribute("y");
 
                 return _y.Value;
             }
@@ -242,9 +247,42 @@ namespace DirectEve
             get
             {
                 if (!_z.HasValue)
-                    _z = (double) _ball.Attribute("z");
+                    _z = (double)_ball.Attribute("z");
 
                 return _z.Value;
+            }
+        }
+
+        public double Vx
+        {
+            get
+            {
+                if (!_vx.HasValue)
+                    _vx = (double)_ball.Attribute("vx");
+
+                return _vx.Value;
+            }
+        }
+
+        public double Vy
+        {
+            get
+            {
+                if (!_vy.HasValue)
+                    _vy = (double)_ball.Attribute("vy");
+
+                return _vy.Value;
+            }
+        }
+
+        public double Vz
+        {
+            get
+            {
+                if (!_vz.HasValue)
+                    _vz = (double)_ball.Attribute("vz");
+
+                return _vz.Value;
             }
         }
 
@@ -253,9 +291,39 @@ namespace DirectEve
             get
             {
                 if (_velocity == null)
-                    _velocity = (double) _ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetSimTime")).Call("Length");
+                    _velocity = (double)_ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetSimTime")).Call("Length");
 
                 return _velocity.Value;
+            }
+        }
+
+        public double TransversalVelocity
+        {
+            get
+            {
+                if (_transversalVelocity == null)
+                {
+                    var myBall = DirectEve.ActiveShip.Entity;
+                    var CombinedVelocity = new List<double>() { Vx - myBall.Vx, Vy - myBall.Vy, Vz - myBall.Vz };
+                    var Radius = new List<double>() { X - myBall.X, Y - myBall.Y, Z - myBall.Z };
+                    var RadiusVectorNormalized = Radius.Select(i => i / (Math.Sqrt(Radius[0] * Radius[0] + Radius[1] * Radius[1] + Radius[2] * Radius[2]))).ToList();
+                    var RadialVelocity = CombinedVelocity[0] * RadiusVectorNormalized[0] + CombinedVelocity[1] * RadiusVectorNormalized[1] + CombinedVelocity[2] * RadiusVectorNormalized[2];
+                    var ScaledRadiusVector = RadiusVectorNormalized.Select(i => i * RadialVelocity).ToList();
+                    _transversalVelocity = (double)Math.Sqrt((CombinedVelocity[0] - ScaledRadiusVector[0]) * (CombinedVelocity[0] - ScaledRadiusVector[0]) + (CombinedVelocity[1] - ScaledRadiusVector[1]) * (CombinedVelocity[1] - ScaledRadiusVector[1]) + (CombinedVelocity[2] - ScaledRadiusVector[2]) * (CombinedVelocity[2] - ScaledRadiusVector[2]));
+                }
+
+                return _transversalVelocity.Value;
+            }
+        }
+
+        public double AngularVelocity
+        {
+            get
+            {
+                if (_angularVelocity == null)
+                    _angularVelocity = (double)TransversalVelocity / Math.Max(1, Distance);
+
+                return _angularVelocity.Value;
             }
         }
 
@@ -517,6 +585,15 @@ namespace DirectEve
             return DirectEve.ThreadedLocalSvcCall("menu", "WarpToItem", Id);
         }
 
+        /// <summary>
+        ///   Warp to target at range
+        /// </summary>
+        /// <returns></returns>
+        public bool WarpTo(double range)
+        {
+            return DirectEve.ThreadedLocalSvcCall("menu", "WarpToItem", Id, range);
+        }
+
 
         /// <summary>
         ///   Warp to target and dock
@@ -541,6 +618,22 @@ namespace DirectEve
                 return false;
 
             return DirectEve.ThreadedLocalSvcCall("menu", "WarpFleet", Id);
+        }
+
+        /// <summary>
+        ///   Warp fleet to target at range, make sure you have the fleetposition to warp the fleet
+        /// </summary>
+        /// <returns></returns>
+        public bool WarpFleetTo(double range)
+        {
+            if (DirectEve.Session.FleetId == null)
+                return false;
+
+            var myDirectFleetMember = DirectEve.GetFleetMembers.FirstOrDefault(i => i.CharacterId == DirectEve.Session.CharacterId);
+            if (myDirectFleetMember.Role == DirectFleetMember.FleetRole.Member)
+                return false;
+
+            return DirectEve.ThreadedLocalSvcCall("menu", "WarpFleet", Id, range);
         }
 
         /// <summary>
@@ -609,6 +702,33 @@ namespace DirectEve
             // Switch active targets
             var activeTarget = PySharp.Import("state").Attribute("activeTarget");
             return IsActiveTarget = DirectEve.ThreadedLocalSvcCall("state", "SetState", Id, activeTarget, 1);
+        }
+
+        /// <summary>
+        /// Abandons all wrecks. Make sure to only call this on a wreck.
+        /// </summary>
+        /// <returns>false if entity is not a wreck</returns>
+        public bool AbandonAllWrecks()
+        {
+            if (GroupId != (int)DirectEve.Const.GroupWreck)
+                return false;
+
+            return DirectEve.ThreadedLocalSvcCall("menu", "AbandonAllLoot", Id);
+        }
+
+        /// <summary>
+        /// Board this ship
+        /// </summary>
+        /// <returns>false if entity is player or out of range</returns>
+        public bool BoardShip()
+        {
+            if (IsPc)
+                return false;
+
+            if (Distance > 6500)
+                return false;
+
+            return DirectEve.ThreadedLocalSvcCall("menu", "Board", Id);
         }
     }
 }

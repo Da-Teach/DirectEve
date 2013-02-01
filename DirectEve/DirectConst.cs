@@ -171,5 +171,10 @@ namespace DirectEve
         {
             get { return Const.Attribute("AU"); }
         }
+
+        public PyObject GroupWreck
+        {
+            get { return Const.Attribute("groupWreck"); }
+        }
     }
 }
