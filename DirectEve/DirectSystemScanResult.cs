@@ -27,16 +27,29 @@ namespace DirectEve
             TypeName = (string)pyResult.Attribute("typeName").ToUnicodeString();
             SignalStrength = (double)pyResult.Attribute("certainty");
             Deviation = (double)pyResult.Attribute("deviation");
-            X = (double?)pyResult.Attribute("data").Attribute("x");
-            Y = (double?)pyResult.Attribute("data").Attribute("y");
-            Z = (double?)pyResult.Attribute("data").Attribute("z");
             IsPointResult = (string)PyResult.Attribute("data").Attribute("__class__").Attribute("__name__") == "Vector3";
+            IsSpereResult = (string)PyResult.Attribute("data").Attribute("__class__").Attribute("__name__") == "float";
+            IsCircleResult = (!IsPointResult && !IsSpereResult);
+            if (IsPointResult)
+            {
+                X = (double?)pyResult.Attribute("data").Attribute("x");
+                Y = (double?)pyResult.Attribute("data").Attribute("y");
+                Z = (double?)pyResult.Attribute("data").Attribute("z");
+            }
+            else if (IsCircleResult)
+            {
+                X = (double?)pyResult.Attribute("data").Attribute("point").Attribute("x");
+                Y = (double?)pyResult.Attribute("data").Attribute("point").Attribute("y");
+                Z = (double?)pyResult.Attribute("data").Attribute("point").Attribute("z");
+            }
+
+            // If SphereResult: X,Y,Z is probe location
+
             if (X.HasValue && Y.HasValue && Z.HasValue)
             {
                 var myship = directEve.ActiveShip.Entity;
                 Distance = Math.Sqrt((X.Value - myship.X) * (X.Value - myship.X) + (Y.Value - myship.Y) * (Y.Value - myship.Y) + (Z.Value - myship.Z) * (Z.Value - myship.Z));
             }
-
         }
 
         public string Id { get; internal set; }
@@ -50,6 +63,16 @@ namespace DirectEve
         public double? Z { get; internal set; }
         public double Deviation { get; internal set; }
         public bool IsPointResult { get; internal set; }
+        public bool IsSpereResult { get; internal set; }
+        public bool IsCircleResult { get; internal set; }
+
+        public bool BookmarkScanResult(string title, string comment = "", bool corp = false)
+        {
+            if (corp)
+                return DirectEve.ThreadedLocalSvcCall("bookmarkSvc", "BookmarkScanResult", DirectEve.Session.SolarSystemId.Value, title, comment, Id, DirectEve.Session.CorporationId);
+            else
+                return DirectEve.ThreadedLocalSvcCall("bookmarkSvc", "BookmarkScanResult", DirectEve.Session.SolarSystemId.Value, title, comment, Id, DirectEve.Session.CharacterId);
+        }
 
         public bool WarpTo()
         {

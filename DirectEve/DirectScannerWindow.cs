@@ -23,9 +23,10 @@ namespace DirectEve
         {
             var charId = DirectEve.Session.CharacterId;
             var obj = PyWindow.Attribute("busy");
+            var analyseBtnEnabled = (bool)pyWindow.Attribute("sr").Attribute("analyzeBtn").Attribute("enabled");
             //Log("obj type = " + obj.GetPyType().ToString());
             //Log("obj value = " + ((bool) obj).ToString());
-            IsReady = charId != null && obj.IsValid && (bool) obj == false;
+            IsReady = charId != null && obj.IsValid && (bool) obj == false && analyseBtnEnabled;
         }
 
         /// <summary>
