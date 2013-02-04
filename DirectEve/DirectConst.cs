@@ -176,5 +176,14 @@ namespace DirectEve
         {
             get { return Const.Attribute("groupWreck"); }
         }
+
+        public PyObject MapWormholeSystemMin
+        {
+            get { return Const.Attribute("mapWormholeSystemMin"); }
+        }
+        public PyObject MapWormholeSystemMax
+        {
+            get { return Const.Attribute("mapWormholeSystemMax"); }
+        }
     }
 }

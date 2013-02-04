@@ -25,8 +25,13 @@ namespace DirectEve
             Name = (string) pyo.Attribute("solarSystemName");
             Description = (string) pyo.Attribute("description");
             ConstellationId = (long) pyo.Attribute("constellationID");
+            RegionID = (long) pyo.Attribute("regionID");
             FactionId = (long?) pyo.Attribute("factionID");
             Security = (double) pyo.Attribute("security");
+            IsWormholeSystem = ((long)directEve.Const.MapWormholeSystemMin < Id && Id < (long)directEve.Const.MapWormholeSystemMax);
+            if (IsWormholeSystem)
+                WormholeClass = (int)directEve.PySharp.Import("__builtin__").Attribute("cfg").Call("GetLocationWormholeClass", Id, ConstellationId, RegionID);
+
         }
 
         public long Id { get; private set; }
@@ -34,6 +39,7 @@ namespace DirectEve
         public string Description { get; private set; }
 
         public long ConstellationId { get; private set; }
+        public long RegionID { get; private set; }
 
         public DirectConstellation Constellation
         {
@@ -46,6 +52,8 @@ namespace DirectEve
 
         public long? FactionId { get; private set; }
         public double Security { get; private set; }
+        public bool IsWormholeSystem { get; private set; }
+        public int WormholeClass { get; private set; }
 
         /// <summary>
         ///   List all stations within this solar system
