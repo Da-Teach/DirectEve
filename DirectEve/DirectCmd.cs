@@ -79,6 +79,7 @@ namespace DirectEve
         CmdOverloadLowPowerSlot6,
         CmdOverloadLowPowerSlot7,
         CmdOverloadLowPowerSlot8,
+        CmdSetShipFullSpeed,
         CmdAccelerate,
         CmdDecelerate,
         CmdStopShip,

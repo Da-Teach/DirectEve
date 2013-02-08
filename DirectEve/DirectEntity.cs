@@ -674,6 +674,15 @@ namespace DirectEve
         }
 
         /// <summary>
+        ///   Jump Wormhole (Wormholes only)
+        /// </summary>
+        /// <returns></returns>
+        public bool JumpWormhole()
+        {
+            return DirectEve.ThreadedLocalSvcCall("menu", "EnterWormhole", Id);
+        }
+
+        /// <summary>
         ///   Activate (Acceleration Gates only)
         /// </summary>
         /// <returns></returns>

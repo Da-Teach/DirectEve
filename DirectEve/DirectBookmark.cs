@@ -152,6 +152,11 @@ namespace DirectEve
             return DirectEve.ThreadedLocalSvcCall("menu", "WarpToBookmark", PyBookmark, distance);
         }
 
+        public bool Approach()
+        {
+            return DirectEve.ThreadedLocalSvcCall("menu", "ApproachLocation", PyBookmark);
+        }
+
         public bool Delete()
         {
             if (!BookmarkId.HasValue)
