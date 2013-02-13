@@ -322,6 +322,20 @@ namespace DirectEve
             return DirectEve.ThreadedLocalSvcCall("menu", "AssembleShip", new List<PyObject>() { this.PyItem });
         }
 
+        /// <summary>
+        /// Board this ship from a ship maintanance bay!
+        /// </summary>
+        /// <returns>false if entity is player or out of range</returns>
+        public bool BoardShipFromShipMaintBay()
+        {
+            if (CategoryId != (int)DirectEve.Const.CategoryShip)
+                return false;
+
+            if (IsSingleton)
+                return false;
+
+            return DirectEve.ThreadedLocalSvcCall("menu", "Board", ItemId);
+        }
 
         /// <summary>
         ///   Fit this item to your ship

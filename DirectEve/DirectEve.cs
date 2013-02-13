@@ -611,6 +611,11 @@ namespace DirectEve
             return ThreadedLocalSvcCall("menu", "OpenCorpHangarArray", itemID, global::DirectEve.PySharp.PySharp.PyNone);
         }
 
+        public bool OpenShipMaintenanceBay(long itemID)
+        { 
+            return ThreadedLocalSvcCall("menu", "OpenShipMaintenanceBayShip", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        }
+
         public bool OpenStructure(long itemID)
         {
             return ThreadedLocalSvcCall("menu", "OpenStructure", itemID, global::DirectEve.PySharp.PySharp.PyNone);

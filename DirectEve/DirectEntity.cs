@@ -44,6 +44,8 @@ namespace DirectEve
         private double? _x;
         private double? _y;
         private double? _z;
+        private double? _wormholeAge;
+        private double? _wormholeSize;
         private DateTime lastApproach = DateTime.MinValue;
 
         internal DirectEntity(DirectEve directEve, PyObject ballpark, PyObject ball, PyObject slimItem, long id)
@@ -377,6 +379,28 @@ namespace DirectEve
             }
         }
 
+        public double? WormholeAge
+        {
+            get
+            {
+                if (_wormholeAge == null)
+                    _wormholeAge = (double)_slimItem.Attribute("wormholeAge");
+
+                return _wormholeAge.Value;
+            }
+        }
+
+        public double? WormholeSize
+        {
+            get
+            {
+                if (_wormholeSize == null)
+                    _wormholeSize = (double)_slimItem.Attribute("wormholeSize");
+
+                return _wormholeSize.Value;
+            }
+        }
+        
         /// <summary>
         ///   Is it a valid entity?
         /// </summary>
