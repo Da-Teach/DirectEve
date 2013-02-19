@@ -210,7 +210,7 @@ namespace DirectEve
         ///   Return the container's capacity
         /// </summary>
         /// <returns></returns>
-        public double Capacity
+        public new double Capacity
         {
             get
             {
@@ -533,7 +533,7 @@ namespace DirectEve
         /// <param name = "bookmarkIds"></param>
         /// <returns></returns>
         /// <remarks>
-        ///   This only works on shipCargo & hangarFloor containers and only 5 bookmarks per AddBookmarks call
+        ///   This only works on shipCargo &amp; hangarFloor containers and only 5 bookmarks per AddBookmarks call
         /// </remarks>
         public bool AddBookmarks(IEnumerable<long> bookmarkIds)
         {

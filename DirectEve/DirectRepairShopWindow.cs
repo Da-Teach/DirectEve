@@ -48,7 +48,7 @@ namespace DirectEve
             {
                 return (string)PyWindow.Attribute("sr").Attribute("avgDamage").Attribute("text");
             }
-            catch (Exception e)
+            catch
             {
                 return "";
             }

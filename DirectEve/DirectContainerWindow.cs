@@ -164,7 +164,6 @@ namespace DirectEve
         ///   Expand the tree entry with the given name and ID
         /// </summary>
         /// <param name = "entryName"></param>
-        /// <param name = "entryID"></param>
         /// <returns></returns>
         internal bool ExpandTreeEntry(string entryName)
         {

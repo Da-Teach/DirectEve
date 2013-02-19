@@ -44,7 +44,7 @@
         private Type _lsEventArgs;
 
         /// <summary>
-        /// A delegate that maps our FrameHook to EventHandler<LSEventArgs>
+        /// A delegate that maps our FrameHook to EventHandler
         /// </summary>
         private Delegate _frameHookDelegate;
 
