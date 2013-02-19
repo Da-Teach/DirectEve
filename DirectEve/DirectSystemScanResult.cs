@@ -83,10 +83,10 @@ namespace DirectEve
             return false;
         }
 
-        // I don't see any reason why we should read out the UI instead of the cached probeData.
-        // The X,Y,Z values are not available in the UI, but i need them for scan probing to work.
-        // If it's an issue using probeData instead of the current UI reading, let me know asap and we revert it ~ Ferox
-        // 
+        /// I don't see any reason why we should read out the UI instead of the cached probeData.
+        /// The X,Y,Z values are not available in the UI, but i need them for scan probing to work.
+        /// If it's an issue using probeData instead of the current UI reading, let me know asap and we revert it ~ Ferox
+        /// 
         /*
         private Dictionary<string, PyObject> _node;
         private string _id;

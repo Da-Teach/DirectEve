@@ -210,7 +210,7 @@ namespace DirectEve
         ///   Return the container's capacity
         /// </summary>
         /// <returns></returns>
-        public new double Capacity
+        public double Capacity
         {
             get
             {

@@ -85,6 +85,11 @@ namespace DirectEve
             get { return Attributes.TryGet<double>("duration"); }
         }
 
+        public double? CapacitorNeed
+        {
+            get { return Attributes.TryGet<double>("capacitorNeed"); }
+        }
+
         /*public List<DirectItem> MatchingAmmo
         {
             get

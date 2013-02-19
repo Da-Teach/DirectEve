@@ -63,6 +63,8 @@ namespace DirectEve
         /// </summary>
         private Dictionary<long, DirectEntity> _entitiesById;
 
+        private uint _innerspaceOnFrameId;
+
         /// <summary>
         ///   Item Hangar container cache
         /// </summary>
@@ -445,13 +447,11 @@ namespace DirectEve
             get
             {
                 var rendering1 = (bool) GetLocalSvc("sceneManager").Attribute("registeredScenes").DictionaryItem("default").Attribute("display");
-                var rendering2 = (bool) GetLocalSvc("sceneManager").Attribute("registeredScenes2").DictionaryItem("default").Attribute("display");
-                return rendering1 && rendering2;
+                return rendering1;
             }
             set
             {
                 GetLocalSvc("sceneManager").Attribute("registeredScenes").DictionaryItem("default").SetAttribute("display", value);
-                GetLocalSvc("sceneManager").Attribute("registeredScenes2").DictionaryItem("default").SetAttribute("display", value);
             }
         }
 
@@ -872,15 +872,22 @@ namespace DirectEve
         /// <param name = "comment"></param>
         /// <param name = "folderId"></param>
         /// <returns></returns>
-        public bool BookmarkEntity(DirectEntity entity, string name, string comment, long? folderId)
+        public bool BookmarkEntity(DirectEntity entity, string name, string comment, long? folderId, bool corp = false)
         {
             if (!entity.IsValid)
                 return false;
 
-            if (Session.CharacterId == null)
+            if (!corp && Session.CharacterId == null)
                 return false;
 
-            return DirectBookmark.BookmarkLocation(this, Session.CharacterId.Value, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId, folderId);
+            if (corp && Session.CorporationId == null)
+                return false;
+
+            if (!corp)
+                return DirectBookmark.BookmarkLocation(this, Session.CharacterId.Value, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId, folderId);
+            else
+                return DirectBookmark.BookmarkLocation(this, Session.CorporationId.Value, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId, folderId);
+
         }
 
 
@@ -930,7 +937,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Drop bookmarks into people &amp; places
+        ///   Drop bookmarks into people & places
         /// </summary>
         /// <param name = "bookmarks"></param>
         /// <returns></returns>
