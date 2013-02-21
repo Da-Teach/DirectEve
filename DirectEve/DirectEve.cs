@@ -63,8 +63,6 @@ namespace DirectEve
         /// </summary>
         private Dictionary<long, DirectEntity> _entitiesById;
 
-        private uint _innerspaceOnFrameId;
-
         /// <summary>
         ///   Item Hangar container cache
         /// </summary>
@@ -937,7 +935,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Drop bookmarks into people & places
+        ///   Drop bookmarks into people &amp; places
         /// </summary>
         /// <param name = "bookmarks"></param>
         /// <returns></returns>

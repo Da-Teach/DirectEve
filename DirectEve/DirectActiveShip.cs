@@ -27,7 +27,7 @@ namespace DirectEve
             PyItem = directEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation").Call("GetShip");
         }
 
-        public long ItemId
+        public new long ItemId
         {
             get
             {
