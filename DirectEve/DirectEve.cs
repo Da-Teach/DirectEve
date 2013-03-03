@@ -869,6 +869,7 @@ namespace DirectEve
         /// <param name = "name"></param>
         /// <param name = "comment"></param>
         /// <param name = "folderId"></param>
+        /// <param name = "corp"></param>
         /// <returns></returns>
         public bool BookmarkEntity(DirectEntity entity, string name, string comment, long? folderId, bool corp = false)
         {

@@ -31,3 +31,5 @@ TestResult*
 *.sdf
 *.opensdf
 *.user.props
+packages/
+ipch/
