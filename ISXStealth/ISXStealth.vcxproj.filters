@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{ba9c89e4-9b49-4f00-9890-cf2b6b14cca3}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="Source Files\LavishScript Extensions">
+      <UniqueIdentifier>{a333e029-3fca-4b24-82d1-030c06e4e604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{4c37aee2-3b77-4051-ab63-920430bfe52e}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Header Files\LavishScript Extensions">
+      <UniqueIdentifier>{1d527711-1bcc-490b-9efd-3e3f4d926122}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\LavishScript Extensions\Lists">
+      <UniqueIdentifier>{7f4973c5-a265-448e-9ea1-9625fd26933d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ISXStealth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands.cpp">
+      <Filter>Source Files\LavishScript Extensions</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ISXStealth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands.h">
+      <Filter>Header Files\LavishScript Extensions\Lists</Filter>
+    </ClInclude>
+    <ClInclude Include="PEBStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
