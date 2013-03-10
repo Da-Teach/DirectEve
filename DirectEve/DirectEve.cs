@@ -526,8 +526,16 @@ namespace DirectEve
                 }
 #endif
                 // Get current target list
+#if THIS_CODE_NO_LONGER_WORKS
                 var targets = pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targets").ToList<long>();
                 targets.AddRange(pySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("target").Attribute("targeting").ToList<long>());
+#endif
+                // Try using dynamic PySharp!!
+                dynamic ps = pySharp;
+                // targetsByID and targeting are now dictionaries
+                List<long> targets = ps.__builtin__.sm.services["target"].targetsByID.keys().ToList<long>();
+                targets.AddRange(ps.__builtin__.sm.services["target"].targeting.keys().ToList<long>());
+
                 // Update currently locked targets
                 targets.ForEach(t => _lastKnownTargets[t] = DateTime.Now);
                 // Remove all targets that have not been locked for 3 seconds

@@ -13,7 +13,7 @@ namespace DirectEve.PySharp
     using System.Collections.Generic;
     using System.Linq;
 
-    internal class PySharp : IDisposable
+    internal partial class PySharp : IDisposable
     {
         public static PyObject PyZero = new PyObject(null, IntPtr.Zero, false);
         public static PyObject PyNone = new PyObject(null, Py.PyNoneStruct, false);
