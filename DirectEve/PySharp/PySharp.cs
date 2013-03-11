@@ -12,6 +12,7 @@ namespace DirectEve.PySharp
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
 
     internal partial class PySharp : IDisposable
     {
@@ -177,6 +178,8 @@ namespace DirectEve.PySharp
                 return From((IEnumerable<string>) value);
             if (value is IEnumerable<object>)
                 return From((IEnumerable<object>) value);
+            if (value is Delegate)
+                return From((Delegate)value);
             if (value is PyObject)
                 return (PyObject) value;
             return null;
@@ -310,6 +313,31 @@ namespace DirectEve.PySharp
 
             return result;
         }
+
+        /// <summary>
+        ///   Get a PyObject from a delegate
+        /// </summary>
+        /// <param name = "value"></param>
+        /// <returns></returns>
+        public PyObject From(Delegate value)
+        {
+            PyObject result, name;
+            Py.PyMethodDef md;
+
+            md.ml_doc = (IntPtr)0;
+            md.ml_name = Marshal.StringToHGlobalAnsi( "testmethod" );
+            md.ml_meth = Marshal.GetFunctionPointerForDelegate(value);
+            md.ml_flags = 1; // METH_VARARGS
+            name = From((string)"testmethod");
+
+            IntPtr mdPtr = Marshal.AllocHGlobal(Marshal.SizeOf(md));
+            Marshal.StructureToPtr(md, mdPtr, false);
+
+            result = new PyObject(this, Py.PyCFunction_NewEx(mdPtr, (IntPtr)0, name), true);
+
+            return result;
+        }
+
 
         /// <summary>
         ///   Add a reference to the reference stack

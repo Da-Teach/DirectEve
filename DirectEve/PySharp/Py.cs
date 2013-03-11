@@ -338,5 +338,18 @@ namespace DirectEve.PySharp
 
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int PyDict_DelItem(IntPtr op, IntPtr key);
+
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr PyCFunction_NewEx(IntPtr md, IntPtr self, IntPtr name);
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct PyMethodDef 
+        {
+            public IntPtr ml_name;	/* The name of the built-in function/method */
+            public IntPtr ml_meth;	/* The C function that implements it */
+            public int    ml_flags;	/* Combination of METH_xxx flags, which mostly
+				                       describe the args expected by the C func */
+            public IntPtr ml_doc;	/* The __doc__ attribute, or NULL */
+        };
     }
 }
