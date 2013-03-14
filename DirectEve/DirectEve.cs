@@ -1327,14 +1327,6 @@ namespace DirectEve
             }
         }
 
-        ///<summary>This currently throws a Python exception.  don't use!!!</summary>
-        public bool ThreadedCallback(Delegate func)
-        {
-            PyObject pyCall = PySharp.From(func);
-            return ThreadedCall(pyCall);
-        }
-
-
 		//Hooking stuff
 
         [DllImport("kernel32.dll")]

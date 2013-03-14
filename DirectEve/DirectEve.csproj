@@ -202,6 +202,12 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WhiteMagic\WhiteMagic.csproj">
+      <Project>{5721fba5-fe77-4727-8bfe-13cd23ece36e}</Project>
+      <Name>WhiteMagic</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyToInnerSpace" AfterTargets="AfterBuild">
