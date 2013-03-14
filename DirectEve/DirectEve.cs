@@ -14,7 +14,9 @@ namespace DirectEve
     using System.Linq;
     using System.Reflection;
     using System.Security;
+    using System.Runtime.InteropServices;
     using global::DirectEve.PySharp;
+    using WhiteMagic;
 
     public delegate void LoggingDelegate(string msg);
 
@@ -160,6 +162,11 @@ namespace DirectEve
         /// </summary>
         private List<DirectWindow> _windows;
 
+        DLoadLibraryA _DLoadLibraryA;
+        WhiteMagic.Internals.Detour _LoadLibraryAHook;
+        DGetModuleHandleA _DGetModuleHandleA;
+        WhiteMagic.Internals.Detour _GetModuleHandleAHook;
+
         /// <summary>
         /// The framework object that wraps OnFrame and Log
         /// </summary>
@@ -207,6 +214,14 @@ namespace DirectEve
 #endif
             try
             {
+                //Hooking 
+                _DLoadLibraryA = Magic.Instance.RegisterDelegate<DLoadLibraryA>(GetProcAddresFunc("kernel32.dll", "LoadLibraryA"));
+                _LoadLibraryAHook = Magic.Instance.Detours.CreateAndApply(_DLoadLibraryA, new DLoadLibraryA(LoadLibraryAHooked), "LoadLibraryA");
+
+                _DGetModuleHandleA = Magic.Instance.RegisterDelegate<DGetModuleHandleA>(GetProcAddresFunc("kernel32.dll", "GetModuleHandleA"));
+                _GetModuleHandleAHook = Magic.Instance.Detours.CreateAndApply(_DGetModuleHandleA, new DGetModuleHandleA(GetModuleHandleAHooked), "GetModuleHandleA"); 
+
+
                 _localSvcCache = new Dictionary<string, PyObject>();
                 _containers = new Dictionary<long, DirectContainer>();
                 _lastKnownTargets = new Dictionary<long, DateTime>();
@@ -1317,6 +1332,68 @@ namespace DirectEve
         {
             PyObject pyCall = PySharp.From(func);
             return ThreadedCall(pyCall);
+        }
+
+
+		//Hooking stuff
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+        private static IntPtr GetProcAddresFunc(string dllname, string function)
+        {
+            var hDLL = GetModuleHandle(dllname);
+            return GetProcAddress(hDLL, function);
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
+        private delegate IntPtr DLoadLibraryA(IntPtr lpFileName);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
+        private static extern IntPtr LoadLibraryA(IntPtr lpFileName);
+
+        private IntPtr LoadLibraryAHooked(IntPtr lpFileName)
+        {
+            string fileName = Marshal.PtrToStringAnsi(lpFileName);
+            Log("LoadLibraryA called with string: " + fileName);
+            if (fileName.ToLower().Contains("rgdll") || fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
+            {
+                Log("Changing LoadLibraryA parameter value");
+                IntPtr trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
+                if (fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
+                {
+                    Log("Warning: DLL check for questor or directeve. Parameter is " + fileName);
+                }
+                return (IntPtr)_LoadLibraryAHook.CallOriginal(trash);
+            }
+            else return (IntPtr)_LoadLibraryAHook.CallOriginal(lpFileName);
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
+        private delegate IntPtr DGetModuleHandleA(IntPtr lpFileName);
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
+        public static extern IntPtr GetModuleHandleA(IntPtr lpModuleName);
+
+        private IntPtr GetModuleHandleAHooked(IntPtr lpModuleName)
+        {
+            string fileName = Marshal.PtrToStringAnsi(lpModuleName);
+            if (!fileName.ToLower().Contains("Kernel"))
+                Log("GetModuleHandleA called with string: " + fileName);
+            if (fileName.ToLower().Contains("rgdll") || fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
+            {
+                System.Diagnostics.Debugger.Launch();
+                Log("Changing GetModuleHandleA parameter value");
+                IntPtr trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
+                if (fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
+                {
+                    Log("Warning: DLL check for questor or directeve. Parameter is " + fileName);
+                }
+                return (IntPtr)_GetModuleHandleAHook.CallOriginal(trash);
+            }
+            else return (IntPtr)_GetModuleHandleAHook.CallOriginal(lpModuleName);
         }
     }
 }
