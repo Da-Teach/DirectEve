@@ -1,28 +1,14 @@
 #include "ISXStealth.h"
 
-DWORD GetKPROCESS()
+int CMD_BlockMiniDump(int argc, char *argv[])
 {
-	DWORD dwKProcess = 0;
-
-	// Return PEB address for current process
-	// address is located at FS:0x30
-	__asm 
+	if (argc != 2)
 	{
-		push eax
-		mov eax, FS:[0x124]
-		mov eax, [eax+0x50]
-		mov [dwKProcess], eax
-		pop eax
+		printf("Syntax: BlockMiniDump true|false");
+		return -1;
 	}
 
-	return (DWORD)dwKProcess;
-}
-
-int CMD_ThreadWalk(int argc, char *argv[])
-{	
-	DWORD eThread = GetKPROCESS();
-	printf("0x%08x", eThread);
-	return 0;
+	pExtension->BlockMiniDump(strnicmp(argv[1], "true", 4) == 0);
 }
 
 int CMD_StealthModule(int argc, char *argv[])

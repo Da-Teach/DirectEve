@@ -6,8 +6,7 @@
 // commands
 
 COMMAND("StealthModule",CMD_StealthModule,true,false);
-COMMAND("ThreadWalk",CMD_ThreadWalk,true,false);
-
+COMMAND("BlockMiniDump",CMD_BlockMiniDump,true,false);
 
 // ----------------------------------------------------
 #ifdef COMMAND_SELF

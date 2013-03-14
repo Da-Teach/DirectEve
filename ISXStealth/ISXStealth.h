@@ -47,7 +47,10 @@ public:
 	void UnstealthModule(char *module);
 	void UnstealthModule(PStealthModule module);
 
+	void BlockMiniDump(bool block);
+
 	vector<PStealthModule> modules;
+	bool blockMiniDump;
 };
 
 extern ISInterface *pISInterface;

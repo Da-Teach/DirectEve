@@ -9,7 +9,7 @@
 // same extension to check for new versions -- if this version text comes before the compared text (in a 
 // dictionary), then an update is available.  Equal text means the version is up to date.  After means this 
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
-#define EXTENSION_VERSION "20110724"
+#define EXTENSION_VERSION "20111019"
 
 #include "ISXStealth.h"
 #pragma comment(lib,"isxdk.lib")
@@ -21,8 +21,12 @@
 ISXPreSetup("ISXStealth",ISXStealth);
 
 ISInterface *pISInterface=0;
+HISXSERVICE hMemoryService;
 
 char Stealth_Version[]=EXTENSION_VERSION;
+
+// Forward declarations of callbacks
+void __cdecl MemoryService(bool Broadcast, unsigned int MSG, void *lpData);
 
 // The constructor of our class.  General initialization cannot be done yet, because we're not given
 // the pointer to the Inner Space interface until it is ready for us to initialize.  Just set the
@@ -56,6 +60,9 @@ bool ISXStealth::Initialize(ISInterface *p_ISInterface)
 
 		// Register LavishScript extensions (commands, aliases, data types, objects)
 		RegisterCommands();
+
+		// Connect to the memory service
+		hMemoryService=pISInterface->ConnectService(this,"Memory",MemoryService);
 
 		printf("ISXStealth version %s Loaded",Stealth_Version);
 		return true;
@@ -98,8 +105,6 @@ int ISXStealth::GetModuleList(char ModuleListType, PLIST_ENTRY *moduleListHead, 
 	PebBaseAddr = GetPEB();
 	if (PebBaseAddr == 0)
 		return 0;
-
-	printf("0x%08x", PebBaseAddr);
 
 	pLdrData=(PPEB_LDR_DATA)(DWORD *)(*(DWORD *)(PebBaseAddr + PEB_LDR_DATA_OFFSET)); // PEB.ProcessModuleInfo = PEB + 0x0C
 	if(!pLdrData->Initialized) 
@@ -296,11 +301,44 @@ void ISXStealth::UnstealthModule(char *module)
 	}
 }
 
+DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI MiniDumpWriteDumpTrampoline(HANDLE hProcess, DWORD ProcessId, HANDLE hFile, DWORD DumpType, DWORD ExceptionParam, DWORD UserStreamParam, DWORD CallbackParam));
+BOOL WINAPI MiniDumpWriteDumpDetour(HANDLE hProcess, DWORD ProcessId, HANDLE hFile, DWORD DumpType, DWORD ExceptionParam, DWORD UserStreamParam, DWORD CallbackParam)
+{
+	// Out of memory error
+	SetLastError(8);
+	return FALSE;
+}
+
+void ISXStealth::BlockMiniDump(bool block)
+{
+	if (block != blockMiniDump)
+	{
+		blockMiniDump = block;
+		if (block)
+		{
+			EzDetour(GetProcAddress(LoadLibrary("dbghelp.dll"), "MiniDumpWriteDump"), MiniDumpWriteDumpDetour, MiniDumpWriteDumpTrampoline);
+		}
+		else
+		{
+			EzUnDetour(GetProcAddress(GetModuleHandle("dbghelp.dll"), "MiniDumpWriteDump"));
+		}
+	}
+
+	printf("We are currently %s MiniDumpWriteDump", block ? "blocking" : "not blocking");
+}
+
 // shutdown sequence
 void ISXStealth::Shutdown()
 {
 	// Remove LavishScript extensions (commands, aliases, data types, objects)
 	UnRegisterCommands();
+
+	// gracefully disconnect from services
+	if (hMemoryService)
+	{
+		pISInterface->DisconnectService(this,hMemoryService);
+		hMemoryService=0;
+	}
 
 	for(int i = modules.size() -1; i >= 0; i --)
 		UnstealthModule(modules[i]);
@@ -346,4 +384,10 @@ void ISXStealth::UnRegisterCommands()
 #define COMMAND(name,cmd,parse,hide) pISInterface->RemoveCommand(name);
 #include "Commands.h"
 #undef COMMAND
+}
+
+void __cdecl MemoryService(bool Broadcast, unsigned int MSG, void *lpData)
+{
+	// no messages are currently associated with this service (other than
+	// system messages such as client disconnect), so do nothing.
 }
