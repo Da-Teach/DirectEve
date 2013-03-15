@@ -1,5 +1,11 @@
 #include "ISXStealth.h"
 
+int CMD_UnitTest(int argc, char *argv[])
+{
+	pExtension->UnitTest();
+	return 0;
+}
+
 int CMD_BlockMiniDump(int argc, char *argv[])
 {
 	if (argc != 2)

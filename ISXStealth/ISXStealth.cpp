@@ -9,7 +9,7 @@
 // same extension to check for new versions -- if this version text comes before the compared text (in a 
 // dictionary), then an update is available.  Equal text means the version is up to date.  After means this 
 // is newer than the compared version.  With that said, use whatever version numbering system you'd like.
-#define EXTENSION_VERSION "20111019"
+#define EXTENSION_VERSION "20130315"
 
 #include "ISXStealth.h"
 #pragma comment(lib,"isxdk.lib")
@@ -63,6 +63,9 @@ bool ISXStealth::Initialize(ISInterface *p_ISInterface)
 
 		// Connect to the memory service
 		hMemoryService=pISInterface->ConnectService(this,"Memory",MemoryService);
+
+		// Hook functions
+		InitializeHooks();
 
 		printf("ISXStealth version %s Loaded",Stealth_Version);
 		return true;
@@ -237,6 +240,7 @@ void ISXStealth::StealthModule(char *module)
 	for(int i = 0; i < BUFMAXLEN; i ++)
 	{
 		stealthModule->name[i] = LOWCASE(module[i]);
+		stealthModule->w_name[i] = (wchar_t)stealthModule->name[i];
 		if (module[i] == '\0')
 			break;
 	}
@@ -330,15 +334,171 @@ void ISXStealth::BlockMiniDump(bool block)
 DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI GetModuleHandleATrampoline( LPCSTR lpModuleName ));
 HMODULE WINAPI GetModuleHandleADetour( LPCSTR lpModuleName )
 {
-	// Do nothing for now
-	return GetModuleHandleATrampoline(lpModuleName);
+	HMODULE rval = 0;
+
+	vector<PStealthModule> modules = pExtension->modules;
+
+	int i;
+	for( i = modules.size() - 1; i >= 0; i-- ) 
+	{
+		PStealthModule stealthModule = modules[i];
+		if( CompareStringA(LOCALE_SYSTEM_DEFAULT,LINGUISTIC_IGNORECASE,stealthModule->name,
+			lstrlenA(stealthModule->name),lpModuleName,lstrlenA(lpModuleName)) == CSTR_EQUAL )
+		{
+			break;
+		}
+	}
+
+	if( i >= 0 )
+	{
+		printf( "Blocking GetModuleHandleA(%s) call.", lpModuleName );
+		SetLastError(ERROR_ACCESS_DENIED);
+	}
+	else
+	{
+		rval = GetModuleHandleATrampoline(lpModuleName);
+	}
+
+	return rval;
 }
 
 DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI GetModuleHandleWTrampoline( LPCWSTR lpModuleName ));
 HMODULE WINAPI GetModuleHandleWDetour( LPCWSTR lpModuleName )
 {
-	// Do nothing for now
-	return GetModuleHandleWTrampoline(lpModuleName);
+	HMODULE rval = 0;
+
+	vector<PStealthModule> modules = pExtension->modules;
+
+	int i;
+	for( i = modules.size() - 1; i >= 0; i-- ) 
+	{
+		PStealthModule stealthModule = modules[i];
+		if( CompareStringW(LOCALE_SYSTEM_DEFAULT,LINGUISTIC_IGNORECASE,stealthModule->w_name,
+			lstrlenW(stealthModule->w_name),lpModuleName,lstrlenW(lpModuleName)) == CSTR_EQUAL )
+		{
+			break;
+		}
+	}
+
+	if( i >= 0 )
+	{
+		printf( "Blocking GetModuleHandleW(%ls) call.", lpModuleName );
+		SetLastError(ERROR_ACCESS_DENIED);
+	}
+	else
+	{
+		rval = GetModuleHandleWTrampoline(lpModuleName);
+	}
+
+	return rval;
+}
+
+DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryATrampoline( LPCSTR lpLibFileName ));
+HMODULE WINAPI LoadLibraryADetour( LPCSTR lpLibFileName )
+{
+	HMODULE rval = 0;
+
+	vector<PStealthModule> modules = pExtension->modules;
+
+	int i;
+	for( i = modules.size() - 1; i >= 0; i-- ) 
+	{
+		PStealthModule stealthModule = modules[i];
+		if( CompareStringA(LOCALE_SYSTEM_DEFAULT,LINGUISTIC_IGNORECASE,stealthModule->name,
+			lstrlenA(stealthModule->name),lpLibFileName,lstrlenA(lpLibFileName)) == CSTR_EQUAL )
+		{
+			break;
+		}
+	}
+
+	if( i >= 0 )
+	{
+		printf( "Blocking LoadLibraryA(%s) call.", lpLibFileName );
+		SetLastError(ERROR_ACCESS_DENIED);
+	}
+	else
+	{
+		rval = LoadLibraryATrampoline(lpLibFileName);
+	}
+
+	return rval;
+}
+
+DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryWTrampoline( LPCWSTR lpLibFileName ));
+HMODULE WINAPI LoadLibraryWDetour( LPCWSTR lpLibFileName )
+{
+	HMODULE rval = 0;
+
+	vector<PStealthModule> modules = pExtension->modules;
+
+	int i;
+	for( i = modules.size() - 1; i >= 0; i-- ) 
+	{
+		PStealthModule stealthModule = modules[i];
+		if( CompareStringW(LOCALE_SYSTEM_DEFAULT,LINGUISTIC_IGNORECASE,stealthModule->w_name,
+			lstrlenW(stealthModule->w_name),lpLibFileName,lstrlenW(lpLibFileName)) == CSTR_EQUAL )
+		{
+			break;
+		}
+	}
+
+	if( i >= 0 )
+	{
+		printf( "Blocking LoadLibraryW(%ls) call.", lpLibFileName );
+		SetLastError(ERROR_ACCESS_DENIED);
+	}
+	else
+	{
+		rval = LoadLibraryWTrampoline(lpLibFileName);
+	}
+
+	return rval;
+}
+
+DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI IsDebuggerPresentTrampoline( VOID ));
+BOOL WINAPI IsDebuggerPresentDetour( VOID )
+{
+	printf( "Blocking IsDebuggerPresent() call." );
+	return FALSE;
+}
+
+DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI CheckRemoteDebuggerPresentTrampoline( HANDLE hProcess, PBOOL pbDebuggerPresent ));
+BOOL WINAPI CheckRemoteDebuggerPresentDetour( HANDLE hProcess, PBOOL pbDebuggerPresent )
+{
+	BOOL rval = FALSE;
+
+	if( hProcess == GetCurrentProcess() && pbDebuggerPresent != NULL )
+	{
+		printf( "Blocking CheckRemoteDebuggerPresent() call." );
+		*pbDebuggerPresent = FALSE;
+		rval = TRUE;
+	}
+	else
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+	}
+
+	return rval;
+}
+
+void ISXStealth::InitializeHooks()
+{
+	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "LoadLibraryA"), LoadLibraryADetour, LoadLibraryATrampoline);
+	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "LoadLibraryW"), LoadLibraryWDetour, LoadLibraryWTrampoline);
+	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "GetModuleHandleA"), GetModuleHandleADetour, GetModuleHandleATrampoline);
+	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "GetModuleHandleW"), GetModuleHandleWDetour, GetModuleHandleWTrampoline);
+	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "IsDebuggerPresent"), IsDebuggerPresentDetour, IsDebuggerPresentTrampoline);
+	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "CheckRemoteDebuggerPresent"), CheckRemoteDebuggerPresentDetour, CheckRemoteDebuggerPresentTrampoline);
+}
+
+void ISXStealth::RemoveHooks()
+{
+	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA"));
+	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryW"));
+	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "GetModuleHandleA"));
+	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "GetModuleHandleW"));
+	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "IsDebuggerPresent"));
+	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "CheckRemoteDebuggerPresent"));
 }
 
 
@@ -347,6 +507,9 @@ void ISXStealth::Shutdown()
 {
 	// Remove LavishScript extensions (commands, aliases, data types, objects)
 	UnRegisterCommands();
+
+	// Remove our hooks
+	RemoveHooks();
 
 	// gracefully disconnect from services
 	if (hMemoryService)
@@ -399,6 +562,20 @@ void ISXStealth::UnRegisterCommands()
 #define COMMAND(name,cmd,parse,hide) pISInterface->RemoveCommand(name);
 #include "Commands.h"
 #undef COMMAND
+}
+
+void ISXStealth::UnitTest()
+{
+	GetModuleHandleA("iSxStEaLtH.DlL");
+	GetModuleHandleW(L"iSxStEaLtH.DlL");
+	
+	LoadLibraryA("iSxStEaLtH.DlL");
+	LoadLibraryW(L"iSxStEaLtH.DlL");
+
+	IsDebuggerPresent();
+
+	BOOL bVal;
+	CheckRemoteDebuggerPresent(GetCurrentProcess(),&bVal);
 }
 
 void __cdecl MemoryService(bool Broadcast, unsigned int MSG, void *lpData)

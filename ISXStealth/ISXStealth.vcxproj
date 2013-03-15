@@ -68,4 +68,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <Target Name="CopyToInnerSpace" AfterTargets="AfterBuild">
+    <PropertyGroup>
+      <InnerSpacePath Condition="'$(InnerSpacePath)'==''">$(registry:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\App Paths\InnerSpace.exe@Path)</InnerSpacePath>
+      <InnerSpacePath Condition="'$(InnerSpacePath)'==''">$(registry:HKEY_CURRENT_USER\Software\Microsoft\IntelliPoint\AppSpecific\InnerSpace.exe@Path)</InnerSpacePath>
+      <InnerSpacePath Condition="'$(InnerSpacePath)'==''">$(registry:HKEY_CURRENT_USER\Software\Microsoft\IntelliType Pro\AppSpecific\InnerSpace.exe@Path)</InnerSpacePath>
+      <InnerSpacePath Condition="'$(InnerSpacePath.EndsWith(&quot;InnerSpace.exe&quot;))'=='True'">$(InnerSpacePath.Replace("InnerSpace.exe",""))</InnerSpacePath>
+    </PropertyGroup>
+    <Copy Condition="'$(InnerSpacePath)'!=''" SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(InnerSpacePath)\Extensions" />
+  </Target>
 </Project>

@@ -13,6 +13,7 @@
 typedef struct StealthModule
 {
 	char name[BUFMAXLEN];
+	wchar_t w_name[BUFMAXLEN];
 
 	PLIST_ENTRY load_order;
 	PLIST_ENTRY memory_order;
@@ -48,6 +49,9 @@ public:
 	void UnstealthModule(PStealthModule module);
 
 	void BlockMiniDump(bool block);
+	void InitializeHooks();
+	void RemoveHooks();
+	void UnitTest();
 
 	vector<PStealthModule> modules;
 	bool blockMiniDump;

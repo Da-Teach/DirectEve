@@ -7,6 +7,7 @@
 
 COMMAND("StealthModule",CMD_StealthModule,true,false);
 COMMAND("BlockMiniDump",CMD_BlockMiniDump,true,false);
+COMMAND("StealthTest",CMD_UnitTest,true,false);
 
 // ----------------------------------------------------
 #ifdef COMMAND_SELF
