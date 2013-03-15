@@ -327,6 +327,21 @@ void ISXStealth::BlockMiniDump(bool block)
 	printf("We are currently %s MiniDumpWriteDump", block ? "blocking" : "not blocking");
 }
 
+DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI GetModuleHandleATrampoline( LPCSTR lpModuleName ));
+HMODULE WINAPI GetModuleHandleADetour( LPCSTR lpModuleName )
+{
+	// Do nothing for now
+	return GetModuleHandleATrampoline(lpModuleName);
+}
+
+DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI GetModuleHandleWTrampoline( LPCWSTR lpModuleName ));
+HMODULE WINAPI GetModuleHandleWDetour( LPCWSTR lpModuleName )
+{
+	// Do nothing for now
+	return GetModuleHandleWTrampoline(lpModuleName);
+}
+
+
 // shutdown sequence
 void ISXStealth::Shutdown()
 {
