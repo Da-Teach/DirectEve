@@ -39,9 +39,14 @@ typedef struct _UNICODE_STRING
 	USHORT  Length;
 	USHORT  MaximumLength;
 	PWSTR  Buffer;
-	} UNICODE_STRING, *PUNICODE_STRING;
+} UNICODE_STRING, *PUNICODE_STRING;
+
+typedef struct _STRING {
+	USHORT  Length;
+	USHORT  MaximumLength;
+	PCHAR  Buffer;
+} ANSI_STRING, *PANSI_STRING;
 #pragma pack()
-	
 
 typedef struct _PEB {
 	/*000*/ BOOLEAN              InheritedAddressSpace;
