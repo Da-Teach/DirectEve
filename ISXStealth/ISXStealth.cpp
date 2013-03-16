@@ -455,6 +455,90 @@ HMODULE WINAPI LoadLibraryWDetour( LPCWSTR lpLibFileName )
 	return rval;
 }
 
+DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryExATrampoline( LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags ));
+HMODULE WINAPI LoadLibraryExADetour( LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags )
+{
+	HMODULE rval = 0;
+
+	vector<PStealthModule> modules = pExtension->modules;
+
+	int i;
+	for( i = modules.size() - 1; i >= 0; i-- ) 
+	{
+		PStealthModule stealthModule = modules[i];
+		if( CompareStringA(LOCALE_SYSTEM_DEFAULT,LINGUISTIC_IGNORECASE,stealthModule->name,
+			lstrlenA(stealthModule->name),lpLibFileName,lstrlenA(lpLibFileName)) == CSTR_EQUAL )
+		{
+			break;
+		}
+	}
+
+	if( i >= 0 )
+	{
+		printf( "Blocking LoadLibraryExA(%s) call.", lpLibFileName );
+		SetLastError(ERROR_ACCESS_DENIED);
+	}
+	else
+	{
+		rval = LoadLibraryExATrampoline(lpLibFileName, hFile, dwFlags);
+	}
+
+	return rval;
+}
+
+DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryExWTrampoline( LPCWSTR lpLibFileName, HANDLE hFile, DWORD dwFlags ));
+HMODULE WINAPI LoadLibraryExWDetour( LPCWSTR lpLibFileName, HANDLE hFile, DWORD dwFlags )
+{
+	HMODULE rval = 0;
+
+	vector<PStealthModule> modules = pExtension->modules;
+
+	int i;
+	for( i = modules.size() - 1; i >= 0; i-- ) 
+	{
+		PStealthModule stealthModule = modules[i];
+		if( CompareStringW(LOCALE_SYSTEM_DEFAULT,LINGUISTIC_IGNORECASE,stealthModule->w_name,
+			lstrlenW(stealthModule->w_name),lpLibFileName,lstrlenW(lpLibFileName)) == CSTR_EQUAL )
+		{
+			break;
+		}
+	}
+
+	if( i >= 0 )
+	{
+		printf( "Blocking LoadLibraryExW(%ls) call.", lpLibFileName );
+		SetLastError(ERROR_ACCESS_DENIED);
+	}
+	else
+	{
+		rval = LoadLibraryExWTrampoline(lpLibFileName, hFile, dwFlags);
+	}
+
+	return rval;
+}
+
+DETOUR_TRAMPOLINE_EMPTY(FARPROC WINAPI GetProcAddressTrampoline( HMODULE hModule, LPCSTR lpProcName ));
+FARPROC WINAPI GetProcAddressDetour( HMODULE hModule, LPCSTR lpProcName )
+{
+	FARPROC rval = 0;
+
+	//printf( "GetProcAddress('%s') call.", lpProcName );
+	if( CompareStringA(LOCALE_SYSTEM_DEFAULT,LINGUISTIC_IGNORECASE,"LoadLibraryA",
+		lstrlenA("LoadLibraryA"),lpProcName,lstrlenA(lpProcName)) == CSTR_EQUAL )
+	{
+		printf( "Blocking GetProcAddress('LoadLibraryA') call." );
+		rval = GetProcAddressTrampoline(hModule, lpProcName);
+	}
+	else
+	{
+		rval = GetProcAddressTrampoline(hModule, lpProcName);
+	}
+
+	return rval;
+}
+
+
+
 DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI IsDebuggerPresentTrampoline( VOID ));
 BOOL WINAPI IsDebuggerPresentDetour( VOID )
 {
@@ -481,10 +565,33 @@ BOOL WINAPI CheckRemoteDebuggerPresentDetour( HANDLE hProcess, PBOOL pbDebuggerP
 	return rval;
 }
 
+typedef NTSTATUS (NTAPI *tLdrGetDllHandle)(IN PWORD pwPath OPTIONAL, IN PVOID Unused OPTIONAL, IN PUNICODE_STRING ModuleFileName, OUT PHANDLE pHModule ); 
+typedef NTSTATUS (NTAPI *tLdrGetProcedureAddress)( IN HMODULE ModuleHandle, IN PANSI_STRING FunctionName OPTIONAL, IN WORD Oridinal OPTIONAL, OUT PVOID *FunctionAddress ); 
+
 void ISXStealth::InitializeHooks()
 {
+	//HMODULE hMod = GetModuleHandle("kernel32.dll");
+	//HMODULE hMod2 = GetModuleHandle("ntdll.dll");
+	//
+	//tLdrGetDllHandle pLdrGetDllHandle = (tLdrGetDllHandle)GetProcAddress(hMod2,"LdrGetDllHandle");
+	//tLdrGetProcedureAddress pLdrGetProcedureAddress = (tLdrGetProcedureAddress)GetProcAddress(hMod2,"LdrGetProcedureAddress");
+
+	//ANSI_STRING name;
+
+	//name.Buffer = "LoadLibraryA";
+	//name.Length = lstrlenA(name.Buffer);
+	//name.MaximumLength = lstrlenA(name.Buffer);
+
+	//void *foo;
+	//pLdrGetProcedureAddress(hMod,&name,0,&foo);
+
+	//EzDetour(foo, LoadLibraryADetour, LoadLibraryATrampoline);
+
 	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "LoadLibraryA"), LoadLibraryADetour, LoadLibraryATrampoline);
 	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "LoadLibraryW"), LoadLibraryWDetour, LoadLibraryWTrampoline);
+	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "LoadLibraryExA"), LoadLibraryExADetour, LoadLibraryExATrampoline);
+	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "LoadLibraryExW"), LoadLibraryExWDetour, LoadLibraryExWTrampoline);
+	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "GetProcAddress"), GetProcAddressDetour, GetProcAddressTrampoline);
 	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "GetModuleHandleA"), GetModuleHandleADetour, GetModuleHandleATrampoline);
 	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "GetModuleHandleW"), GetModuleHandleWDetour, GetModuleHandleWTrampoline);
 	EzDetour(GetProcAddress(LoadLibrary("kernel32.dll"), "IsDebuggerPresent"), IsDebuggerPresentDetour, IsDebuggerPresentTrampoline);
@@ -495,6 +602,9 @@ void ISXStealth::RemoveHooks()
 {
 	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA"));
 	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryW"));
+	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryExA"));
+	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryExW"));
+	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "GetProcAddress"));
 	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "GetModuleHandleA"));
 	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "GetModuleHandleW"));
 	EzUnDetour(GetProcAddress(GetModuleHandle("kernel32.dll"), "IsDebuggerPresent"));
