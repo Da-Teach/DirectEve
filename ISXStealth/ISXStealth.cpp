@@ -392,6 +392,16 @@ HMODULE WINAPI GetModuleHandleWDetour( LPCWSTR lpModuleName )
 		}
 	}
 
+	if ( CompareStringW(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, L"isxstealth.dll", lstrlenW(L"isxstealth.dll"), lpModuleName, lstrlenW(lpModuleName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
+    if ( CompareStringW(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, L"directeve.dll", lstrlenW(L"directeve.dll"), lpModuleName, lstrlenW(lpModuleName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
 	if( i >= 0 )
 	{
 		printf( "Blocking GetModuleHandleW(%ls) call.", lpModuleName );
@@ -476,6 +486,16 @@ HMODULE WINAPI LoadLibraryWDetour( LPCWSTR lpLibFileName )
 		{
 			break;
 		}
+	}
+
+	if ( CompareStringW(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, L"isxstealth.dll", lstrlenW(L"isxstealth.dll"), lpLibFileName, lstrlenW(lpLibFileName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
+    if ( CompareStringW(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, L"directeve.dll", lstrlenW(L"directeve.dll"), lpLibFileName, lstrlenW(lpLibFileName)) == CSTR_EQUAL)
+	{
+		i = 1;
 	}
 
 	if( i >= 0 )
