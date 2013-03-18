@@ -349,6 +349,16 @@ HMODULE WINAPI GetModuleHandleADetour( LPCSTR lpModuleName )
 		}
 	}
 
+	if ( CompareStringA(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, "directeve.dll", lstrlenA("directeve.dll"), lpModuleName, lstrlenA(lpModuleName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
+	if ( CompareStringA(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, "isxstealth.dll", lstrlenA("isxstealth.dll"), lpModuleName, lstrlenA(lpModuleName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
 	if( i >= 0 )
 	{
 		printf( "Blocking GetModuleHandleA(%s) call.", lpModuleName );
@@ -361,6 +371,8 @@ HMODULE WINAPI GetModuleHandleADetour( LPCSTR lpModuleName )
 
 	return rval;
 }
+
+
 
 DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI GetModuleHandleWTrampoline( LPCWSTR lpModuleName ));
 HMODULE WINAPI GetModuleHandleWDetour( LPCWSTR lpModuleName )
@@ -413,10 +425,20 @@ HMODULE WINAPI LoadLibraryAHook( LPCSTR lpLibFileName, tLoadLibraryA tramp )
 		}
 	}
 
+	if ( CompareStringA(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, "directeve.dll", lstrlenA("directeve.dll"), lpLibFileName, lstrlenA(lpLibFileName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
+	if ( CompareStringA(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, "isxstealth.dll", lstrlenA("isxstealth.dll"), lpLibFileName, lstrlenA(lpLibFileName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
 	if( i >= 0 )
 	{
 		printf( "Blocking LoadLibraryA(%s) call.", lpLibFileName );
-		SetLastError(ERROR_MOD_NOT_FOUND);
+		SetLastError(ERROR_ACCESS_DENIED);
 	}
 	else
 	{
@@ -438,9 +460,8 @@ HMODULE WINAPI LoadLibraryADetour_2( LPCSTR lpLibFileName )
 	return LoadLibraryAHook(lpLibFileName,LoadLibraryATrampoline_2);
 }
 
-typedef HMODULE (WINAPI *tLoadLibraryW)( LPCWSTR lpLibFileName ); 
-
-HMODULE WINAPI LoadLibraryWHook( LPCWSTR lpLibFileName, tLoadLibraryW tramp  )
+DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryWTrampoline( LPCWSTR lpLibFileName ));
+HMODULE WINAPI LoadLibraryWDetour( LPCWSTR lpLibFileName )
 {
 	HMODULE rval = 0;
 
@@ -460,26 +481,14 @@ HMODULE WINAPI LoadLibraryWHook( LPCWSTR lpLibFileName, tLoadLibraryW tramp  )
 	if( i >= 0 )
 	{
 		printf( "Blocking LoadLibraryW(%ls) call.", lpLibFileName );
-		SetLastError(ERROR_MOD_NOT_FOUND);
+		SetLastError(ERROR_ACCESS_DENIED);
 	}
 	else
 	{
-		rval = tramp(lpLibFileName);
+		rval = LoadLibraryWTrampoline(lpLibFileName);
 	}
 
 	return rval;
-}
-
-DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryWTrampoline( LPCWSTR lpLibFileName ));
-HMODULE WINAPI LoadLibraryWDetour( LPCWSTR lpLibFileName )
-{
-	return LoadLibraryWHook(lpLibFileName,LoadLibraryWTrampoline);
-}
-
-DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryWTrampoline_2( LPCWSTR lpLibFileName ));
-HMODULE WINAPI LoadLibraryWDetour_2( LPCWSTR lpLibFileName )
-{
-	return LoadLibraryWHook(lpLibFileName,LoadLibraryWTrampoline);
 }
 
 DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryExATrampoline( LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags ));
@@ -568,6 +577,13 @@ FARPROC WINAPI GetProcAddressDetour( HMODULE hModule, LPCSTR lpProcName )
 
 DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI IsDebuggerPresentTrampoline( VOID ));
 BOOL WINAPI IsDebuggerPresentDetour( VOID )
+{
+	printf( "Blocking IsDebuggerPresent() call." );
+	return FALSE;
+}
+
+DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI IsDebuggerPresentTrampoline_2( VOID ));
+BOOL WINAPI IsDebuggerPresentDetour_2( VOID )
 {
 	printf( "Blocking IsDebuggerPresent() call." );
 	return FALSE;
@@ -703,10 +719,12 @@ void *GetThunk(char *mod_name_1, char *mod_name_2, char *func_name)
     return rval;
 }
 
+
 void ISXStealth::InitializeHooks()
 {
 	void *func1, *func2;
 
+	//LoadLibraryA
 	func1 = GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryA");
 	func2 = GetThunk("_ctypes.pyd","kernel32.dll","LoadLibraryA");
 	EzDetour(func1, LoadLibraryADetour, LoadLibraryATrampoline);
@@ -715,23 +733,52 @@ void ISXStealth::InitializeHooks()
 		EzDetour(func2, LoadLibraryADetour_2, LoadLibraryATrampoline_2);
 	}
 
+	//LoadLibraryW ~ This one doesnt catch it but allready returns a 0 handle from itself
 	func1 = GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryW");
-	func2 = GetThunk("_ctypes.pyd","kernel32.dll","LoadLibraryW");
-	EzDetour(func1, LoadLibraryWDetour, LoadLibraryWTrampoline);
+	func2 = GetThunk("exefile.exe","kernel32.dll","LoadLibraryW");
 	if( func1 != func2 && func2 != NULL )
 	{
-		EzDetour(func2, LoadLibraryWDetour_2, LoadLibraryWTrampoline_2);
+		EzDetour(func2, LoadLibraryWDetour, LoadLibraryWTrampoline);
 	}
 
-	//EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrGetDllHandle"), LdrGetDllHandleDetour, LdrGetDllHandleTrampoline);
-	//EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrLoadDll"), LdrLoadDllDetour, LdrLoadDllTrampoline);
-	EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryExA"), LoadLibraryExADetour, LoadLibraryExATrampoline);
-	EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryExW"), LoadLibraryExWDetour, LoadLibraryExWTrampoline);
+	//LoadLibraryExA and W not available in exefile.exe
+
+	//GetModuleHandleA
+	func1 = GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetModuleHandleA");
+	func2 = GetThunk("exefile.exe","kernel32.dll","GetModuleHandleA");
+	if( func1 != func2 && func2 != NULL )
+	{
+		EzDetour(func2, GetModuleHandleADetour, GetModuleHandleATrampoline);
+	}
+
+	
+	//GetModuleHandleW ~ This one doesnt catch it but allready returns a 0 handle from itself
+	func1 = GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetModuleHandleW");
+	func2 = GetThunk("exefile.exe","kernel32.dll","GetModuleHandleW");
+	if( func1 != func2 && func2 != NULL )
+	{
+		EzDetour(func2, GetModuleHandleWDetour, GetModuleHandleWTrampoline);
+	}
+
+	//IsDebuggerPresent
+	func1 = GetProcAddress(GetModuleHandleA("kernel32.dll"), "IsDebuggerPresent");
+	func2 = GetThunk("_ctypes.pyd","kernel32.dll","IsDebuggerPresent");
+	EzDetour(func1, IsDebuggerPresentDetour, IsDebuggerPresentTrampoline);
+	if( func1 != func2 && func2 != NULL )
+	{
+		EzDetour(func2, IsDebuggerPresentDetour_2, IsDebuggerPresentDetour_2);
+	}
+
+	//Still have to hook GetProcAddress, but not sure what intentions are of this detour
 	//EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetProcAddress"), GetProcAddressDetour, GetProcAddressTrampoline);
-	EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetModuleHandleA"), GetModuleHandleADetour, GetModuleHandleATrampoline);
-	EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetModuleHandleW"), GetModuleHandleWDetour, GetModuleHandleWTrampoline);
-	EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "IsDebuggerPresent"), IsDebuggerPresentDetour, IsDebuggerPresentTrampoline);
+
+	//CheckRemoteDebuggerPresent ~ Also not loaded into client so no iat hooking into client
 	EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "CheckRemoteDebuggerPresent"), CheckRemoteDebuggerPresentDetour, CheckRemoteDebuggerPresentTrampoline);
+
+	//Ldr ~ also not available in client so no iat hooking here either
+	EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrGetDllHandle"), LdrGetDllHandleDetour, LdrGetDllHandleTrampoline);
+	EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrLoadDll"), LdrLoadDllDetour, LdrLoadDllTrampoline);
+
 }
 
 void ISXStealth::RemoveHooks()
