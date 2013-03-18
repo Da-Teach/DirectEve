@@ -121,7 +121,7 @@ namespace DirectEve
             if (SolarSystemId == null)
                 return false;
 
-            return DirectEve.ThreadedLocalSvcCall("starmap", "SetWaypoint", SolarSystemId.Value, clearOtherWaypoints, firstWaypoint);
+            return DirectEve.ThreadedLocalSvcCall("starmap", "SetWaypoint", LocationId, clearOtherWaypoints, firstWaypoint);
         }
     }
 }
