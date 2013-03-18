@@ -349,6 +349,16 @@ HMODULE WINAPI GetModuleHandleADetour( LPCSTR lpModuleName )
 		}
 	}
 
+	if ( CompareStringA(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, "directeve.dll", lstrlenA("directeve.dll"), lpModuleName, lstrlenA(lpModuleName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
+	if ( CompareStringA(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, "isxstealth.dll", lstrlenA("isxstealth.dll"), lpModuleName, lstrlenA(lpModuleName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
 	if( i >= 0 )
 	{
 		printf( "Blocking GetModuleHandleA(%s) call.", lpModuleName );
@@ -413,6 +423,16 @@ HMODULE WINAPI LoadLibraryAHook( LPCSTR lpLibFileName, tLoadLibraryA tramp )
 		{
 			break;
 		}
+	}
+
+	if ( CompareStringA(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, "directeve.dll", lstrlenA("directeve.dll"), lpLibFileName, lstrlenA(lpLibFileName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
+	if ( CompareStringA(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, "isxstealth.dll", lstrlenA("isxstealth.dll"), lpLibFileName, lstrlenA(lpLibFileName)) == CSTR_EQUAL)
+	{
+		i = 1;
 	}
 
 	if( i >= 0 )
@@ -758,6 +778,7 @@ void ISXStealth::InitializeHooks()
 	//Ldr ~ also not available in client so no iat hooking here either
 	EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrGetDllHandle"), LdrGetDllHandleDetour, LdrGetDllHandleTrampoline);
 	EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrLoadDll"), LdrLoadDllDetour, LdrLoadDllTrampoline);
+
 }
 
 void ISXStealth::RemoveHooks()
