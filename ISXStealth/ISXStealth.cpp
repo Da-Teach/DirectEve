@@ -416,7 +416,7 @@ HMODULE WINAPI LoadLibraryAHook( LPCSTR lpLibFileName, tLoadLibraryA tramp )
 	if( i >= 0 )
 	{
 		printf( "Blocking LoadLibraryA(%s) call.", lpLibFileName );
-		SetLastError(ERROR_ACCESS_DENIED);
+		SetLastError(ERROR_MOD_NOT_FOUND);
 	}
 	else
 	{
@@ -438,8 +438,9 @@ HMODULE WINAPI LoadLibraryADetour_2( LPCSTR lpLibFileName )
 	return LoadLibraryAHook(lpLibFileName,LoadLibraryATrampoline_2);
 }
 
-DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryWTrampoline( LPCWSTR lpLibFileName ));
-HMODULE WINAPI LoadLibraryWDetour( LPCWSTR lpLibFileName )
+typedef HMODULE (WINAPI *tLoadLibraryW)( LPCWSTR lpLibFileName ); 
+
+HMODULE WINAPI LoadLibraryWHook( LPCWSTR lpLibFileName, tLoadLibraryW tramp  )
 {
 	HMODULE rval = 0;
 
@@ -459,14 +460,26 @@ HMODULE WINAPI LoadLibraryWDetour( LPCWSTR lpLibFileName )
 	if( i >= 0 )
 	{
 		printf( "Blocking LoadLibraryW(%ls) call.", lpLibFileName );
-		SetLastError(ERROR_ACCESS_DENIED);
+		SetLastError(ERROR_MOD_NOT_FOUND);
 	}
 	else
 	{
-		rval = LoadLibraryWTrampoline(lpLibFileName);
+		rval = tramp(lpLibFileName);
 	}
 
 	return rval;
+}
+
+DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryWTrampoline( LPCWSTR lpLibFileName ));
+HMODULE WINAPI LoadLibraryWDetour( LPCWSTR lpLibFileName )
+{
+	return LoadLibraryWHook(lpLibFileName,LoadLibraryWTrampoline);
+}
+
+DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryWTrampoline_2( LPCWSTR lpLibFileName ));
+HMODULE WINAPI LoadLibraryWDetour_2( LPCWSTR lpLibFileName )
+{
+	return LoadLibraryWHook(lpLibFileName,LoadLibraryWTrampoline);
 }
 
 DETOUR_TRAMPOLINE_EMPTY(HMODULE WINAPI LoadLibraryExATrampoline( LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags ));
@@ -690,7 +703,6 @@ void *GetThunk(char *mod_name_1, char *mod_name_2, char *func_name)
     return rval;
 }
 
-
 void ISXStealth::InitializeHooks()
 {
 	void *func1, *func2;
@@ -703,9 +715,16 @@ void ISXStealth::InitializeHooks()
 		EzDetour(func2, LoadLibraryADetour_2, LoadLibraryATrampoline_2);
 	}
 
+	func1 = GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryW");
+	func2 = GetThunk("_ctypes.pyd","kernel32.dll","LoadLibraryW");
+	EzDetour(func1, LoadLibraryWDetour, LoadLibraryWTrampoline);
+	if( func1 != func2 && func2 != NULL )
+	{
+		EzDetour(func2, LoadLibraryWDetour_2, LoadLibraryWTrampoline_2);
+	}
+
 	//EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrGetDllHandle"), LdrGetDllHandleDetour, LdrGetDllHandleTrampoline);
 	//EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrLoadDll"), LdrLoadDllDetour, LdrLoadDllTrampoline);
-	EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryW"), LoadLibraryWDetour, LoadLibraryWTrampoline);
 	EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryExA"), LoadLibraryExADetour, LoadLibraryExATrampoline);
 	EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryExW"), LoadLibraryExWDetour, LoadLibraryExWTrampoline);
 	//EzDetour(GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetProcAddress"), GetProcAddressDetour, GetProcAddressTrampoline);
