@@ -609,6 +609,14 @@ BOOL WINAPI IsDebuggerPresentDetour_2( VOID )
 	return FALSE;
 }
 
+DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI EnumProcessesTrampoline( DWORD pProcessIds, DWORD cb, DWORD pBytesReturned ));
+BOOL WINAPI EnumProcessesDetour( DWORD *pProcessIds, DWORD cb, DWORD *pBytesReturned )
+{
+	*pProcessIds = GetCurrentProcessId();
+	*pBytesReturned = sizeof(DWORD);
+	return TRUE;
+}
+
 DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI CheckRemoteDebuggerPresentTrampoline( HANDLE hProcess, PBOOL pbDebuggerPresent ));
 BOOL WINAPI CheckRemoteDebuggerPresentDetour( HANDLE hProcess, PBOOL pbDebuggerPresent )
 {
@@ -798,6 +806,10 @@ void ISXStealth::InitializeHooks()
 	//Ldr ~ also not available in client so no iat hooking here either
 	EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrGetDllHandle"), LdrGetDllHandleDetour, LdrGetDllHandleTrampoline);
 	EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrLoadDll"), LdrLoadDllDetour, LdrLoadDllTrampoline);
+
+	func1 = GetThunk("psapi.dll","kernel32.dll","K32EnumProcesses");
+	if (func1 != NULL)
+		EzDetour(func1, EnumProcessesDetour, EnumProcessesTrampoline);
 
 }
 
