@@ -413,6 +413,11 @@ namespace DirectEve
             get { return _solarSystems ?? (_solarSystems = DirectSolarSystem.GetSolarSystems(this)); }
         }
 
+        public int GetDistanceBetweenSolarsystems(int solarsystem1, int solarsystem2)
+        {
+            return DirectSolarSystem.GetDistanceBetweenSolarsystems(solarsystem1, solarsystem2, this);
+        }
+
         /// <summary>
         ///   Return a dictionary of solar systems
         /// </summary>

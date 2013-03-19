@@ -64,7 +64,7 @@ namespace DirectEve
             get { return _stations ?? (_stations = DirectEve.Stations.Values.Where(s => s.SolarSystemId == Id).ToList()); }
         }
 
-        public static Dictionary<long, DirectSolarSystem> GetSolarSystems(DirectEve directEve)
+        internal static Dictionary<long, DirectSolarSystem> GetSolarSystems(DirectEve directEve)
         {
             var result = new Dictionary<long, DirectSolarSystem>();
 
@@ -74,5 +74,12 @@ namespace DirectEve
 
             return result;
         }
+
+        internal static int GetDistanceBetweenSolarsystems(int solarsystem1, int solarsystem2, DirectEve directEve)
+        {
+            return (int)directEve.GetLocalSvc("pathfinder").Call("GetJumpCountFromCurrent", solarsystem1, solarsystem2);
+        }
+
+
     }
 }
