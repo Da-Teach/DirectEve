@@ -23,14 +23,17 @@ namespace DirectEve
             Price = (double) pyOrder.Attribute("price");
             VolumeRemaining = (int) pyOrder.Attribute("volRemaining");
             TypeId = (int) pyOrder.Attribute("typeID");
-            if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeSolarSystem)
+            if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeSolarSystem)
                 Range = DirectOrderRange.SolarSystem;
-            else if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeConstellation)
+            else if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeConstellation)
                 Range = DirectOrderRange.Constellation;
-            else if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeRegion)
+            else if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeRegion)
                 Range = DirectOrderRange.Region;
-            else
+            else if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeStation)
                 Range = DirectOrderRange.Station;
+            else
+                RangeAbsolute = (int)pyOrder.Attribute("range");
+
             OrderId = (long) pyOrder.Attribute("orderID");
             VolumeEntered = (int) pyOrder.Attribute("volEntered");
             MinimumVolume = (int) pyOrder.Attribute("minVolume");
@@ -54,6 +57,7 @@ namespace DirectEve
         public int VolumeEntered { get; set; }
         public long OrderId { get; set; }
         public DirectOrderRange Range { get; set; }
+        public int RangeAbsolute { get; set; }
         public int TypeId { get; set; }
         public int VolumeRemaining { get; set; }
         public double Price { get; set; }
