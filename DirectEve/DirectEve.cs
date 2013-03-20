@@ -459,6 +459,29 @@ namespace DirectEve
             }
         }
 
+        /// <summary>
+        ///   Is EVE loading textures, you can enable/disable texture loading by setting this value to true or false
+        /// </summary>
+        /// <remarks>
+        ///   Use at own risk!
+        /// </remarks>
+        public bool ResourceLoad
+        {
+            get
+            {
+                bool disableGeometryLoad = (bool)PySharp.Import("trinity").Attribute("device").Attribute("disableGeometryLoad");
+                bool disableEffectLoad = (bool)PySharp.Import("trinity").Attribute("device").Attribute("disableEffectLoad");
+                bool disableTextureLoad = (bool)PySharp.Import("trinity").Attribute("device").Attribute("disableTextureLoad");
+                return (disableGeometryLoad || disableEffectLoad || disableTextureLoad);
+            }
+            set
+            {
+                PySharp.Import("trinity").Attribute("device").SetAttribute("disableGeometryLoad", value);
+                PySharp.Import("trinity").Attribute("device").SetAttribute("disableEffectLoad", value);
+                PySharp.Import("trinity").Attribute("device").SetAttribute("disableTextureLoad", value);
+            }
+        }
+
         #region IDisposable Members
 
         /// <summary>

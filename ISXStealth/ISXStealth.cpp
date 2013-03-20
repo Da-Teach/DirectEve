@@ -392,6 +392,16 @@ HMODULE WINAPI GetModuleHandleWDetour( LPCWSTR lpModuleName )
 		}
 	}
 
+	if ( CompareStringW(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, L"isxstealth.dll", lstrlenW(L"isxstealth.dll"), lpModuleName, lstrlenW(lpModuleName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
+    if ( CompareStringW(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, L"directeve.dll", lstrlenW(L"directeve.dll"), lpModuleName, lstrlenW(lpModuleName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
 	if( i >= 0 )
 	{
 		printf( "Blocking GetModuleHandleW(%ls) call.", lpModuleName );
@@ -476,6 +486,16 @@ HMODULE WINAPI LoadLibraryWDetour( LPCWSTR lpLibFileName )
 		{
 			break;
 		}
+	}
+
+	if ( CompareStringW(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, L"isxstealth.dll", lstrlenW(L"isxstealth.dll"), lpLibFileName, lstrlenW(lpLibFileName)) == CSTR_EQUAL)
+	{
+		i = 1;
+	}
+
+    if ( CompareStringW(LOCALE_SYSTEM_DEFAULT, LINGUISTIC_IGNORECASE, L"directeve.dll", lstrlenW(L"directeve.dll"), lpLibFileName, lstrlenW(lpLibFileName)) == CSTR_EQUAL)
+	{
+		i = 1;
 	}
 
 	if( i >= 0 )
@@ -587,6 +607,14 @@ BOOL WINAPI IsDebuggerPresentDetour_2( VOID )
 {
 	printf( "Blocking IsDebuggerPresent() call." );
 	return FALSE;
+}
+
+DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI EnumProcessesTrampoline( DWORD pProcessIds, DWORD cb, DWORD pBytesReturned ));
+BOOL WINAPI EnumProcessesDetour( DWORD *pProcessIds, DWORD cb, DWORD *pBytesReturned )
+{
+	*pProcessIds = GetCurrentProcessId();
+	*pBytesReturned = sizeof(DWORD);
+	return TRUE;
 }
 
 DETOUR_TRAMPOLINE_EMPTY(BOOL WINAPI CheckRemoteDebuggerPresentTrampoline( HANDLE hProcess, PBOOL pbDebuggerPresent ));
@@ -778,6 +806,10 @@ void ISXStealth::InitializeHooks()
 	//Ldr ~ also not available in client so no iat hooking here either
 	EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrGetDllHandle"), LdrGetDllHandleDetour, LdrGetDllHandleTrampoline);
 	EzDetour(GetProcAddress(GetModuleHandle("ntdll.dll"),"LdrLoadDll"), LdrLoadDllDetour, LdrLoadDllTrampoline);
+
+	func1 = GetThunk("psapi.dll","kernel32.dll","K32EnumProcesses");
+	if (func1 != NULL)
+		EzDetour(func1, EnumProcessesDetour, EnumProcessesTrampoline);
 
 }
 
