@@ -248,5 +248,14 @@ namespace DirectEve
         {
             return DirectEve.ThreadedLocalSvcCall("menu", "Eject");
         }
+
+        /// <summary>
+        /// Strips active ship, use only in station!
+        /// </summary>
+        /// <returns></returns>
+        public bool StripFitting()
+        {
+            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("menu").Attribute("invCache").Call("GetInventoryFromId", ItemId).Attribute("StripFitting"));
+        }
     }
 }

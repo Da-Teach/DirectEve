@@ -1340,5 +1340,10 @@ namespace DirectEve
             return charIds;
             }
         }
+
+        public bool AddCharidToAddressBook(int charid)
+        {
+            return ThreadedLocalSvcCall("addressbook", "AddToPersonalMulti", new List<int> { charid });
+        }
     }
 }
