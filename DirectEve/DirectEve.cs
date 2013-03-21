@@ -215,6 +215,7 @@ namespace DirectEve
 #if DEBUG
                 Log("Registering OnFrame event");
 #endif
+                Hooks.InitializeHooks();
                 _framework.RegisterFrameHook(FrameworkOnFrame);
             }
             catch (Exception e)
