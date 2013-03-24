@@ -5,7 +5,7 @@
     using System.Dynamic;
     using System.Linq;
 
-    internal partial class PySharp : DynamicObject
+    public partial class PySharp : DynamicObject
     {
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
@@ -14,7 +14,7 @@
         }
     }
 
-    internal partial class PyObject : DynamicObject
+    public partial class PyObject : DynamicObject
     {
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {

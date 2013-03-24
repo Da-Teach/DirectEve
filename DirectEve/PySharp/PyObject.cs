@@ -14,7 +14,7 @@ namespace DirectEve.PySharp
     using System.Linq;
     using System.Runtime.InteropServices;
 
-    internal partial class PyObject
+    public partial class PyObject
     {
         /// <summary>
         ///   Attribute cache

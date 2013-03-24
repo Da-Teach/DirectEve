@@ -297,7 +297,7 @@ namespace DirectEve
         /// <remarks>
         ///   This reference is only valid while in an OnFrame event
         /// </remarks>
-        internal PySharp.PySharp PySharp { get; private set; }
+        public PySharp.PySharp PySharp { get; private set; }
 
         /// <summary>
         ///   Return a list of entities

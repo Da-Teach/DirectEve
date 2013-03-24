@@ -14,7 +14,7 @@ namespace DirectEve.PySharp
     using System.Linq;
     using System.Runtime.InteropServices;
 
-    internal partial class PySharp : IDisposable
+    public partial class PySharp : IDisposable
     {
         public static PyObject PyZero = new PyObject(null, IntPtr.Zero, false);
         public static PyObject PyNone = new PyObject(null, Py.PyNoneStruct, false);
@@ -77,7 +77,7 @@ namespace DirectEve.PySharp
         /// <summary>
         ///   Create a new PySharp object
         /// </summary>
-        public PySharp()
+        internal PySharp()
         {
             _dummyCode = PyZero;
             _frame = PyZero;
@@ -90,7 +90,8 @@ namespace DirectEve.PySharp
             _longCache = new Dictionary<long, PyObject>();
         }
 
-        public PySharp(bool createFrame) : this()
+        internal PySharp(bool createFrame)
+            : this()
         {
             if (!createFrame)
                 return;

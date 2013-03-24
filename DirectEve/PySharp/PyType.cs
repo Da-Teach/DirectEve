@@ -9,7 +9,7 @@
 // -------------------------------------------------------------------------------
 namespace DirectEve.PySharp
 {
-    internal enum PyType
+    public enum PyType
     {
         Invalid,
         Unknown,
