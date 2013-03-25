@@ -162,6 +162,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="WhiteMagic\Internals\DetourManager.cs" />
+    <Compile Include="WhiteMagic\Internals\Manager.cs" />
+    <Compile Include="WhiteMagic\Internals\PatchManager.cs" />
+    <Compile Include="WhiteMagic\Internals\PatternManager.cs" />
+    <Compile Include="WhiteMagic\Magic.cs" />
+    <Compile Include="WhiteMagic\MissingAttributeException.cs" />
+    <Compile Include="WhiteMagic\Native\PeHeaderParser.cs" />
+    <Compile Include="WhiteMagic\Native\Win32.cs" />
+    <Compile Include="WhiteMagic\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Certificates\ClientToServer.pfx" />
@@ -202,12 +211,6 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WhiteMagic\WhiteMagic.csproj">
-      <Project>{5721fba5-fe77-4727-8bfe-13cd23ece36e}</Project>
-      <Name>WhiteMagic</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
