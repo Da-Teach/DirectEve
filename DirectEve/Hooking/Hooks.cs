@@ -615,7 +615,7 @@ namespace DirectEve
             _BlockMiniWriteDumpDetour = Magic.Instance.Detours.CreateAndApply(_DBlockMiniWriteDump, new DBlockMiniDumpWriteDump(BlockMiniDumpWriteDumpDetour), "MiniDumpWriteDump"); 
 
             // Doesn't work yet ~ don't know why
-            /*
+            
             //EnumProcess/GetExeFilePids
             hMod = GetModuleHandle("psapi.dll");
             if (hMod != IntPtr.Zero)
@@ -627,9 +627,28 @@ namespace DirectEve
                     _BlockMiniWriteDumpDetour = Magic.Instance.Detours.CreateAndApply(_DEnumProcesses, new DEnumProcesses(EnumProcessesDetour), "K32EnumProcesses");
                 }
             }
-            */
+            
             //IsDebuggerPresent left out otherwise we can't debug
 
+        }
+
+        internal static void RemoveHooks()
+        {
+            try
+            {
+                _LoadLibraryAHook.Remove();
+                _LoadLibraryAHook_2.Remove();
+                _GetModuleHandleAHook.Remove();
+                _GetModuleHandleAHook_2.Remove();
+                _LoadLibraryWHook.Remove();
+                _GetModuleHandleWHook.Remove();
+                _BlockMiniWriteDumpDetour.Remove();
+                _EnumProcessesDetour.Remove();
+            }
+            catch
+            {
+
+            }
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
@@ -736,12 +755,12 @@ namespace DirectEve
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        private delegate bool DEnumProcesses([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U4)] [In][Out] UInt32[] processIds, UInt32 arraySizeBytes,[MarshalAs(UnmanagedType.U4)] out UInt32 bytesCopied);
+        private delegate bool DEnumProcesses([In][Out] IntPtr processIds, UInt32 arraySizeBytes, [In][Out] IntPtr bytesCopied);
 
-        private static bool EnumProcessesDetour([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U4)] [In][Out] UInt32[] processIds, UInt32 arraySizeBytes, [MarshalAs(UnmanagedType.U4)] out UInt32 bytesCopied)
+        private static bool EnumProcessesDetour([In][Out] IntPtr processIds, UInt32 arraySizeBytes, [In][Out] IntPtr bytesCopied)
         {
-            processIds = new uint[] { (UInt32)System.Diagnostics.Process.GetCurrentProcess().Id };
-            bytesCopied = (UInt32)Marshal.SizeOf(processIds);
+            Marshal.WriteInt32(processIds, System.Diagnostics.Process.GetCurrentProcess().Id);
+            Marshal.WriteInt32(bytesCopied, Marshal.SizeOf(processIds));
             return true;
         }
 

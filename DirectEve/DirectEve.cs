@@ -490,6 +490,8 @@ namespace DirectEve
         /// </summary>
         public void Dispose()
         {
+            Hooks.RemoveHooks();
+
             if (_framework != null)
                 _framework.Dispose();
 
