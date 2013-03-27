@@ -86,7 +86,8 @@ namespace DirectEve
 
         public bool Speak(string message)
         {
-            return DirectEve.ThreadedCall(PyWindow.Attribute("Speak"), PySharp.UnicodeFrom(message), DirectEve.Session.CharacterId, true);
+            PyWindow.Attribute("input").Call(("SetValue"), message);
+            return DirectEve.ThreadedCall(PyWindow.Attribute("InputKeyUp"));           
         }
     }
 }
