@@ -25,6 +25,7 @@ using System.Runtime.InteropServices;
 
 using WhiteMagic.Internals;
 using WhiteMagic.Native;
+using SmartAssembly.Attributes;
 
 #if X64
 using ADDR = System.UInt64;
@@ -67,6 +68,8 @@ namespace WhiteMagic
     /// 
     /// I highly suggest tracking your own instances for fairly obvious reasons.
     /// </summary>
+    /// 
+    [DoNotObfuscate()]
     public sealed class Magic : IDisposable
     {
         private static Magic _instance;

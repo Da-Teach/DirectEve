@@ -21,12 +21,14 @@
 using System;
 
 using WhiteMagic.Native;
+using SmartAssembly.Attributes;
 
 namespace WhiteMagic.Internals
 {
     /// <summary>
     /// A manager class to handle memory patches.
     /// </summary>
+    [DoNotObfuscate()]
     public class PatchManager : Manager<Patch>
     {
         internal PatchManager(Win32 win32) : base(win32)
@@ -85,6 +87,7 @@ namespace WhiteMagic.Internals
     /// <summary>
     /// Contains methods, and information for a memory patch.
     /// </summary>
+    [DoNotObfuscate()]
     public class Patch : IMemoryOperation
     {
         private readonly IntPtr _address;

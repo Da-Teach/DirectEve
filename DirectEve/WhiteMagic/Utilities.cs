@@ -20,10 +20,12 @@
 
 using System;
 using System.Runtime.InteropServices;
+using SmartAssembly.Attributes;
 
 namespace WhiteMagic
 {
 #if !NOEXCEPTIONS
+    [DoNotObfuscate()]
     internal class Utilities
     {
         internal static bool HasAttrib<T>(Type item)

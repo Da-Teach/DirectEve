@@ -22,12 +22,14 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security;
+using SmartAssembly.Attributes;
 
 namespace WhiteMagic.Native
 {
     /// <summary>
     /// A simplistic Win32 API wrapper class.
     /// </summary>
+    [DoNotObfuscate()]
     public class Win32 : IDisposable
     {
         private readonly IntPtr _processHandle;

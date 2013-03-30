@@ -1344,7 +1344,7 @@ namespace DirectEve
             }
         }
 
-        public bool AddCharidToAddressBook(int charid)
+        public bool AddToAddressbook(int charid)
         {
             return ThreadedLocalSvcCall("addressbook", "AddToPersonalMulti", new List<int> { charid });
         }

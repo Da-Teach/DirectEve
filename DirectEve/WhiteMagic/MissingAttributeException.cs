@@ -20,6 +20,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using SmartAssembly.Attributes;
 
 namespace WhiteMagic
 {
@@ -27,6 +28,7 @@ namespace WhiteMagic
     /// An exception that is thrown when a struct, class, or delegate is missing proper attributes.
     ///</summary>
     [Serializable]
+    [DoNotObfuscate()]
     public class MissingAttributeException : Exception
     {
         //

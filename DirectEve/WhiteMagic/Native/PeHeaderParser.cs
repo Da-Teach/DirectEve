@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using SmartAssembly.Attributes;
 
 #region Warning Disables
 
@@ -35,6 +36,7 @@ namespace WhiteMagic.Native
     /// <summary>
     /// A class to extract PE header information from modules or PE files.
     /// </summary>
+    [DoNotObfuscate()]
     public class PeHeaderParser
     {
         /// <summary>

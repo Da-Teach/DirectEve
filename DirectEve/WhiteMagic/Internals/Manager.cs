@@ -22,12 +22,14 @@ using System;
 using System.Collections.Generic;
 
 using WhiteMagic.Native;
+using SmartAssembly.Attributes;
 
 namespace WhiteMagic.Internals
 {
     /// <summary>
     /// Represents an operation in memory, be it a patch, detour, or anything else.
     /// </summary>
+    [DoNotObfuscate()]
     public interface IMemoryOperation : IDisposable
     {
         /// <summary>
@@ -54,6 +56,7 @@ namespace WhiteMagic.Internals
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [DoNotObfuscate()]
     public abstract class Manager<T> where T : IMemoryOperation
     {
         /// <summary>

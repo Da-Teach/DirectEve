@@ -4,9 +4,11 @@ using System.Runtime.InteropServices;
 using System.Linq;
 using System.Text;
 using WhiteMagic;
+using SmartAssembly.Attributes;
 
 namespace DirectEve
 {
+    [DoNotObfuscate()]
     internal class Hooks
     {
         #region Native structures

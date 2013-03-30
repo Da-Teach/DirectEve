@@ -26,7 +26,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 using WhiteMagic.Native;
-
+using SmartAssembly.Attributes;
 
 #if X64
 using ADDR = System.UInt64;
@@ -39,6 +39,7 @@ namespace WhiteMagic.Internals
     /// <summary>
     /// Credits to Dominik, Patrick, Bobbysing, and whoever else I forgot, for most of the ripped code here!
     /// </summary>
+    [DoNotObfuscate()]
     public class PatternManager
     {
         private readonly Dictionary<string, IntPtr> _patterns = new Dictionary<string, IntPtr>();

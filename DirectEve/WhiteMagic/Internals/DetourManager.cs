@@ -23,12 +23,14 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using WhiteMagic.Native;
+using SmartAssembly.Attributes;
 
 namespace WhiteMagic.Internals
 {
     /// <summary>
     /// A manager class to handle function detours, and hooks.
     /// </summary>
+    [DoNotObfuscate()]
     public class DetourManager : Manager<Detour>
     {
 
@@ -99,6 +101,7 @@ namespace WhiteMagic.Internals
     /// <summary>
     /// Contains methods, and information for a detour, or hook.
     /// </summary>
+    [DoNotObfuscate()]
     public class Detour : IMemoryOperation
     {
         private readonly IntPtr _hook;
