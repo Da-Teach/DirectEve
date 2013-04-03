@@ -1,4 +1,14 @@
-﻿namespace DirectEve.Certificates
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
+
+namespace DirectEve.Certificates
 {
     using System;
     using System.Linq;
@@ -42,7 +52,7 @@
         internal static string SignData(string data)
         {
             var buffer = Encoding.UTF8.GetBytes(data);
-            var signature = ((RSACryptoServiceProvider)ClientToServer.PrivateKey).SignData(buffer, new SHA1CryptoServiceProvider());
+            var signature = ((RSACryptoServiceProvider) ClientToServer.PrivateKey).SignData(buffer, new SHA1CryptoServiceProvider());
             return Convert.ToBase64String(signature);
         }
 
@@ -52,7 +62,7 @@
             {
                 var buffer = Encoding.UTF8.GetBytes(data);
                 var signatureBuffer = Convert.FromBase64String(signature);
-                return ((RSACryptoServiceProvider)ServerToClient.PublicKey.Key).VerifyData(buffer, new SHA1CryptoServiceProvider(), signatureBuffer);
+                return ((RSACryptoServiceProvider) ServerToClient.PublicKey.Key).VerifyData(buffer, new SHA1CryptoServiceProvider(), signatureBuffer);
             }
             catch
             {

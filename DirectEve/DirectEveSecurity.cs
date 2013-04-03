@@ -1,4 +1,14 @@
-﻿namespace DirectEve
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
+
+namespace DirectEve
 {
     using System;
     using System.Globalization;
@@ -10,8 +20,8 @@
     using System.ServiceModel;
     using System.Threading;
     using System.Xml.Linq;
-    using global::DirectEve.LicenseServer;
-    using Certs = global::DirectEve.Certificates.Certificates;
+    using LicenseServer;
+    using Certs = Certificates.Certificates;
 
     internal class DirectEveSecurity
     {
@@ -37,7 +47,7 @@
         private DateTime _lastPulse;
 
         internal DirectEveSecurity(DirectEve directEve)
-        {            
+        {
             _directEve = directEve;
 #if DEBUG
             _directEve.Log("DirectEve: Debug: Starting security");
@@ -71,7 +81,7 @@
         }
 
         /// <summary>
-        ///   Load the DirectEve license
+        ///     Load the DirectEve license
         /// </summary>
         private void LoadLicense()
         {
@@ -81,9 +91,9 @@
                 RetrieveAnonymousLicense(licensePath);
 
             var license = XElement.Load(licensePath);
-            var email = (string)license.Element("email");
-            var licenseKey = (Guid?)license.Element("licensekey") ?? Guid.Empty;
-            var signature = (string)license.Element("signature");
+            var email = (string) license.Element("email");
+            var licenseKey = (Guid?) license.Element("licensekey") ?? Guid.Empty;
+            var signature = (string) license.Element("signature");
             if (!Certs.VerifyData(signature, email, licenseKey))
                 throw new SecurityException(_invalidSupportLicense);
 
@@ -92,7 +102,7 @@
         }
 
         /// <summary>
-        ///   Perform a server call
+        ///     Perform a server call
         /// </summary>
         /// <returns></returns>
         private XElement PerformServerCall(string url, XElement xml)
@@ -101,7 +111,7 @@
             {
                 if (xml.Element("signature") == null)
                 {
-                    var signData = xml.Elements().TakeWhile(element => element.Name != "signature").Select(element => (string)element).ToArray();
+                    var signData = xml.Elements().TakeWhile(element => element.Name != "signature").Select(element => (string) element).ToArray();
                     xml.Add(new XElement("signature", Certs.SignData(signData)));
                 }
 
@@ -113,7 +123,7 @@
                     buffer = ms.ToArray();
                 }
 
-                var request = (HttpWebRequest)WebRequest.Create(url);
+                var request = (HttpWebRequest) WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "text/xml";
                 request.ContentLength = buffer.Length;
@@ -130,17 +140,17 @@
                 if (result.Name == "error")
                     throw new SecurityException(result.Value);
 
-                var signature = (string)result.Element("signature");
+                var signature = (string) result.Element("signature");
                 if (string.IsNullOrEmpty(signature))
                     return null;
 
-                var data = result.Elements().TakeWhile(element => element.Name != "signature").Select(element => (string)element).ToArray();
+                var data = result.Elements().TakeWhile(element => element.Name != "signature").Select(element => (string) element).ToArray();
                 if (!Certs.VerifyData(signature, data))
                     return null;
 
                 return result;
             }
-            catch(SecurityException)
+            catch (SecurityException)
             {
                 throw;
             }
@@ -151,13 +161,13 @@
         }
 
         /// <summary>
-        ///   Retrieve the anonymous license from the server
+        ///     Retrieve the anonymous license from the server
         /// </summary>
         private void RetrieveAnonymousLicense(string licensePath)
         {
             var licenseRequest = new XElement("request",
-                new XElement("email", "anonymous"),
-                new XElement("licensekey", Guid.Empty));
+                                              new XElement("email", "anonymous"),
+                                              new XElement("licensekey", Guid.Empty));
 
             var license = PerformServerCall(_retrieveLicenseUrl, licenseRequest);
             if (license == null)
@@ -167,7 +177,7 @@
         }
 
         /// <summary>
-        ///   A check to see if 
+        ///     A check to see if
         /// </summary>
         private void PerformStartupCheck()
         {
@@ -199,7 +209,7 @@
         }
 
         /// <summary>
-        ///   A quick check to see if machonet matches minor version of DirectEve
+        ///     A quick check to see if machonet matches minor version of DirectEve
         /// </summary>
         private void CheckVersion()
         {
@@ -222,7 +232,7 @@
         }
 
         /// <summary>
-        ///   This pulses the server to keep it alive
+        ///     This pulses the server to keep it alive
         /// </summary>
         private void PulseThread()
         {
@@ -245,7 +255,7 @@
         }
 
         /// <summary>
-        ///   This triggers a server pulse (note that pulse will never return false if the character is not in a station)
+        ///     This triggers a server pulse (note that pulse will never return false if the character is not in a station)
         /// </summary>
         /// <returns></returns>
         internal bool Pulse()
@@ -269,7 +279,7 @@
         }
 
         /// <summary>
-        ///   This tells the server the directeve instance has been closed
+        ///     This tells the server the directeve instance has been closed
         /// </summary>
         internal void QuitDirectEve()
         {
@@ -283,12 +293,28 @@
                     client.Shutdown(_email, _licenseKey, _instanceId, challenge, signature);
             }
             catch
-            { }
+            {
+            }
         }
 
-        internal Version Version { get { return _version; } }
-        internal string Email { get { return _email; } }
-        internal int ActiveInstances { get { return _activeInstances; } }
-        internal int SupportInstances { get { return _supportInstances; } }
+        internal Version Version
+        {
+            get { return _version; }
+        }
+
+        internal string Email
+        {
+            get { return _email; }
+        }
+
+        internal int ActiveInstances
+        {
+            get { return _activeInstances; }
+        }
+
+        internal int SupportInstances
+        {
+            get { return _supportInstances; }
+        }
     }
 }

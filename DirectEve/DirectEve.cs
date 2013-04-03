@@ -1057,7 +1057,8 @@ namespace DirectEve
         /// </summary>
         /// <param name = "svc"></param>
         /// <returns></returns>
-        internal PyObject GetLocalSvc(string svc)
+        /// <remarks>Use at your own risk!</remarks>
+        public PyObject GetLocalSvc(string svc)
         {
             PyObject service;
             // Do we have a cached version (this is to stop overloading the LocalSvc call)
@@ -1088,7 +1089,8 @@ namespace DirectEve
         /// <param name = "pyCall"></param>
         /// <param name = "parms"></param>
         /// <returns></returns>
-        internal bool ThreadedCall(PyObject pyCall, params object[] parms)
+        /// <remarks>Use at your own risk!</remarks>
+        public bool ThreadedCall(PyObject pyCall, params object[] parms)
         {
             return ThreadedCallWithKeywords(pyCall, null, parms);
         }
@@ -1100,7 +1102,8 @@ namespace DirectEve
         /// <param name = "keywords"></param>
         /// <param name = "parms"></param>
         /// <returns></returns>
-        internal bool ThreadedCallWithKeywords(PyObject pyCall, Dictionary<string, object> keywords, params object[] parms)
+        /// <remarks>Use at your own risk!</remarks>
+        public bool ThreadedCallWithKeywords(PyObject pyCall, Dictionary<string, object> keywords, params object[] parms)
         {
             // Check specifically for this, as the call has to be valid (e.g. not null or none)
             if (!pyCall.IsValid)
@@ -1117,7 +1120,8 @@ namespace DirectEve
         /// <param name = "call"></param>
         /// <param name = "parms"></param>
         /// <returns></returns>
-        internal bool ThreadedLocalSvcCall(string svc, string call, params object[] parms)
+        /// <remarks>Use at your own risk!</remarks>
+        public bool ThreadedLocalSvcCall(string svc, string call, params object[] parms)
         {
             var pyCall = GetLocalSvc(svc).Attribute(call);
             return ThreadedCall(pyCall, parms);
