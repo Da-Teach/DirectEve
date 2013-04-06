@@ -170,7 +170,7 @@ namespace DirectEve
         /// <summary>
         /// Create a DirectEve object
         /// </summary>
-        public DirectEve(IFramework framework = null)
+        public DirectEve(IFramework framework = null, bool enableStealth = true)
         {
             // create an instance of IFramework
             if (framework != null)
@@ -216,7 +216,17 @@ namespace DirectEve
 #if DEBUG
                 Log("Registering OnFrame event");
 #endif
-                Hooks.InitializeHooks();
+                if (enableStealth)
+                {
+                    try
+                    {
+                        Hooks.InitializeHooks();
+                    }
+                    catch
+                    {
+                        Log("Warning: Failed to initialize stealth hooks");
+                    }
+                }
                 _framework.RegisterFrameHook(FrameworkOnFrame);
             }
             catch (Exception e)

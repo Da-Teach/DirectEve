@@ -503,7 +503,7 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
             if (address == IntPtr.Zero)
                 return;
 
-            if (address == GetProcAddresFunc(importedModule, function))
+            if (address == GetProcAddresFunc(imbool _isInitialized;s == GetProcAddresFunc(importedModule, function))
                 return;
             
             try
@@ -529,7 +529,10 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
                 new MiniDumpWriteDumpHook(GetProcAddresFunc("dbghelp.dll", "MiniDumpWriteDump")),
                 // These block the kernel versions 
                 new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryA"), false),
-                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
+                new LibraryCallHook(GetProcif (_isInitialized)
+                return;
+            _isInitialized = true;
+llHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
                 new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleA"), false),
                 new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleW"), true),
                 new EnumProcessesHook(GetProcAddresFunc("kernel32.dll", "K32EnumProcesses"))
@@ -568,4 +571,4 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
             { }
         }
     }
-}
+}_isInitialized = false;
