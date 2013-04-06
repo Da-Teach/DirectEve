@@ -503,7 +503,7 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
             if (address == IntPtr.Zero)
                 return;
 
-            if (address == GetProcAddresFunc(imbool _isInitialized;s == GetProcAddresFunc(importedModule, function))
+            if (address == GetProcAddresFunc(imbool _isInitialized;s == GetProcAddresFunc(imint _referenceCount;s == GetProcAddresFunc(importedModule, function))
                 return;
             
             try
@@ -529,7 +529,8 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
                 new MiniDumpWriteDumpHook(GetProcAddresFunc("dbghelp.dll", "MiniDumpWriteDump")),
                 // These block the kernel versions 
                 new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryA"), false),
-                new LibraryCallHook(GetProcif (_isInitialized)
+                new LibraryCallHook(GetProc_referenceCount++;
+llHook(GetProcif (_isInitialized)
                 return;
             _isInitialized = true;
 llHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
@@ -572,3 +573,6 @@ llHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
         }
     }
 }_isInitialized = false;
+referenceCount--;
+            if (_referenceCount > 0)
+                return;
