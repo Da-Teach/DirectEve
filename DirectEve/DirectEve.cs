@@ -15,6 +15,7 @@ namespace DirectEve
     using System.Reflection;
     using System.Security;
     using System.Runtime.InteropServices;
+    using Hooking;
     using global::DirectEve.PySharp;
 
     public delegate void LoggingDelegate(string msg);
@@ -1055,18 +1056,17 @@ namespace DirectEve
         /// <summary>
         ///   Return what "eve.LocalSvc" would return, unless the service wasn't started yet
         /// </summary>
-        /// <param name = "svc"></param>
-        /// <returns></returns>
+        /// <param name = "svc"></param>      /// <returns></returns>
         /// <remarks>Use at your own risk!</remarks>
-        public PyObject GetLocalSvc(string svc)
+        public bool PyObject GetLocalSvc(string svc)
         {
-            PyObject service;
-            // Do we have a cached version (this is to stop overloading the LocalSvc call)
+            PyObject service;            // Do we have a cached version (this is to stop overloading the LocalSvc call)
+
             if (_localSvcCache.TryGetValue(svc, out service))
                 return service;
 
-            // First try to get it from services
-            service = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem(svc);
+            // First try to get it from services            service = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem(svc);
+
 
             // Add it to the cache (it doesn't matter if its not valid)
             _localSvcCache.Add(svc, service);
@@ -1075,11 +1075,11 @@ namespace DirectEve
             if (service.IsValid)
                 return service;
 
-            // Start the service in a ThreadedCall
-            var localSvc = PySharp.Import("__builtin__").Attribute("sm").Attribute("GetService");
-            ThreadedCall(localSvc, svc);
+            // Start the service in a ThreadedCall            var localSvc = PySharp.Import("__builtin__").Attribute("sm").Attribute("GetService");
 
-            // Return an invalid PyObject (so that LocalSvc can start the service)
+            ThreadedCall(localSvc, svc);
+            // Return an invalid PyObject (so that LocalSvc can start the service)
+
             return global::DirectEve.PySharp.PySharp.PyZero;
         }
 
@@ -1087,12 +1087,11 @@ namespace DirectEve
         ///   Perform a uthread.new(pyCall, parms) call
         /// </summary>
         /// <param name = "pyCall"></param>
-        /// <param name = "parms"></param>
-        /// <returns></returns>
+        /// <param name = "parms"></param>      /// <returns></returns>
         /// <remarks>Use at your own risk!</remarks>
-        public bool ThreadedCall(PyObject pyCall, params object[] parms)
-        {
-            return ThreadedCallWithKeywords(pyCall, null, parms);
+        public bool ThreadedCallWithK(PyObject pyCall, params object[] parms)
+        {          return ThreadedCallWithKeywords(pyCall, null, parms);
+  
         }
 
         /// <summary>
@@ -1100,17 +1099,17 @@ namespace DirectEve
         /// </summary>
         /// <param name = "pyCall"></param>
         /// <param name = "keywords"></param>
-        /// <param name = "parms"></param>
-        /// <returns></returns>
+        /// <param name = "parms"></param>      /// <returns></returns>
         /// <remarks>Use at your own risk!</remarks>
         public bool ThreadedCallWithKeywords(PyObject pyCall, Dictionary<string, object> keywords, params object[] parms)
+    
         {
             // Check specifically for this, as the call has to be valid (e.g. not null or none)
             if (!pyCall.IsValid)
                 return false;
 
-            RegisterAppEventTime();
-            return !PySharp.Import("uthread").CallWithKeywords("new", keywords, (new object[] {pyCall}).Concat(parms).ToArray()).IsNull;
+            RegisterAppEventTime();        return !PySharp.Import("uthread").CallWithKeywords("new", keywords, (new object[] {pyCall}).Concat(parms).ToArray()).IsNull;
+    
         }
 
         /// <summary>
@@ -1118,10 +1117,9 @@ namespace DirectEve
         /// </summary>
         /// <param name = "svc"></param>
         /// <param name = "call"></param>
-        /// <param name = "parms"></param>
-        /// <returns></returns>
+        /// <param name = "parms"></param>      /// <returns></returns>
         /// <remarks>Use at your own risk!</remarks>
-        public bool ThreadedLocalSvcCall(string svc, string call, params object[] parms)
+        public bool ThreadedCallWLocalSvcCall(string svc, string call, params object[] parms)
         {
             var pyCall = GetLocalSvc(svc).Attribute(call);
             return ThreadedCall(pyCall, parms);
@@ -1168,8 +1166,8 @@ namespace DirectEve
         /// </summary>
         public void OpenFitingManager()
         {
-            var form = PySharp.Import("form");
-            ThreadedCall(form.Attribute("FittingMgmt").Attribute("Open"));
+            var form = PySharp.Import("form");      ThreadedCall(form.Attribute("FittingMgmt").Attribute("Open"));
+      
         }
 
         /// <summary>
@@ -1186,8 +1184,8 @@ namespace DirectEve
         internal long getServiceMask()
         {
             if (!Session.IsInStation)
-                return 0;
-            return (long)PySharp.Import("__builtin__").Attribute("eve").Attribute("stationItem").Attribute("serviceMask");
+                return 0;      return (long)PySharp.Import("__builtin__").Attribute("eve").Attribute("stationItem").Attribute("serviceMask");
+      
         }
 
         public bool hasRepairFacility()
@@ -1206,8 +1204,8 @@ namespace DirectEve
         /// <param name="evt">The event name.</param>
         /// <returns></returns>
         public bool ScatterEvent(string evt)
-        {
-            var scatterEvent = PySharp.Import("__builtin__").Attribute("sm").Attribute("ScatterEvent");
+        {      var scatterEvent = PySharp.Import("__builtin__").Attribute("sm").Attribute("ScatterEvent");
+      
             return ThreadedCall(scatterEvent, evt);
         }
 
@@ -1230,18 +1228,11 @@ namespace DirectEve
         /// <returns>True if the user has support instances.</returns>
         public bool HasSupportInstances()
         {
-            bool rval = false;
-
-            if (_security.Email != "anonymous" && _security.SupportInstances >= 0 && 
-                _security.ActiveInstances <= _security.SupportInstances)
-            {
-                rval = true;
-            }
-
-            return rval;
+            return ty.Email != "anonymous" && _security.SupportInstances >= 0 && 
+      _security.ActiveInstances <= _security.SupportInstances;
         }
-
-        public bool Sell(DirectItem item, int StationId, int quantity, double price, int duration, bool useCorp)
+  public bool Sell(DirectItem item, int StationId, int quantity, double price, int duration, bool useCorp)
+      
         {            
             if (!item.PyItem.IsValid)
                 return false;
@@ -1250,9 +1241,9 @@ namespace DirectEve
                 Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            //var pyRange = GetRange(range);
-            //def SellStuff(self, stationID, typeID, itemID, price, quantity, duration = 0, useCorp = False, located = None):
-            return ThreadedLocalSvcCall("marketQuote", "SellStuff", StationId, item.TypeId, item.ItemId, price, quantity, duration, useCorp);//pyRange);
+            //var pyRange = GetRange(range);      //def SellStuff(self, stationID, typeID, itemID, price, quantity, duration = 0, useCorp = False, located = None):
+            return ThreadedLocalSvcCall("marketQuote", "SellStuff", StationId, item.TypeId, item.ItemId, price, quantity, duration, useCorp);//pyRange);
+      
         }
 
         internal PyObject GetRange(DirectOrderRange range)
@@ -1269,17 +1260,17 @@ namespace DirectEve
                     return Const.RangeStation;
             }
         }
-
-        public bool Buy(int StationId, int TypeId, double Price, int quantity, DirectOrderRange range, int minVolume, int duration)//, bool useCorp)
+  public bool Buy(int StationId, int TypeId, double Price, int quantity, DirectOrderRange range, int minVolume, int duration)//, bool useCorp)
+      
         {
             if (!HasSupportInstances())
             {
                 Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            var pyRange = GetRange(range);
-            //def BuyStuff(self, stationID, typeID, price, quantity, orderRange = None, minVolume = 1, duration = 0, useCorp = False):
-            return ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange, minVolume, duration);//, useCorp);
+            var pyRange = GetRange(range);      //def BuyStuff(self, stationID, typeID, price, quantity, orderRange = None, minVolume = 1, duration = 0, useCorp = False):
+            return ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange, minVolume, duration);//, useCorp);
+      
         }
 
         public bool InviteToFleet(long charId)
@@ -1306,8 +1297,8 @@ namespace DirectEve
         {
             get
             {
-                List<DirectFleetMember> fleetMembers = new List<DirectFleetMember>();
-                var pyMembers = GetLocalSvc("fleet").Attribute("members").ToDictionary<long>();
+                List<DirectFleetMember> fleetMembers = new List<DirectFleetMember>();          var pyMembers = GetLocalSvc("fleet").Attribute("members").ToDictionary<long>();
+      
                 foreach (var pyMember in pyMembers)
                 {
                     fleetMembers.Add(new DirectFleetMember(this, pyMember.Value));
@@ -1319,8 +1310,8 @@ namespace DirectEve
         /// <summary>
         /// Initiates trade window
         /// </summary>
-        /// <param name="charId"></param>
-        /// <returns>Fails if char is not in station, if charId is not in station and if the service is not active yet</returns>
+        /// <param name="charId"></param>  /// <returns>Fails if char is not in station, if charId is not in station and if the service is not active yet</returns>
+      
         public bool InitiateTrade(long charId)
         {
             if (!Session.IsInStation)
@@ -1340,8 +1331,8 @@ namespace DirectEve
         {
             get
             {
-            List<long> charIds = new List<long>();
-            var pyCharIds = GetLocalSvc("station").Attribute("guests").ToDictionary();
+            List<long> charIds = new List<long>();      var pyCharIds = GetLocalSvc("station").Attribute("guests").ToDictionary();
+      
             foreach(var pyChar in pyCharIds)
                 charIds.Add((long)pyChar.Key);
             return charIds;

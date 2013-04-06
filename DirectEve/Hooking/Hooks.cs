@@ -10,8 +10,10 @@
 
 namespace DirectEve
 {
+    usi.Hooking
+{
     using System;
-    using System.Diagnostics;
+    using System.Collections.GenericSystem.Diagnostics;
     using System.Runtime.InteropServices;
     using SmartAssembly.Attributes;
     using WhiteMagic;
@@ -227,123 +229,7 @@ namespace DirectEve
 
             [FieldOffset(3)] public byte MinorLinkerVersion;
 
-            [FieldOffset(4)] public uint SizeOfCode;
-
-            [FieldOffset(8)] public uint SizeOfInitializedData;
-
-            [FieldOffset(12)] public uint SizeOfUninitializedData;
-
-            [FieldOffset(16)] public uint AddressOfEntryPoint;
-
-            [FieldOffset(20)] public uint BaseOfCode;
-
-            [FieldOffset(24)] public ulong ImageBase;
-
-            [FieldOffset(32)] public uint SectionAlignment;
-
-            [FieldOffset(36)] public uint FileAlignment;
-
-            [FieldOffset(40)] public ushort MajorOperatingSystemVersion;
-
-            [FieldOffset(42)] public ushort MinorOperatingSystemVersion;
-
-            [FieldOffset(44)] public ushort MajorImageVersion;
-
-            [FieldOffset(46)] public ushort MinorImageVersion;
-
-            [FieldOffset(48)] public ushort MajorSubsystemVersion;
-
-            [FieldOffset(50)] public ushort MinorSubsystemVersion;
-
-            [FieldOffset(52)] public uint Win32VersionValue;
-
-            [FieldOffset(56)] public uint SizeOfImage;
-
-            [FieldOffset(60)] public uint SizeOfHeaders;
-
-            [FieldOffset(64)] public uint CheckSum;
-
-            [FieldOffset(68)] public SubSystemType Subsystem;
-
-            [FieldOffset(70)] public DllCharacteristicsType DllCharacteristics;
-
-            [FieldOffset(72)] public ulong SizeOfStackReserve;
-
-            [FieldOffset(80)] public ulong SizeOfStackCommit;
-
-            [FieldOffset(88)] public ulong SizeOfHeapReserve;
-
-            [FieldOffset(96)] public ulong SizeOfHeapCommit;
-
-            [FieldOffset(104)] public uint LoaderFlags;
-
-            [FieldOffset(108)] public uint NumberOfRvaAndSizes;
-
-            [FieldOffset(112)] public IMAGE_DATA_DIRECTORY ExportTable;
-
-            [FieldOffset(120)] public IMAGE_DATA_DIRECTORY ImportTable;
-
-            [FieldOffset(128)] public IMAGE_DATA_DIRECTORY ResourceTable;
-
-            [FieldOffset(136)] public IMAGE_DATA_DIRECTORY ExceptionTable;
-
-            [FieldOffset(144)] public IMAGE_DATA_DIRECTORY CertificateTable;
-
-            [FieldOffset(152)] public IMAGE_DATA_DIRECTORY BaseRelocationTable;
-
-            [FieldOffset(160)] public IMAGE_DATA_DIRECTORY Debug;
-
-            [FieldOffset(168)] public IMAGE_DATA_DIRECTORY Architecture;
-
-            [FieldOffset(176)] public IMAGE_DATA_DIRECTORY GlobalPtr;
-
-            [FieldOffset(184)] public IMAGE_DATA_DIRECTORY TLSTable;
-
-            [FieldOffset(192)] public IMAGE_DATA_DIRECTORY LoadConfigTable;
-
-            [FieldOffset(200)] public IMAGE_DATA_DIRECTORY BoundImport;
-
-            [FieldOffset(208)] public IMAGE_DATA_DIRECTORY IAT;
-
-            [FieldOffset(216)] public IMAGE_DATA_DIRECTORY DelayImportDescriptor;
-
-            [FieldOffset(224)] public IMAGE_DATA_DIRECTORY CLRRuntimeHeader;
-
-            [FieldOffset(232)] public IMAGE_DATA_DIRECTORY Reserved;
-        }
-
-        [StructLayout(LayoutKind.Explicit)]
-        public struct IMAGE_NT_HEADERS32
-        {
-            [FieldOffset(0)] [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public char[] Signature;
-
-            [FieldOffset(4)] public IMAGE_FILE_HEADER FileHeader;
-
-            [FieldOffset(24)] public IMAGE_OPTIONAL_HEADER32 OptionalHeader;
-
-            private string _Signature
-            {
-                get { return new string(Signature); }
-            }
-
-            public bool isValid
-            {
-                get { return _Signature == "PE\0\0" && OptionalHeader.Magic == MagicType.IMAGE_NT_OPTIONAL_HDR32_MAGIC; }
-            }
-        }
-
-        [StructLayout(LayoutKind.Explicit)]
-        public struct IMAGE_NT_HEADERS64
-        {
-            [FieldOffset(0)] [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public char[] Signature;
-
-            [FieldOffset(4)] public IMAGE_FILE_HEADER FileHeader;
-
-            [FieldOffset(24)] public IMAGE_OPTIONAL_HEADER64 OptionalHeader;
-
-            private string _Signature
-            {
-                get { return new string(Signature); }
+            [FiNT_HEADERS32 { return new string(Signature); }
             }
 
             public bool isValid
@@ -352,7 +238,7 @@ namespace DirectEve
             }
         }
 
-        [StructLayout(LayoutKind.Sequential)]
+       32StructLayout(LayoutKind.Sequential)]
         public struct IMAGE_IMPORT_BY_NAME
         {
             public short Hint;
@@ -364,7 +250,7 @@ namespace DirectEve
         {
             #region union
 
-            /// <summary>
+            ///32summary>
             ///     C# doesn't really support unions, but they can be emulated by a field offset 0
             /// </summary>
             [FieldOffset(0)] public uint Characteristics; // 0 for terminating null import descriptor
@@ -407,276 +293,279 @@ namespace DirectEve
             idh = (IMAGE_DOS_HEADER) Marshal.PtrToStructure(ModuleHandle, typeof (IMAGE_DOS_HEADER));
             if (idh.isValid)
             {
-                IMAGE_NT_HEADERS32 inh32;
-                IMAGE_NT_HEADERS64 inh64;
-                inh32 = (IMAGE_NT_HEADERS32) Marshal.PtrToStructure(IntPtr.Add(ModuleHandle, idh.e_lfanew), typeof (IMAGE_NT_HEADERS32));
-                inh64 = (IMAGE_NT_HEADERS64) Marshal.PtrToStructure(IntPtr.Add(ModuleHandle, idh.e_lfanew), typeof (IMAGE_NT_HEADERS64));
-                if (inh32.isValid && inh32.OptionalHeader.ImportTable.VirtualAddress != 0)
-                {
-                    iidPtr = IntPtr.Add(ModuleHandle, (int) inh32.OptionalHeader.ImportTable.VirtualAddress);
-                }
-                else if (inh64.isValid && inh64.OptionalHeader.ImportTable.VirtualAddress != 0)
-                {
-                    iidPtr = IntPtr.Add(ModuleHandle, (int) inh64.OptionalHeader.ImportTable.VirtualAddress);
-                }
-            }
+                IMAGE_[DllImport("kernel32.dll", SetLastError = true)]
+        private static extern void SetLastError(int errorCod         IMAGE_NT_HEADERS32 inh32;
+                IMAGE_NT_HEADERS64 inh64moduleHandle, string intermodName, string funcName)
+        {
+            var idh = (IMAGE_DOS_HEADER) Marshal.PtrToStructure(moduleHandle, typeof (IMAGE_DOS_HEADER));
+            if (!idh.isValid)
+                return IntPtr.Zero;
 
-            if (iidPtr != IntPtr.Zero)
+            var inh32 = (IMAGE_NT_HEADERS32) Marshal.PtrToStructure(IntPtr.Add(moduleHandle, idh.e_lfanew), typeof (IMAGE_NT_HEADERS32));
+            if (!inh32.isValid || inh32.OptionalHeader.ImportTable.VirtualAddress == 0)
+                return IntPtr.Zero;
+
+            var iidPtr = IntPtr.Add(moduleHandle, (int) inh32.OptionalHeader.ImportTable.VirtualAddress);
+            if (iidPtr == IntPtr.Zero)
+                return IntPtr.Zero;
+
+-bit processes as the thunk data structure is different
+                        var itdPtr = IntPtr.Add(ModuleHandle, (int) iidwhile (iid.Name != 0)
             {
-                var iid = (IMAGE_IMPORT_DESCRIPTOR) Marshal.PtrToStructure(iidPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
-                while (iid.Name != 0)
-                {
-                    var iidName = Marshal.PtrToStringAnsi(IntPtr.Add(ModuleHandle, (int) iid.Name));
-                    if (string.Compare(iidName, intermodName, true) == 0)
-                    {
-                        // this probably won't work for 64-bit processes as the thunk data structure is different
-                        var itdPtr = IntPtr.Add(ModuleHandle, (int) iid.FirstThunk);
-                        var oitdPtr = IntPtr.Add(ModuleHandle, (int) iid.OriginalFirstThunk);
-                        while (itdPtr != IntPtr.Zero && oitdPtr != IntPtr.Zero)
-                        {
-                            var itd = (IMAGE_THUNK_DATA) Marshal.PtrToStructure(itdPtr, typeof (IMAGE_THUNK_DATA));
-                            var oitd = (IMAGE_THUNK_DATA) Marshal.PtrToStructure(oitdPtr, typeof (IMAGE_THUNK_DATA));
+                var iidName = Marshal.PtrToStringAnsi(IntPtr.Add(moduleHandle, (int) iid.Name));
+                if (string.Compare(iidName, intermodName, System.StringComparison.OrdinalIgnoreCase)r iidName = Marshal.PtrToStringAnsi(IntPtr.Add(ModuleHandle, (int) iidPtr, Marshal.SizeOf(typeofuleHandleA _dGetModuleHandleA;
+        private static Detour _getModuleHandleAHooMarshal.PtrToStructure(iidPtr, typeof(IMAGE_IMPORT_DESCRIPTOR));
 
-                            var iibnPtr = IntPtr.Add(ModuleHandle, (int) oitd.AddressOfData);
-                            var iibn = (IMAGE_IMPORT_BY_NAME) Marshal.PtrToStructure(iibnPtr, typeof (IMAGE_IMPORT_BY_NAME));
-                            var iibnName = Marshal.PtrToStringAnsi(IntPtr.Add(iibnPtr, Marshal.OffsetOf(typeof (IMAGE_IMPORT_BY_NAME), "Name").ToInt32()));
+                    continue;
+                }
+
+MAGE_THUNK_DATA) Marshal.PtrToStructure(itdPtr, typeof (IMAGE_THUNK_DATA));
+                            var oitd = (IMAGE_Tvar itdPtr = IntPtr.Add(moduleHandle, (int) iid.FirstThunk);
+                var oitdPtr = IntPtr.Add(moduleHandle, (int) iid.OriginalFirstThunk);
+                while (itdPtr != IntPtr.Zero && oitdPtr != IntPtr.Zero)
+                {
+BY_NAME));
+                            var iibnName = Marshal.PtrToStringAnsi(IntPtr.Add(iibnPtr, Marshal.OffsetOf(typeof (IMAGE_Y_NAME), "Name").ToInt32()));
 
                             if (string.Compare(iibnName, funcName, true) == 0)
-                            {
-                                rval = new IntPtr(itd.Function);
-                                break;
-                            }
+   var iibnPtr = IntPtr.Add(moduleHandle, (int) oitd.AddressOfData);
+itdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
+                            oitdPtr = IntPtr.Add(oitdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA                    if (itd.Function == 0)
+                        return IntPtr.Zero;
 
-                            itdPtr = IntPtr.Add(itdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
-                            oitdPtr = IntPtr.Add(oitdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
-                        }
-                        break;
+                    if (string.Compare(iibnName, funcName, System.StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        return new IntPtr(itd.Function);
                     }
-                    iidPtr = IntPtr.Add(iidPtr, Marshal.SizeOf(typeof (IMAGE_IMPORT_DESCRIPTOR)));
-                    iid = (IMAGE_IMPORT_DESCRIPTOR) Marshal.PtrToStructure(iidPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
+                    
+dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
                 }
             }
 
             return rval;
         }
 
-        private static DLoadLibraryA _dLoadLibraryA;
-        private static Detour _loadLibraryAHook;
-        private static DLoadLibraryA_2 _dLoadLibraryA2;
-        private static Detour _loadLibraryAHook2;
-        private static DGetModuleHandleA _dGetModuleHandleA;
-        private static Detour _getModuleHandleAHook;
-        private static DGetModuleHandleA_2 _dGetModuleHandleA2;
-        private static Detour _getModuleHandleAHook2;
-        private static DLoadLibraryW _dLoadLibraryW;
-        private static Detour _loadLibraryWHook;
-        private static DGetModuleHandleW _dGetModuleHandleW;
-        private static Detour _getModuleHandleWHook;
-        private static DBlockMiniDumpWriteDump _dBlockMiniWriteDump;
-        private static Detour _blockMiniWriteDumpDetour;
-        private static DEnumProcesses _dEnumProcesses;
+   oitdPtr = IntPtr.Add(oitdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
+                }
+
+                return IntPtr.Zero;
+            }
+
+            return IntPtr.Zero;
+        }
+
+        private class LibraryCallHook : IDisposable
+        {
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            private delegate IntPtr LibraryCallDelegate(IntPtr lpFileName);
+
+            private bool _isWideString;
+            private string _name;
+
+            private Detour _original;
+            private LibraryCallDelegate _registered;
+
+            public LibraryCallHook(IntPtr address, bool isWideString)
+            {
+                _isWideString = isWideString;
+                _name = string.Format("LibraryCallHook_{0:X}", address.ToInt32());
+
+                _registered = Magic.Instance.RegisterDelegate<LibraryCallDelegate>(address);
+                _original = Magic.Instance.Detours.CreateAndApply(_registered, new LibraryCallDelegate(LoadLibraryDetour), _name);
+            }
+
+            private IntPtr LoadLibraryDetour(IntPtr lpFileName)
+            {
+                var fileName = _isWideString ? Marshal.PtrToStringUni(lpFileName) : Marshal.PtrToStringAnsi(lpFileName);
+                
+                if (string.IsNullOrEmpty(fileName))
+                    return (IntPtr) _original.CallOriginal(lpFileName);
+
+                fileName = fileName.ToLower();
+                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp"))
+                    return (IntPtr)_original.CallOriginal(lpFileName);
+
+                var trash = _isWideString ? Marshal.StringToHGlobalUni("ajhajshsg.dll") : Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
+                try
+                {
+                    return (IntPtr)_original.CallOriginal(trash);
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(trash);
+                }
+            }
+
+            public void Dispose()
+            {
+                if (_original == null) 
+                    return;
+
+                _original.Remove();
+                _original = null;
+            }
+        }
+
+        private class MiniDumpWriteDumpHook : IDisposable
+        {
+        }
+            else return (IntPtr) _loadLibraryWHook.CallOriginal(lpFileName);
+        }
+
+        [UnmanagedFunc    private delegate bool MiniDumpWriteDumpDelegate(IntPtr lpModuleName, IntPtr processId, IntPtr hFile, IntPtr dumpType, IntPtr exceptionParam, IntPtr userStreamParam, IntPtr callbackParam);
+
+            private string _name;
+
+            private Detour _original;
+            private MiniDumpWriteDumpDelegate _registered;
+
+            public MiniDumpWriteDumpHook(IntPtr address)
+            {
+                _name = string.Format("MiniDumpWriteDumpHook_{0:X}", address.ToInt32());
+
+                _registered = Magic.Instance.RegisterDelegate<MiniDumpWriteDumpDelegate>(address);
+                _original = Magic.Instance.Detours.CreateAndApply(_registered, new MiniDumpWriteDumpDelegate(MiniDumpWriteDumpDetour), _name);
+            }
+
+            private bool MiniDumpWriteDumpDetour(IntPtr lpModuleName, IntPtr processId, IntPtr hFile, IntPtr dumpType, IntPtr exceptionParam, IntPtr userStreamParam, IntPtr callbackParam)
+            {
+                SetLastError(8);
+                return false;
+            }
+
+            public void Dispose()
+            {
+                if (_original == null) 
+                    return;
+
+                _original.Remove();
+                _original = null;
+            }
+        }
+
+        private class EnumProcessesHook : IDisposable
+        {
+        }
+            else return (IntPtr) _loadLibraryWHook.CallOriginal(lpFileName);
+        }
+
+        [UnmanagedFunc    private delegate bool EnumProcessesDelegate([In] [Out] IntPtr processIds, UInt32 arraySizeBytes, [In] [Out] IntPtr bytesCopied);
+
+            private string _name;
+
+            private Detour _original;
+            private Delegate _registered;
+
+            public EnumProcessesHook(IntPtr address)
+            {
+                _name = string.Format("EnumProcessesHook_{0:X}", address.ToInt32());
+
+                _registered = Magic.Instance.RegisterDelegate<EnumProcessesDelegate>(address);
+                _original = Magic.Instance.Detours.CreateAndApply(_registered, new EnumProcessesDelegate(MiniDumpWriteDumpDetour), _name);
+            }
+
+            private bool MiniDumpWriteDumpn);
+        }
+    }
+}    {
+                if (processIds == IntPtr.Zero || bytesCopied == IntPtr.Zero)
+                    return false;
+
+                Marshal.WriteInt32(processIds, Process.GetCurrentProcess().Id);
+                Marshal.WriteInt32(bytesCopied, Marshal.SizeOf(processIds));
+                return true;
+            }
+
+            public void Dispose()
+            {
+                if (_original == null)
+                    return;
+
+                _original.Remove();
+                _original = null;
+            }
+        }
+
+        private static IntPtr GetProcAddresFunc(string module, string function)
+        {
+            return GetProcAddress(GetModuleHandle(module), function);
+        }
+
+        private static List<IDisposable> _hooks;
+
+        private static void HookImport(string module, string importedModule, string function, bool isWideString)
+        {
+            var handle = GetModuleHandle(module);
+            if (handle == IntPtr.Zero)
+                return;
+
+            var address = GetThunk(handle, importedModule, function);
+            if (address == IntPtr.Zero)
+                return;
+
+            if (address == GetProcAddresFunc(importedModule, function))
+                return;
+            
+            try
+            {
+                _hooks.Add(new LibraryCallHook(address, isWideString));
+            }
+            catch { }
+        }
+
+        private static void HookImports(string module)
+        {
+            HookImport(module, "kernel32.dll", "LoadLibraryA", false);
+            HookImport(module, "kernel32.dll", "LoadLibraryW", true);
+            HookImport(module, "kernel32.dll", "GetModuleHandleA", false);
+            HookImport(module, "kernel32.dll", "GetModuleHandleW", true);
+        }
 
         internal static void InitializeHooks()
         {
-            //LoadLibraryA
-            var hMod = GetModuleHandle("_ctypes.pyd");
-            if (hMod != IntPtr.Zero)
+            _hooks = new List<IDisposable>
             {
-                var ptr = GetThunk(hMod, "kernel32.dll", "LoadLibraryA");
-                if (ptr != null)
-                {
-                    _dLoadLibraryA = Magic.Instance.RegisterDelegate<DLoadLibraryA>(ptr);
-                    _loadLibraryAHook = Magic.Instance.Detours.CreateAndApply(_dLoadLibraryA, new DLoadLibraryA(LoadLibraryAHooked), "LoadLibraryA");
-                }
-            }
+                // This block will only be active if dbghelp.dll is already loaded, otherwise LoadLibrary will block the dll from getting loaded
+                new MiniDumpWriteDumpHook(GetProcAddresFunc("dbghelp.dll", "MiniDumpWriteDump")),
+                // These block the kernel versions 
+                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryA"), false),
+                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
+                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleA"), false),
+                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleW"), true),
+                new EnumProcessesHook(GetProcAddresFunc("kernel32.dll", "K32EnumProcesses"))
+            };
 
-            var address = GetProcAddresFunc("kernel32.dll", "LoadLibraryA");
-            _dLoadLibraryA2 = Magic.Instance.RegisterDelegate<DLoadLibraryA_2>(GetProcAddresFunc("kernel32.dll", "LoadLibraryA"));
-            _loadLibraryAHook2 = Magic.Instance.Detours.CreateAndApply(_dLoadLibraryA2, new DLoadLibraryA_2(LoadLibraryAHooked_2), "LoadLibraryA2");
+            // Here we'll add the versions per import-table
+            HookImports("_ctypes.pyd");
+            HookImports("exefile.exe");
 
-            //GetmoduleHandleA
-            hMod = GetModuleHandle("exefile.exe");
-            if (hMod != IntPtr.Zero)
+            var handle = GetModuleHandle("psapi.dll");
+            if (handle == IntPtr.Zero)
+                return;
+
+            var address = GetThunk(handle, "kernel32.dll", "K32EnumProcesses");
+            if (address == IntPtr.Zero)
+                return;
+
+            if (address == GetProcAddresFunc("kernel32.dll", "K32EnumProcesses"))
+                return;
+
+            try
             {
-                var ptr = GetThunk(hMod, "kernel32.dll", "GetModuleHandleA");
-                if (ptr != null)
-                {
-                    _dGetModuleHandleA = Magic.Instance.RegisterDelegate<DGetModuleHandleA>(ptr);
-                    _getModuleHandleAHook = Magic.Instance.Detours.CreateAndApply(_dGetModuleHandleA, new DGetModuleHandleA(GetModuleHandleAHooked), "GetModuleHandleA");
-                }
+                _hooks.Add(new EnumProcessesHook(address));
             }
-            _dGetModuleHandleA2 = Magic.Instance.RegisterDelegate<DGetModuleHandleA_2>(GetProcAddresFunc("kernel32.dll", "GetModuleHandleA"));
-            _getModuleHandleAHook2 = Magic.Instance.Detours.CreateAndApply(_dGetModuleHandleA2, new DGetModuleHandleA_2(GetModuleHandleAHooked_2), "GetModuleHandleA2");
-
-            //LoadLibraryW
-            _dLoadLibraryW = Magic.Instance.RegisterDelegate<DLoadLibraryW>(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"));
-            _loadLibraryWHook = Magic.Instance.Detours.CreateAndApply(_dLoadLibraryW, new DLoadLibraryW(LoadLibraryWHooked), "LoadLibraryW");
-
-            //GetModuleHandleW
-            _dGetModuleHandleW = Magic.Instance.RegisterDelegate<DGetModuleHandleW>(GetProcAddresFunc("kernel32.dll", "GetModuleHandleW"));
-            _getModuleHandleWHook = Magic.Instance.Detours.CreateAndApply(_dGetModuleHandleW, new DGetModuleHandleW(GetModuleHandleWHooked), "GetModuleHandleW");
-
-            //Blockminidump
-            _dBlockMiniWriteDump = Magic.Instance.RegisterDelegate<DBlockMiniDumpWriteDump>(GetProcAddresFunc("dbghelp.dll", "MiniDumpWriteDump"));
-            _blockMiniWriteDumpDetour = Magic.Instance.Detours.CreateAndApply(_dBlockMiniWriteDump, new DBlockMiniDumpWriteDump(BlockMiniDumpWriteDumpDetour), "MiniDumpWriteDump");
-
-            // Doesn't work yet ~ don't know why
-
-            //EnumProcess/GetExeFilePids
-            hMod = GetModuleHandle("psapi.dll");
-            if (hMod != IntPtr.Zero)
-            {
-                var ptr = GetThunk(hMod, "kernel32.dll", "K32EnumProcesses");
-                if (ptr != null)
-                {
-                    _dEnumProcesses = Magic.Instance.RegisterDelegate<DEnumProcesses>(ptr);
-                    _blockMiniWriteDumpDetour = Magic.Instance.Detours.CreateAndApply(_dEnumProcesses, new DEnumProcesses(EnumProcessesDetour), "K32EnumProcesses");
-                }
-            }
-
-            //IsDebuggerPresent left out otherwise we can't debug
+            catch { }
         }
 
         internal static void RemoveHooks()
         {
             try
             {
-                _loadLibraryAHook.Remove();
-                _loadLibraryAHook2.Remove();
-                _getModuleHandleAHook.Remove();
-                _getModuleHandleAHook2.Remove();
-                _loadLibraryWHook.Remove();
-                _getModuleHandleWHook.Remove();
-                _blockMiniWriteDumpDetour.Remove();
+                foreach (var hook in _hooks)
+                    hook.Dispose();
             }
             catch
-            {
-            }
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        private delegate IntPtr DLoadLibraryA(IntPtr lpFileName);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
-        private static extern IntPtr LoadLibraryA(IntPtr lpFileName);
-
-        private static IntPtr LoadLibraryAHooked(IntPtr lpFileName)
-        {
-            var fileName = Marshal.PtrToStringAnsi(lpFileName);
-            if (fileName.ToLower().Contains("rgdll") || fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
-            {
-                var trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
-                return (IntPtr) _loadLibraryAHook.CallOriginal(trash);
-            }
-            else return (IntPtr) _loadLibraryAHook.CallOriginal(lpFileName);
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        private delegate IntPtr DLoadLibraryA_2(IntPtr lpFileName);
-
-        private static IntPtr LoadLibraryAHooked_2(IntPtr lpFileName)
-        {
-            var fileName = Marshal.PtrToStringAnsi(lpFileName);
-            if (fileName.ToLower().Contains("rgdll") || fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
-            {
-                var trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
-                return (IntPtr) _loadLibraryAHook2.CallOriginal(trash);
-            }
-            else return (IntPtr) _loadLibraryAHook2.CallOriginal(lpFileName);
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        private delegate IntPtr DGetModuleHandleA(IntPtr lpFileName);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
-        public static extern IntPtr GetModuleHandleA(IntPtr lpModuleName);
-
-        private static IntPtr GetModuleHandleAHooked(IntPtr lpModuleName)
-        {
-            var fileName = Marshal.PtrToStringAnsi(lpModuleName);
-            if (fileName.ToLower().Contains("rgdll") || fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
-            {
-                var trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
-                return (IntPtr) _getModuleHandleAHook.CallOriginal(trash);
-            }
-            else return (IntPtr) _getModuleHandleAHook.CallOriginal(lpModuleName);
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        private delegate IntPtr DGetModuleHandleA_2(IntPtr lpFileName);
-
-        private static IntPtr GetModuleHandleAHooked_2(IntPtr lpModuleName)
-        {
-            var fileName = Marshal.PtrToStringAnsi(lpModuleName);
-            if (fileName.ToLower().Contains("rgdll") || fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
-            {
-                var trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
-                return (IntPtr) _getModuleHandleAHook2.CallOriginal(trash);
-            }
-            else return (IntPtr) _getModuleHandleAHook2.CallOriginal(lpModuleName);
-        }
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern void SetLastError(int errorCode);
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        private delegate IntPtr DLoadLibraryW(IntPtr lpFileName);
-
-        private static IntPtr LoadLibraryWHooked(IntPtr lpFileName)
-        {
-            var fileName = Marshal.PtrToStringUni(lpFileName);
-            if (fileName.ToLower().Contains("rgdll") || fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
-            {
-                var trash = Marshal.StringToHGlobalUni("ajhajshsg.dll");
-                return (IntPtr) _loadLibraryWHook.CallOriginal(trash);
-            }
-            else return (IntPtr) _loadLibraryWHook.CallOriginal(lpFileName);
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        private delegate IntPtr DGetModuleHandleW(IntPtr lpFileName);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
-        public static extern IntPtr GetModuleHandleW(IntPtr lpModuleName);
-
-        private static IntPtr GetModuleHandleWHooked(IntPtr lpModuleName)
-        {
-            var fileName = Marshal.PtrToStringUni(lpModuleName);
-            if (fileName.ToLower().Contains("rgdll") || fileName.ToLower().Contains("directeve") || fileName.ToLower().Contains("questor"))
-            {
-                var trash = Marshal.StringToHGlobalUni("ajhajshsg.dll");
-                return (IntPtr) _getModuleHandleWHook.CallOriginal(trash);
-            }
-            else return (IntPtr) _getModuleHandleWHook.CallOriginal(lpModuleName);
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        private delegate bool DBlockMiniDumpWriteDump(IntPtr lpModuleName, long processId, IntPtr hFile, long DumpType, long ExceptionParam, long UserStreamParam, long CallbackParam);
-
-        private static bool BlockMiniDumpWriteDumpDetour(IntPtr lpModuleName, long processId, IntPtr hFile, long DumpType, long ExceptionParam, long UserStreamParam, long CallbackParam)
-        {
-            SetLastError(8);
-            return false;
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        private delegate bool DEnumProcesses([In] [Out] IntPtr processIds, UInt32 arraySizeBytes, [In] [Out] IntPtr bytesCopied);
-
-        private static bool EnumProcessesDetour([In] [Out] IntPtr processIds, UInt32 arraySizeBytes, [In] [Out] IntPtr bytesCopied)
-        {
-            Marshal.WriteInt32(processIds, Process.GetCurrentProcess().Id);
-            Marshal.WriteInt32(bytesCopied, Marshal.SizeOf(processIds));
-            return true;
-        }
-
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
-
-        private static IntPtr GetProcAddresFunc(string dllname, string function)
-        {
-            var hDLL = GetModuleHandle(dllname);
-            return GetProcAddress(hDLL, function);
+            { }
         }
     }
 }

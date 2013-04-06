@@ -93,10 +93,59 @@
                     <ResourcesCompression />
                     <MemberRefsProxy Proxy="1" />
                     <Pruning Prune="1">
-                        <Exclusion />
+                        <Exclusion>
+                            <Token Table="Namespace">
+                                <Assembly>DirectEve</Assembly>
+                                <Module>DirectEve.dll</Module>
+                                <Namespace>WhiteMagic</Namespace>
+                            </Token>
+                            <Token Table="Namespace">
+                                <Assembly>DirectEve</Assembly>
+                                <Module>DirectEve.dll</Module>
+                                <Namespace>WhiteMagic.Internals</Namespace>
+                            </Token>
+                            <Token Table="Namespace">
+                                <Assembly>DirectEve</Assembly>
+                                <Module>DirectEve.dll</Module>
+                                <Namespace>WhiteMagic.Native</Namespace>
+                            </Token>
+                            <Token Table="Namespace">
+                                <Assembly>DirectEve</Assembly>
+                                <Module>DirectEve.dll</Module>
+                                <Namespace>DirectEve.Hooking</Namespace>
+                            </Token>
+                        </Exclusion>
                     </Pruning>
                     <Obfuscation Obfuscate="1">
-                        <Exclusion />
+                        <Exclusion>
+                            <Token Table="Namespace">
+                                <Assembly>DirectEve</Assembly>
+                                <Module>DirectEve.dll</Module>
+                                <Namespace>WhiteMagic</Namespace>
+                            </Token>
+                            <Token Table="Namespace">
+                                <Assembly>DirectEve</Assembly>
+                                <Module>DirectEve.dll</Module>
+                                <Namespace>WhiteMagic.Internals</Namespace>
+                            </Token>
+                            <Token Table="Namespace">
+                                <Assembly>DirectEve</Assembly>
+                                <Module>DirectEve.dll</Module>
+                                <Namespace>WhiteMagic.Native</Namespace>
+                            </Token>
+                            <Token Table="WholeType">
+                                <Assembly>DirectEve</Assembly>
+                                <Module>DirectEve.dll</Module>
+                                <ItemType>Class</ItemType>
+                                <Namespace>DirectEve</Namespace>
+                                <Name>Hooks</Name>
+                            </Token>
+                            <Token Table="Namespace">
+                                <Assembly>DirectEve</Assembly>
+                                <Module>DirectEve.dll</Module>
+                                <Namespace>DirectEve.Hooking</Namespace>
+                            </Token>
+                        </Exclusion>
                     </Obfuscation>
                     <ControlFlow Obfuscate="1" ObfuscationLevel="4" />
                 </Merging>
@@ -232,6 +281,54 @@
                 <Merging />
             </Assembly>
             <Assembly AssemblyName="System.Xaml.Hosting, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+                <Merging />
+            </Assembly>
+            <Assembly AssemblyName="SmartAssembly.Attributes, Culture=neutral, PublicKeyToken=7f465a1c156d4d57">
+                <Merging>
+                    <Pruning>
+                        <Exclusion />
+                    </Pruning>
+                    <Obfuscation>
+                        <Exclusion />
+                    </Obfuscation>
+                </Merging>
+            </Assembly>
+            <Assembly AssemblyName="SmartAssembly.LicenseNoUI, Culture=neutral, PublicKeyToken=null">
+                <Merging>
+                    <Pruning>
+                        <Exclusion />
+                    </Pruning>
+                    <Obfuscation>
+                        <Exclusion />
+                    </Obfuscation>
+                </Merging>
+            </Assembly>
+            <Assembly AssemblyName="SmartAssembly.LicenseNoUI, Culture=neutral, PublicKeyToken=7f465a1c156d4d57">
+                <Merging>
+                    <Pruning>
+                        <Exclusion />
+                    </Pruning>
+                    <Obfuscation>
+                        <Exclusion />
+                    </Obfuscation>
+                </Merging>
+            </Assembly>
+            <Assembly AssemblyName="System.ServiceModel.Internals, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+                <Merging />
+            </Assembly>
+            <Assembly AssemblyName="System.ComponentModel.DataAnnotations, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+                <Merging />
+            </Assembly>
+            <Assembly AssemblyName="System.Net.Http, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                <Merging />
+            </Assembly>
+            <Assembly AssemblyName="Microsoft.CSharp, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                <Merging />
+            </Assembly>
+            <Assembly AssemblyName="System.Dynamic, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                <Merging />
+            </Assembly>
+            <Assembly AssemblyName="DoNotDistribute, Culture=neutral, PublicKeyToken=7f465a1c156d4d57">
                 <Merging />
             </Assembly>
         </Assemblies>
