@@ -16,8 +16,8 @@ namespace DirectEve.PySharp
     using System.Linq;
 
     public partial class PySharp : DynamicObject
-    {       public override bool TryGetMember(GetMemberBinder binder, out object result)
- 
+    {
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             result = Import(binder.Name);
             return true;
@@ -25,8 +25,8 @@ namespace DirectEve.PySharp
     }
 
     public partial class PyObject : DynamicObject
-    {       public override bool TryGetMember(GetMemberBinder binder, out object result)
- 
+    {
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             result = Attribute(binder.Name);
             return true;
@@ -36,11 +36,11 @@ namespace DirectEve.PySharp
         {
             return SetAttribute(binder.Name, value);
         }
-       public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
- 
+
+        public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
         {
-            Dictionary<string, object> keywords = null;           if (args.Length > 0 && args[0] is Dictionary<string, object>)
- 
+            Dictionary<string, object> keywords = null;
+            if (args.Length > 0 && args[0] is Dictionary<string, object>)
             {
                 keywords = (Dictionary<string, object>) args[0];
                 args = args.Skip(1).ToArray();
@@ -52,8 +52,8 @@ namespace DirectEve.PySharp
 
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
-            Dictionary<string, object> keywords = null;           if (args.Length > 0 && args[0] is Dictionary<string, object>)
- 
+            Dictionary<string, object> keywords = null;
+            if (args.Length > 0 && args[0] is Dictionary<string, object>)
             {
                 keywords = (Dictionary<string, object>) args[0];
                 args = args.Skip(1).ToArray();
@@ -62,8 +62,8 @@ namespace DirectEve.PySharp
             result = CallWithKeywords(binder.Name, keywords, args);
             return true;
         }
-       public override bool TryConvert(ConvertBinder binder, out object result)
- 
+
+        public override bool TryConvert(ConvertBinder binder, out object result)
         {
             result = null;
             if (binder.ReturnType == typeof (bool))
@@ -116,8 +116,8 @@ namespace DirectEve.PySharp
                 result = ToDictionary<double>();
             return result != null;
         }
-       public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
- 
+
+        public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
         {
             result = PySharp.PyZero;
             if (indexes.Length != 1 && indexes.Length != 2)

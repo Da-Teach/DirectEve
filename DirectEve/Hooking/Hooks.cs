@@ -8,12 +8,11 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
-namespace DirectEve
-{
-    usi.Hooking
+namespace DirectEve.Hooking
 {
     using System;
-    using System.Collections.GenericSystem.Diagnostics;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Runtime.InteropServices;
     using SmartAssembly.Attributes;
     using WhiteMagic;
@@ -221,24 +220,26 @@ namespace DirectEve
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public struct IMAGE_OPTIONAL_HEADER64
+        public struct IMAGE_NT_HEADERS32
         {
-            [FieldOffset(0)] public MagicType Magic;
+            [FieldOffset(0)] [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public char[] Signature;
 
-            [FieldOffset(2)] public byte MajorLinkerVersion;
+            [FieldOffset(4)] public IMAGE_FILE_HEADER FileHeader;
 
-            [FieldOffset(3)] public byte MinorLinkerVersion;
+            [FieldOffset(24)] public IMAGE_OPTIONAL_HEADER32 OptionalHeader;
 
-            [FiNT_HEADERS32 { return new string(Signature); }
+            private string _Signature
+            {
+                get { return new string(Signature); }
             }
 
             public bool isValid
             {
-                get { return _Signature == "PE\0\0" && OptionalHeader.Magic == MagicType.IMAGE_NT_OPTIONAL_HDR64_MAGIC; }
+                get { return _Signature == "PE\0\0" && OptionalHeader.Magic == MagicType.IMAGE_NT_OPTIONAL_HDR32_MAGIC; }
             }
         }
 
-       32StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         public struct IMAGE_IMPORT_BY_NAME
         {
             public short Hint;
@@ -250,7 +251,7 @@ namespace DirectEve
         {
             #region union
 
-            ///32summary>
+            /// <summary>
             ///     C# doesn't really support unions, but they can be emulated by a field offset 0
             /// </summary>
             [FieldOffset(0)] public uint Characteristics; // 0 for terminating null import descriptor
@@ -281,21 +282,15 @@ namespace DirectEve
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern void SetLastError(int errorCode);
+
         #endregion
 
-        private static IntPtr GetThunk(IntPtr ModuleHandle, string intermodName, string funcName)
-        {
-            var rval = IntPtr.Zero;
-            var iidPtr = IntPtr.Zero;
-
-
-            IMAGE_DOS_HEADER idh;
-            idh = (IMAGE_DOS_HEADER) Marshal.PtrToStructure(ModuleHandle, typeof (IMAGE_DOS_HEADER));
-            if (idh.isValid)
-            {
-                IMAGE_[DllImport("kernel32.dll", SetLastError = true)]
-        private static extern void SetLastError(int errorCod         IMAGE_NT_HEADERS32 inh32;
-                IMAGE_NT_HEADERS64 inh64moduleHandle, string intermodName, string funcName)
+        private static IntPtr GetThunk(IntPtr moduleHandle, string intermodName, string funcName)
         {
             var idh = (IMAGE_DOS_HEADER) Marshal.PtrToStructure(moduleHandle, typeof (IMAGE_DOS_HEADER));
             if (!idh.isValid)
@@ -309,28 +304,29 @@ namespace DirectEve
             if (iidPtr == IntPtr.Zero)
                 return IntPtr.Zero;
 
--bit processes as the thunk data structure is different
-                        var itdPtr = IntPtr.Add(ModuleHandle, (int) iidwhile (iid.Name != 0)
+            var iid = (IMAGE_IMPORT_DESCRIPTOR) Marshal.PtrToStructure(iidPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
+            while (iid.Name != 0)
             {
                 var iidName = Marshal.PtrToStringAnsi(IntPtr.Add(moduleHandle, (int) iid.Name));
-                if (string.Compare(iidName, intermodName, System.StringComparison.OrdinalIgnoreCase)r iidName = Marshal.PtrToStringAnsi(IntPtr.Add(ModuleHandle, (int) iidPtr, Marshal.SizeOf(typeofuleHandleA _dGetModuleHandleA;
-        private static Detour _getModuleHandleAHooMarshal.PtrToStructure(iidPtr, typeof(IMAGE_IMPORT_DESCRIPTOR));
+                if (string.Compare(iidName, intermodName, System.StringComparison.OrdinalIgnoreCase) != 0)
+                {
+                    iidPtr = IntPtr.Add(iidPtr, Marshal.SizeOf(typeof(IMAGE_IMPORT_DESCRIPTOR)));
+                    iid = (IMAGE_IMPORT_DESCRIPTOR)Marshal.PtrToStructure(iidPtr, typeof(IMAGE_IMPORT_DESCRIPTOR));
 
                     continue;
                 }
 
-MAGE_THUNK_DATA) Marshal.PtrToStructure(itdPtr, typeof (IMAGE_THUNK_DATA));
-                            var oitd = (IMAGE_Tvar itdPtr = IntPtr.Add(moduleHandle, (int) iid.FirstThunk);
+                // this probably won't work for 64-bit processes as the thunk data structure is different
+                var itdPtr = IntPtr.Add(moduleHandle, (int) iid.FirstThunk);
                 var oitdPtr = IntPtr.Add(moduleHandle, (int) iid.OriginalFirstThunk);
                 while (itdPtr != IntPtr.Zero && oitdPtr != IntPtr.Zero)
                 {
-BY_NAME));
-                            var iibnName = Marshal.PtrToStringAnsi(IntPtr.Add(iibnPtr, Marshal.OffsetOf(typeof (IMAGE_Y_NAME), "Name").ToInt32()));
+                    var itd = (IMAGE_THUNK_DATA) Marshal.PtrToStructure(itdPtr, typeof (IMAGE_THUNK_DATA));
+                    var oitd = (IMAGE_THUNK_DATA) Marshal.PtrToStructure(oitdPtr, typeof (IMAGE_THUNK_DATA));
 
-                            if (string.Compare(iibnName, funcName, true) == 0)
-   var iibnPtr = IntPtr.Add(moduleHandle, (int) oitd.AddressOfData);
-itdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
-                            oitdPtr = IntPtr.Add(oitdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA                    if (itd.Function == 0)
+                    var iibnPtr = IntPtr.Add(moduleHandle, (int) oitd.AddressOfData);
+                    var iibnName = Marshal.PtrToStringAnsi(IntPtr.Add(iibnPtr, Marshal.OffsetOf(typeof (IMAGE_IMPORT_BY_NAME), "Name").ToInt32()));
+                    if (itd.Function == 0)
                         return IntPtr.Zero;
 
                     if (string.Compare(iibnName, funcName, System.StringComparison.OrdinalIgnoreCase) == 0)
@@ -338,14 +334,8 @@ itdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
                         return new IntPtr(itd.Function);
                     }
                     
-dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
-                }
-            }
-
-            return rval;
-        }
-
-   oitdPtr = IntPtr.Add(oitdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
+                    itdPtr = IntPtr.Add(itdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
+                    oitdPtr = IntPtr.Add(oitdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
                 }
 
                 return IntPtr.Zero;
@@ -408,11 +398,8 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
 
         private class MiniDumpWriteDumpHook : IDisposable
         {
-        }
-            else return (IntPtr) _loadLibraryWHook.CallOriginal(lpFileName);
-        }
-
-        [UnmanagedFunc    private delegate bool MiniDumpWriteDumpDelegate(IntPtr lpModuleName, IntPtr processId, IntPtr hFile, IntPtr dumpType, IntPtr exceptionParam, IntPtr userStreamParam, IntPtr callbackParam);
+            [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
+            private delegate bool MiniDumpWriteDumpDelegate(IntPtr lpModuleName, IntPtr processId, IntPtr hFile, IntPtr dumpType, IntPtr exceptionParam, IntPtr userStreamParam, IntPtr callbackParam);
 
             private string _name;
 
@@ -445,11 +432,8 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
 
         private class EnumProcessesHook : IDisposable
         {
-        }
-            else return (IntPtr) _loadLibraryWHook.CallOriginal(lpFileName);
-        }
-
-        [UnmanagedFunc    private delegate bool EnumProcessesDelegate([In] [Out] IntPtr processIds, UInt32 arraySizeBytes, [In] [Out] IntPtr bytesCopied);
+            [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
+            private delegate bool EnumProcessesDelegate([In] [Out] IntPtr processIds, UInt32 arraySizeBytes, [In] [Out] IntPtr bytesCopied);
 
             private string _name;
 
@@ -464,10 +448,8 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
                 _original = Magic.Instance.Detours.CreateAndApply(_registered, new EnumProcessesDelegate(MiniDumpWriteDumpDetour), _name);
             }
 
-            private bool MiniDumpWriteDumpn);
-        }
-    }
-}    {
+            private bool MiniDumpWriteDumpDetour([In] [Out] IntPtr processIds, UInt32 arraySizeBytes, [In] [Out] IntPtr bytesCopied)
+            {
                 if (processIds == IntPtr.Zero || bytesCopied == IntPtr.Zero)
                     return false;
 
@@ -491,6 +473,8 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
             return GetProcAddress(GetModuleHandle(module), function);
         }
 
+        private static bool _isInitialized;
+        private static int _referenceCount;
         private static List<IDisposable> _hooks;
 
         private static void HookImport(string module, string importedModule, string function, bool isWideString)
@@ -503,7 +487,7 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
             if (address == IntPtr.Zero)
                 return;
 
-            if (address == GetProcAddresFunc(imbool _isInitialized;s == GetProcAddresFunc(imint _referenceCount;s == GetProcAddresFunc(importedModule, function))
+            if (address == GetProcAddresFunc(importedModule, function))
                 return;
             
             try
@@ -523,17 +507,19 @@ dPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
 
         internal static void InitializeHooks()
         {
+            _referenceCount++;
+
+            if (_isInitialized)
+                return;
+            _isInitialized = true;
+
             _hooks = new List<IDisposable>
             {
                 // This block will only be active if dbghelp.dll is already loaded, otherwise LoadLibrary will block the dll from getting loaded
                 new MiniDumpWriteDumpHook(GetProcAddresFunc("dbghelp.dll", "MiniDumpWriteDump")),
                 // These block the kernel versions 
                 new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryA"), false),
-                new LibraryCallHook(GetProc_referenceCount++;
-llHook(GetProcif (_isInitialized)
-                return;
-            _isInitialized = true;
-llHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
+                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
                 new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleA"), false),
                 new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleW"), true),
                 new EnumProcessesHook(GetProcAddresFunc("kernel32.dll", "K32EnumProcesses"))
@@ -563,6 +549,12 @@ llHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
 
         internal static void RemoveHooks()
         {
+            _referenceCount--;
+            if (_referenceCount > 0)
+                return;
+
+            _isInitialized = false;
+
             try
             {
                 foreach (var hook in _hooks)
@@ -572,7 +564,4 @@ llHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
             { }
         }
     }
-}_isInitialized = false;
-referenceCount--;
-            if (_referenceCount > 0)
-                return;
+}
