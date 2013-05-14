@@ -370,7 +370,6 @@ namespace DirectEve.Hooking
 
             private IntPtr GetModuleHandleADetour(IntPtr lpFileName)
             {
-                System.Diagnostics.Debugger.Launch();
                 var fileName = Marshal.PtrToStringAnsi(lpFileName);
 
                 if (string.IsNullOrEmpty(fileName))
@@ -425,7 +424,6 @@ namespace DirectEve.Hooking
 
             private IntPtr GetModuleHandleWDetour(IntPtr lpFileName)
             {
-                System.Diagnostics.Debugger.Launch();
                 var fileName = Marshal.PtrToStringUni(lpFileName);
 
                 if (string.IsNullOrEmpty(fileName))
@@ -480,7 +478,6 @@ namespace DirectEve.Hooking
 
             private IntPtr LoadLibraryADetour(IntPtr lpFileName)
             {
-                System.Diagnostics.Debugger.Launch();
                 var fileName = Marshal.PtrToStringAnsi(lpFileName);
 
                 if (string.IsNullOrEmpty(fileName))
@@ -535,7 +532,6 @@ namespace DirectEve.Hooking
 
             private IntPtr LoadLibraryWDetour(IntPtr lpFileName)
             {
-                System.Diagnostics.Debugger.Launch();
                 var fileName = Marshal.PtrToStringUni(lpFileName);
 
                 if (string.IsNullOrEmpty(fileName))
@@ -691,7 +687,6 @@ namespace DirectEve.Hooking
 
         internal static void InitializeHooks()
         {
-            System.Diagnostics.Debugger.Launch();
             _referenceCount++;
 
             if (_isInitialized)
