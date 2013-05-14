@@ -15,8 +15,7 @@ namespace DirectEve.Hooking
     using System.Diagnostics;
     using System.Runtime.InteropServices;
     using SmartAssembly.Attributes;
-    using WhiteMagic;
-    using WhiteMagic.Internals;
+    using EasyHook;
 
     [DoNotObfuscate]
     internal class Hooks
@@ -287,6 +286,9 @@ namespace DirectEve.Hooking
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern void SetLastError(int errorCode);
+        
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern IntPtr GetModuleHandleW(IntPtr lpModuleName);
 
         #endregion
 
@@ -344,41 +346,44 @@ namespace DirectEve.Hooking
             return IntPtr.Zero;
         }
 
-        private class LibraryCallHook : IDisposable
+        private class GetModuleHandleAHook : IDisposable
         {
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             private delegate IntPtr LibraryCallDelegate(IntPtr lpFileName);
 
-            private bool _isWideString;
             private string _name;
 
-            private Detour _original;
-            private LibraryCallDelegate _registered;
+            private LocalHook _hook;
 
-            public LibraryCallHook(IntPtr address, bool isWideString)
+            //To call original function
+            [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
+            public static extern IntPtr GetModuleHandleA(IntPtr lpModuleName);
+
+            public GetModuleHandleAHook(IntPtr address)
             {
-                _isWideString = isWideString;
                 _name = string.Format("LibraryCallHook_{0:X}", address.ToInt32());
 
-                _registered = Magic.Instance.RegisterDelegate<LibraryCallDelegate>(address);
-                _original = Magic.Instance.Detours.CreateAndApply(_registered, new LibraryCallDelegate(LoadLibraryDetour), _name);
+                _hook = LocalHook.Create(address, new LibraryCallDelegate(GetModuleHandleADetour), this);
+
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
             }
 
-            private IntPtr LoadLibraryDetour(IntPtr lpFileName)
+            private IntPtr GetModuleHandleADetour(IntPtr lpFileName)
             {
-                var fileName = _isWideString ? Marshal.PtrToStringUni(lpFileName) : Marshal.PtrToStringAnsi(lpFileName);
-                
+                System.Diagnostics.Debugger.Launch();
+                var fileName = Marshal.PtrToStringAnsi(lpFileName);
+
                 if (string.IsNullOrEmpty(fileName))
-                    return (IntPtr) _original.CallOriginal(lpFileName);
+                    return GetModuleHandleA(lpFileName);
 
                 fileName = fileName.ToLower();
                 if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp"))
-                    return (IntPtr)_original.CallOriginal(lpFileName);
+                    return GetModuleHandleA(lpFileName);
 
-                var trash = _isWideString ? Marshal.StringToHGlobalUni("ajhajshsg.dll") : Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
+                var trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
                 try
                 {
-                    return (IntPtr)_original.CallOriginal(trash);
+                    return GetModuleHandleA(trash);
                 }
                 finally
                 {
@@ -388,11 +393,176 @@ namespace DirectEve.Hooking
 
             public void Dispose()
             {
-                if (_original == null) 
+                if (_hook == null) 
                     return;
 
-                _original.Remove();
-                _original = null;
+                _hook.Dispose();
+                _hook = null;
+            }
+        }
+
+        private class GetModuleHandleWHook : IDisposable
+        {
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            private delegate IntPtr LibraryCallDelegate(IntPtr lpFileName);
+
+            private string _name;
+
+            private LocalHook _hook;
+
+            //To call original function
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+            public static extern IntPtr GetModuleHandleW(IntPtr lpModuleName);
+
+            public GetModuleHandleWHook(IntPtr address)
+            {
+                _name = string.Format("LibraryCallHook_{0:X}", address.ToInt32());
+
+                _hook = LocalHook.Create(address, new LibraryCallDelegate(GetModuleHandleWDetour), this);
+
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            }
+
+            private IntPtr GetModuleHandleWDetour(IntPtr lpFileName)
+            {
+                System.Diagnostics.Debugger.Launch();
+                var fileName = Marshal.PtrToStringUni(lpFileName);
+
+                if (string.IsNullOrEmpty(fileName))
+                    return GetModuleHandleW(lpFileName);
+
+                fileName = fileName.ToLower();
+                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp"))
+                    return GetModuleHandleW(lpFileName);
+
+                var trash = Marshal.StringToHGlobalUni("ajhajshsg.dll");
+                try
+                {
+                    return GetModuleHandleW(trash);
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(trash);
+                }
+            }
+
+            public void Dispose()
+            {
+                if (_hook == null)
+                    return;
+
+                _hook.Dispose();
+                _hook = null;
+            }
+        }
+        
+        private class LoadLibraryAHook : IDisposable
+        {
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            private delegate IntPtr LibraryCallDelegate(IntPtr lpFileName);
+
+            private string _name;
+
+            private LocalHook _hook;
+
+            //To call original function
+            [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
+            public static extern IntPtr LoadLibraryA(IntPtr lpModuleName);
+
+            public LoadLibraryAHook(IntPtr address)
+            {
+                _name = string.Format("LibraryCallHook_{0:X}", address.ToInt32());
+
+                _hook = LocalHook.Create(address, new LibraryCallDelegate(LoadLibraryADetour), this);
+
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            }
+
+            private IntPtr LoadLibraryADetour(IntPtr lpFileName)
+            {
+                System.Diagnostics.Debugger.Launch();
+                var fileName = Marshal.PtrToStringAnsi(lpFileName);
+
+                if (string.IsNullOrEmpty(fileName))
+                    return LoadLibraryA(lpFileName);
+
+                fileName = fileName.ToLower();
+                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp"))
+                    return LoadLibraryA(lpFileName);
+
+                var trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
+                try
+                {
+                    return LoadLibraryA(trash);
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(trash);
+                }
+            }
+
+            public void Dispose()
+            {
+                if (_hook == null)
+                    return;
+
+                _hook.Dispose();
+                _hook = null;
+            }
+        }
+
+        private class LoadLibraryWHook : IDisposable
+        {
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            private delegate IntPtr LibraryCallDelegate(IntPtr lpFileName);
+
+            private string _name;
+
+            private LocalHook _hook;
+
+            //To call original function
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+            public static extern IntPtr LoadLibraryW(IntPtr lpModuleName);
+
+            public LoadLibraryWHook(IntPtr address)
+            {
+                _name = string.Format("LibraryCallHook_{0:X}", address.ToInt32());
+
+                _hook = LocalHook.Create(address, new LibraryCallDelegate(LoadLibraryWDetour), this);
+
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            }
+
+            private IntPtr LoadLibraryWDetour(IntPtr lpFileName)
+            {
+                System.Diagnostics.Debugger.Launch();
+                var fileName = Marshal.PtrToStringUni(lpFileName);
+
+                if (string.IsNullOrEmpty(fileName))
+                    return LoadLibraryW(lpFileName);
+
+                fileName = fileName.ToLower();
+                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp"))
+                    return LoadLibraryW(lpFileName);
+
+                var trash = Marshal.StringToHGlobalUni("ajhajshsg.dll");
+                try
+                {
+                    return LoadLibraryW(trash);
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(trash);
+                }
+            }
+
+            public void Dispose()
+            {
+                if (_hook == null)
+                    return;
+
+                _hook.Dispose();
+                _hook = null;
             }
         }
 
@@ -403,15 +573,15 @@ namespace DirectEve.Hooking
 
             private string _name;
 
-            private Detour _original;
-            private MiniDumpWriteDumpDelegate _registered;
+            private LocalHook _hook;
 
             public MiniDumpWriteDumpHook(IntPtr address)
             {
                 _name = string.Format("MiniDumpWriteDumpHook_{0:X}", address.ToInt32());
 
-                _registered = Magic.Instance.RegisterDelegate<MiniDumpWriteDumpDelegate>(address);
-                _original = Magic.Instance.Detours.CreateAndApply(_registered, new MiniDumpWriteDumpDelegate(MiniDumpWriteDumpDetour), _name);
+                _hook = LocalHook.Create(address, new MiniDumpWriteDumpDelegate(MiniDumpWriteDumpDetour), this);
+
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
             }
 
             private bool MiniDumpWriteDumpDetour(IntPtr lpModuleName, IntPtr processId, IntPtr hFile, IntPtr dumpType, IntPtr exceptionParam, IntPtr userStreamParam, IntPtr callbackParam)
@@ -422,14 +592,14 @@ namespace DirectEve.Hooking
 
             public void Dispose()
             {
-                if (_original == null) 
+                if (_hook == null) 
                     return;
 
-                _original.Remove();
-                _original = null;
+                _hook.Dispose();
+                _hook = null;
             }
         }
-
+        
         private class EnumProcessesHook : IDisposable
         {
             [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
@@ -437,18 +607,18 @@ namespace DirectEve.Hooking
 
             private string _name;
 
-            private Detour _original;
-            private Delegate _registered;
+            private LocalHook _hook;
 
             public EnumProcessesHook(IntPtr address)
             {
                 _name = string.Format("EnumProcessesHook_{0:X}", address.ToInt32());
 
-                _registered = Magic.Instance.RegisterDelegate<EnumProcessesDelegate>(address);
-                _original = Magic.Instance.Detours.CreateAndApply(_registered, new EnumProcessesDelegate(MiniDumpWriteDumpDetour), _name);
+                _hook = LocalHook.Create(address, new EnumProcessesDelegate(EnumProcessDetour), this);
+
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
             }
 
-            private bool MiniDumpWriteDumpDetour([In] [Out] IntPtr processIds, UInt32 arraySizeBytes, [In] [Out] IntPtr bytesCopied)
+            private bool EnumProcessDetour([In] [Out] IntPtr processIds, UInt32 arraySizeBytes, [In] [Out] IntPtr bytesCopied)
             {
                 if (processIds == IntPtr.Zero || bytesCopied == IntPtr.Zero)
                     return false;
@@ -460,14 +630,14 @@ namespace DirectEve.Hooking
 
             public void Dispose()
             {
-                if (_original == null)
+                if (_hook == null)
                     return;
 
-                _original.Remove();
-                _original = null;
+                _hook.Dispose();
+                _hook = null;
             }
         }
-
+        
         private static IntPtr GetProcAddresFunc(string module, string function)
         {
             return GetProcAddress(GetModuleHandle(module), function);
@@ -477,36 +647,51 @@ namespace DirectEve.Hooking
         private static int _referenceCount;
         private static List<IDisposable> _hooks;
 
-        private static void HookImport(string module, string importedModule, string function, bool isWideString)
+        private static IntPtr GetImportAddress(string module, string importedModule, string function)
         {
             var handle = GetModuleHandle(module);
             if (handle == IntPtr.Zero)
-                return;
+                return IntPtr.Zero;
 
             var address = GetThunk(handle, importedModule, function);
             if (address == IntPtr.Zero)
-                return;
+                return IntPtr.Zero;
 
             if (address == GetProcAddresFunc(importedModule, function))
-                return;
-            
-            try
-            {
-                _hooks.Add(new LibraryCallHook(address, isWideString));
-            }
-            catch { }
+                return IntPtr.Zero;
+
+            return address;
         }
 
         private static void HookImports(string module)
         {
+            var address = GetImportAddress(module, "kernel32.dll", "GetModuleHandleA");
+            if (address != null && address != IntPtr.Zero)
+                _hooks.Add(new GetModuleHandleAHook(address));
+
+            address = GetImportAddress(module, "kernel32.dll", "GetModuleHandleW");
+            if (address != null && address != IntPtr.Zero)
+                _hooks.Add(new GetModuleHandleWHook(address));
+
+            address = GetImportAddress(module, "kernel32.dll", "LoadLibraryA");
+            if (address != null && address != IntPtr.Zero)
+                _hooks.Add(new LoadLibraryAHook(address));
+
+            address = GetImportAddress(module, "kernel32.dll", "LoadLibraryW");
+            if (address != null && address != IntPtr.Zero)
+                _hooks.Add(new LoadLibraryWHook(address));
+
+            /*
             HookImport(module, "kernel32.dll", "LoadLibraryA", false);
             HookImport(module, "kernel32.dll", "LoadLibraryW", true);
             HookImport(module, "kernel32.dll", "GetModuleHandleA", false);
             HookImport(module, "kernel32.dll", "GetModuleHandleW", true);
+             * */
         }
 
         internal static void InitializeHooks()
         {
+            System.Diagnostics.Debugger.Launch();
             _referenceCount++;
 
             if (_isInitialized)
@@ -515,13 +700,11 @@ namespace DirectEve.Hooking
 
             _hooks = new List<IDisposable>
             {
-                // This block will only be active if dbghelp.dll is already loaded, otherwise LoadLibrary will block the dll from getting loaded
+                new GetModuleHandleAHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleA")),
+                new GetModuleHandleWHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleW")),
+                new LoadLibraryAHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryA")),
+                new LoadLibraryWHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW")),
                 new MiniDumpWriteDumpHook(GetProcAddresFunc("dbghelp.dll", "MiniDumpWriteDump")),
-                // These block the kernel versions 
-                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryA"), false),
-                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW"), true),
-                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleA"), false),
-                new LibraryCallHook(GetProcAddresFunc("kernel32.dll", "GetModuleHandleW"), true),
                 new EnumProcessesHook(GetProcAddresFunc("kernel32.dll", "K32EnumProcesses"))
             };
 
@@ -529,6 +712,7 @@ namespace DirectEve.Hooking
             HookImports("_ctypes.pyd");
             HookImports("exefile.exe");
 
+            
             var handle = GetModuleHandle("psapi.dll");
             if (handle == IntPtr.Zero)
                 return;
@@ -545,6 +729,7 @@ namespace DirectEve.Hooking
                 _hooks.Add(new EnumProcessesHook(address));
             }
             catch { }
+      
         }
 
         internal static void RemoveHooks()

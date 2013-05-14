@@ -49,6 +49,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DocumentationFile />
     <NoWarn>1591</NoWarn>
+    <OutputPath>..\..\..\..\..\..\..\Program Files %28x86%29\InnerSpace\.NET Programs\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -83,6 +84,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
@@ -150,6 +152,28 @@
     <Compile Include="DirectStation.cs" />
     <Compile Include="DirectTelecomWindow.cs" />
     <Compile Include="DirectWindow.cs" />
+    <Compile Include="EasyHook\Config.cs" />
+    <Compile Include="EasyHook\Debugging.cs" />
+    <Compile Include="EasyHook\DllImport.cs" />
+    <Compile Include="EasyHook\Domain\DomainIdentifier.cs" />
+    <Compile Include="EasyHook\GACWrap.cs" />
+    <Compile Include="EasyHook\HelperServiceInterface.cs" />
+    <Compile Include="EasyHook\InjectionLoader.cs" />
+    <Compile Include="EasyHook\IPC\-DummyCore.cs" />
+    <Compile Include="EasyHook\IPC\ChannelProperties.cs" />
+    <Compile Include="EasyHook\IPC\ConnectionManager.cs" />
+    <Compile Include="EasyHook\IPC\DomainConnectionEndPoint.cs" />
+    <Compile Include="EasyHook\IPC\DuplexChannel.cs" />
+    <Compile Include="EasyHook\IPC\DuplexChannelEndPointObject.cs" />
+    <Compile Include="EasyHook\IPC\DuplexChannelReadyEventHandler.cs" />
+    <Compile Include="EasyHook\IPC\DuplexChannelState.cs" />
+    <Compile Include="EasyHook\IPC\EndPointConfigurationData.cs" />
+    <Compile Include="EasyHook\IPC\EndPointObject.cs" />
+    <Compile Include="EasyHook\IPC\SimplexChannel.cs" />
+    <Compile Include="EasyHook\LocalHook.cs" />
+    <Compile Include="EasyHook\RemoteHook.cs" />
+    <Compile Include="EasyHook\ServiceMgmt.cs" />
+    <Compile Include="EasyHook\WOW64Bypass.cs" />
     <Compile Include="Frameworks\IFramework.cs" />
     <Compile Include="Frameworks\InnerSpace.cs" />
     <Compile Include="Hooking\Hooks.cs" />
@@ -166,20 +190,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="WhiteMagic\Internals\DetourManager.cs" />
-    <Compile Include="WhiteMagic\Internals\Manager.cs" />
-    <Compile Include="WhiteMagic\Internals\PatchManager.cs" />
-    <Compile Include="WhiteMagic\Internals\PatternManager.cs" />
-    <Compile Include="WhiteMagic\Magic.cs" />
-    <Compile Include="WhiteMagic\MissingAttributeException.cs" />
-    <Compile Include="WhiteMagic\Native\PeHeaderParser.cs" />
-    <Compile Include="WhiteMagic\Native\Win32.cs" />
-    <Compile Include="WhiteMagic\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Certificates\ClientToServer.pfx" />
     <EmbeddedResource Include="Certificates\ServerToClient.cer" />
     <None Include="DirectEve.snk" />
+    <None Include="EasyHook\StrongName.snk" />
     <None Include="Service References\LicenseServer\DirectEve.LicenseServer.StartupResponseV1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -215,6 +231,12 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EasyHook\EasyHook.csproj" />
+    <Content Include="EasyHook\ExecuteAsService.xml" />
+    <Content Include="EasyHook\FileMonHost.xml" />
+    <Content Include="EasyHook\FileMonInject.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props" Condition="Exists('$(MSBuildProjectDirectory)\$(MSBuildProjectName).user.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

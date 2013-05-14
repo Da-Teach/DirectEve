@@ -222,9 +222,9 @@ namespace DirectEve
                     {
                         Hooks.InitializeHooks();
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Log("Warning: Failed to initialize stealth hooks");
+                        Log("Warning: Failed to initialize stealth hooks: " + ex);
                     }
                 }
                 _framework.RegisterFrameHook(FrameworkOnFrame);
