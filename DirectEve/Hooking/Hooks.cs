@@ -14,10 +14,8 @@ namespace DirectEve.Hooking
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.InteropServices;
-    using SmartAssembly.Attributes;
     using EasyHook;
 
-    [DoNotObfuscate]
     internal class Hooks
     {
         #region Native structures
