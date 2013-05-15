@@ -374,7 +374,7 @@ namespace DirectEve.Hooking
                     return GetModuleHandleA(lpFileName);
 
                 fileName = fileName.ToLower();
-                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp"))
+                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp") && !fileName.Contains("easyhook"))
                     return GetModuleHandleA(lpFileName);
 
                 var trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
@@ -428,7 +428,7 @@ namespace DirectEve.Hooking
                     return GetModuleHandleW(lpFileName);
 
                 fileName = fileName.ToLower();
-                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp"))
+                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp") && !fileName.Contains("easyhook"))
                     return GetModuleHandleW(lpFileName);
 
                 var trash = Marshal.StringToHGlobalUni("ajhajshsg.dll");
@@ -482,7 +482,7 @@ namespace DirectEve.Hooking
                     return LoadLibraryA(lpFileName);
 
                 fileName = fileName.ToLower();
-                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp"))
+                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp") && !fileName.Contains("easyhook"))
                     return LoadLibraryA(lpFileName);
 
                 var trash = Marshal.StringToHGlobalAnsi("ajhajshsg.dll");
@@ -536,7 +536,7 @@ namespace DirectEve.Hooking
                     return LoadLibraryW(lpFileName);
 
                 fileName = fileName.ToLower();
-                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp"))
+                if (!fileName.Contains("rgdll") && !fileName.Contains("directeve") && !fileName.Contains("questor") && !fileName.Contains("dbghelp") && !fileName.Contains("easyhook"))
                     return LoadLibraryW(lpFileName);
 
                 var trash = Marshal.StringToHGlobalUni("ajhajshsg.dll");
