@@ -1,0 +1,76 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aphack", "FileMon\Aphack.csproj", "{56B9A390-F320-4224-BFE3-380DDAC2370F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AphackInject", "FileMonInject\AphackInject.csproj", "{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		netfx3.5-Debug|Any CPU = netfx3.5-Debug|Any CPU
+		netfx3.5-Debug|x86 = netfx3.5-Debug|x86
+		netfx3.5-Release|Any CPU = netfx3.5-Release|Any CPU
+		netfx3.5-Release|x86 = netfx3.5-Release|x86
+		netfx4-Debug|Any CPU = netfx4-Debug|Any CPU
+		netfx4-Debug|x86 = netfx4-Debug|x86
+		netfx4-Release|Any CPU = netfx4-Release|Any CPU
+		netfx4-Release|x86 = netfx4-Release|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.Debug|Any CPU.ActiveCfg = netfx4-Debug|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.Debug|Any CPU.Build.0 = netfx4-Debug|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.Debug|x86.ActiveCfg = netfx4-Debug|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.Debug|x86.Build.0 = netfx4-Debug|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx3.5-Debug|Any CPU.ActiveCfg = netfx3.5-Debug|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx3.5-Debug|Any CPU.Build.0 = netfx3.5-Debug|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx3.5-Debug|x86.ActiveCfg = netfx3.5-Debug|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx3.5-Debug|x86.Build.0 = netfx3.5-Debug|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx3.5-Release|Any CPU.ActiveCfg = netfx3.5-Release|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx3.5-Release|Any CPU.Build.0 = netfx3.5-Release|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx3.5-Release|x86.ActiveCfg = netfx3.5-Release|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx3.5-Release|x86.Build.0 = netfx3.5-Release|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx4-Debug|Any CPU.ActiveCfg = netfx4-Debug|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx4-Debug|Any CPU.Build.0 = netfx4-Debug|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx4-Debug|x86.ActiveCfg = netfx4-Debug|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx4-Debug|x86.Build.0 = netfx4-Debug|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx4-Release|Any CPU.ActiveCfg = netfx4-Release|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx4-Release|Any CPU.Build.0 = netfx4-Release|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx4-Release|x86.ActiveCfg = netfx4-Release|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.netfx4-Release|x86.Build.0 = netfx4-Release|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.Release|Any CPU.ActiveCfg = netfx4-Debug|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.Release|Any CPU.Build.0 = netfx4-Debug|Any CPU
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.Release|x86.ActiveCfg = netfx4-Release|x86
+		{56B9A390-F320-4224-BFE3-380DDAC2370F}.Release|x86.Build.0 = netfx4-Release|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.Debug|Any CPU.ActiveCfg = netfx4-Debug|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.Debug|Any CPU.Build.0 = netfx4-Debug|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.Debug|x86.ActiveCfg = netfx4-Debug|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.Debug|x86.Build.0 = netfx4-Debug|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx3.5-Debug|Any CPU.ActiveCfg = netfx3.5-Debug|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx3.5-Debug|Any CPU.Build.0 = netfx3.5-Debug|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx3.5-Debug|x86.ActiveCfg = netfx3.5-Debug|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx3.5-Debug|x86.Build.0 = netfx3.5-Debug|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx3.5-Release|Any CPU.ActiveCfg = netfx3.5-Release|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx3.5-Release|Any CPU.Build.0 = netfx3.5-Release|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx3.5-Release|x86.ActiveCfg = netfx3.5-Release|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx3.5-Release|x86.Build.0 = netfx3.5-Release|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx4-Debug|Any CPU.ActiveCfg = netfx4-Debug|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx4-Debug|Any CPU.Build.0 = netfx4-Debug|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx4-Debug|x86.ActiveCfg = netfx4-Debug|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx4-Debug|x86.Build.0 = netfx4-Debug|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx4-Release|Any CPU.ActiveCfg = netfx4-Release|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx4-Release|Any CPU.Build.0 = netfx4-Release|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx4-Release|x86.ActiveCfg = netfx4-Release|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.netfx4-Release|x86.Build.0 = netfx4-Release|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.Release|Any CPU.ActiveCfg = netfx4-Debug|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.Release|Any CPU.Build.0 = netfx4-Debug|Any CPU
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.Release|x86.ActiveCfg = netfx4-Release|x86
+		{CA462E5D-8A32-42EA-9DBD-C256D22FDA21}.Release|x86.Build.0 = netfx4-Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
