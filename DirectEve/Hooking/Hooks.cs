@@ -631,6 +631,40 @@ namespace DirectEve.Hooking
                 _hook = null;
             }
         }
+
+
+        private class IsDebuggerPresentHook : IDisposable
+        {
+            [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
+            private delegate bool IsDebuggerPresentDelegate();
+
+            private string _name;
+
+            private LocalHook _hook;
+
+            public IsDebuggerPresentHook(IntPtr address)
+            {
+                _name = string.Format("EnumProcessesHook_{0:X}", address.ToInt32());
+
+                _hook = LocalHook.Create(address, new IsDebuggerPresentDelegate(IsDebuggerPresentDetour), this);
+
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            }
+
+            private bool IsDebuggerPresentDetour()
+            {
+                return false;
+            }
+
+            public void Dispose()
+            {
+                if (_hook == null)
+                    return;
+
+                _hook.Dispose();
+                _hook = null;
+            }
+        }
         
         private static IntPtr GetProcAddresFunc(string module, string function)
         {
@@ -675,6 +709,10 @@ namespace DirectEve.Hooking
             if (address != null && address != IntPtr.Zero)
                 _hooks.Add(new LoadLibraryWHook(address));
 
+            address = GetImportAddress(module, "kernel32.dll", "IsDebuggerPresent");
+            if (address != null && address != IntPtr.Zero)
+                _hooks.Add(new IsDebuggerPresentHook(address));
+
             /*
             HookImport(module, "kernel32.dll", "LoadLibraryA", false);
             HookImport(module, "kernel32.dll", "LoadLibraryW", true);
@@ -698,7 +736,8 @@ namespace DirectEve.Hooking
                 new LoadLibraryAHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryA")),
                 new LoadLibraryWHook(GetProcAddresFunc("kernel32.dll", "LoadLibraryW")),
                 new MiniDumpWriteDumpHook(GetProcAddresFunc("dbghelp.dll", "MiniDumpWriteDump")),
-                new EnumProcessesHook(GetProcAddresFunc("kernel32.dll", "K32EnumProcesses"))
+                new EnumProcessesHook(GetProcAddresFunc("kernel32.dll", "K32EnumProcesses")),
+                new IsDebuggerPresentHook(GetProcAddresFunc("kernel32.dll", "IsDebuggerPresent"))
             };
 
             // Here we'll add the versions per import-table

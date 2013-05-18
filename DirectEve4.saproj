@@ -97,49 +97,12 @@
                             <Token Table="Namespace">
                                 <Assembly>DirectEve</Assembly>
                                 <Module>DirectEve.dll</Module>
-                                <Namespace>WhiteMagic</Namespace>
-                            </Token>
-                            <Token Table="Namespace">
-                                <Assembly>DirectEve</Assembly>
-                                <Module>DirectEve.dll</Module>
-                                <Namespace>WhiteMagic.Internals</Namespace>
-                            </Token>
-                            <Token Table="Namespace">
-                                <Assembly>DirectEve</Assembly>
-                                <Module>DirectEve.dll</Module>
-                                <Namespace>WhiteMagic.Native</Namespace>
-                            </Token>
-                            <Token Table="Namespace">
-                                <Assembly>DirectEve</Assembly>
-                                <Module>DirectEve.dll</Module>
                                 <Namespace>DirectEve.Hooking</Namespace>
                             </Token>
                         </Exclusion>
                     </Pruning>
                     <Obfuscation Obfuscate="1">
                         <Exclusion>
-                            <Token Table="Namespace">
-                                <Assembly>DirectEve</Assembly>
-                                <Module>DirectEve.dll</Module>
-                                <Namespace>WhiteMagic</Namespace>
-                            </Token>
-                            <Token Table="Namespace">
-                                <Assembly>DirectEve</Assembly>
-                                <Module>DirectEve.dll</Module>
-                                <Namespace>WhiteMagic.Internals</Namespace>
-                            </Token>
-                            <Token Table="Namespace">
-                                <Assembly>DirectEve</Assembly>
-                                <Module>DirectEve.dll</Module>
-                                <Namespace>WhiteMagic.Native</Namespace>
-                            </Token>
-                            <Token Table="WholeType">
-                                <Assembly>DirectEve</Assembly>
-                                <Module>DirectEve.dll</Module>
-                                <ItemType>Class</ItemType>
-                                <Namespace>DirectEve</Namespace>
-                                <Name>Hooks</Name>
-                            </Token>
                             <Token Table="Namespace">
                                 <Assembly>DirectEve</Assembly>
                                 <Module>DirectEve.dll</Module>
