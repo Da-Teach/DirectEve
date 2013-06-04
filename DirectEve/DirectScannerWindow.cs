@@ -175,7 +175,7 @@ namespace DirectEve
         {
             if (DirectEve.HasSupportInstances())
             {   // only perform a scan for paid users
-                var scanningProbes = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("scanSvc").Attribute("scanningProbes");
+                var scanningProbes = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("scanSvc").Attribute("scanHandler").Attribute("scanningProbes");
 
                 // Check for an active scan.  If we call Analyze while a scan is running Eve will throw an exception
                 if (scanningProbes.IsValid == false)
@@ -191,7 +191,7 @@ namespace DirectEve
         public List<DirectScannerProbe> GetProbes()
         {
             var Probes = new List<DirectScannerProbe>();
-            var pyProbes = DirectEve.GetLocalSvc("scanSvc").Attribute("probeData").ToDictionary<long>();
+            var pyProbes = DirectEve.GetLocalSvc("scanSvc").Attribute("probeTracker").Attribute("probeData").ToDictionary<long>();
             foreach (var pyProbe in pyProbes)
                 Probes.Add(new DirectScannerProbe(DirectEve, pyProbe.Value));
 

@@ -55,17 +55,17 @@ namespace DirectEve
                 return false;
             var stepNumber = AllRangesAu.FindIndex(i => i == range) + 1;
 
-            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("scanSvc").Attribute("SetProbeRangeStep"), ProbeId, stepNumber);            
+            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("scanSvc").Attribute("probeTracker").Attribute("SetProbeRangeStep"), ProbeId, stepNumber);            
         }
 
         public bool RecoverProbe()
         {
-            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("scanSvc").Attribute("RecoverProbe"), ProbeId);
+            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("scanSvc").Attribute("probeTracker").Attribute("RecoverProbe"), ProbeId);
         }
 
         public bool DestroyProbe()
         {
-            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("scanSvc").Attribute("DestroyProbe"), ProbeId);
+            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("scanSvc").Attribute("probeTracker").Attribute("DestroyProbe"), ProbeId);
         }
        
     }

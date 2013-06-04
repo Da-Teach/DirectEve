@@ -47,6 +47,7 @@ namespace DirectEve
         private double? _wormholeAge;
         private double? _wormholeSize;
         private DateTime lastApproach = DateTime.MinValue;
+        private DateTime lastKeepAtRange = DateTime.MinValue;
 
         internal DirectEntity(DirectEve directEve, PyObject ballpark, PyObject ball, PyObject slimItem, long id)
             : base(directEve)
@@ -560,25 +561,28 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Approach target at 50m
+        ///   Approach target
         /// </summary>
         /// <returns></returns>
         public bool Approach()
         {
-            return Approach(50);
-        }
-
-        /// <summary>
-        ///   Approach target
-        /// </summary>
-        /// <param name = "range"></param>
-        /// <returns></returns>
-        public bool Approach(int range)
-        {
             if (DateTime.Now.Subtract(lastApproach).TotalSeconds < 10)
                 return false;
             lastApproach = DateTime.Now;
-            return DirectEve.ThreadedLocalSvcCall("menu", "Approach", Id, range);
+            return DirectEve.ThreadedLocalSvcCall("menu", "Approach", Id);
+        }
+
+        /// <summary>
+        ///   KeepAtRange target
+        /// </summary>
+        /// <param name="range"></param>
+        /// <returns></returns>
+        public bool KeepAtRange(int range)
+        {
+            if (DateTime.Now.Subtract(lastKeepAtRange).TotalSeconds < 10)
+                return false;
+            lastKeepAtRange = DateTime.Now;
+            return DirectEve.ThreadedLocalSvcCall("menu", "KeepAtRange", Id, range);
         }
 
         /// <summary>
