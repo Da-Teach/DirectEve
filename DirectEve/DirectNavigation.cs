@@ -54,9 +54,9 @@ namespace DirectEve
         ///   Return destination path (locationId's only)
         /// </summary>
         /// <returns></returns>
-        public List<long> GetDestinationPath()
+        public List<int> GetDestinationPath()
         {
-            return DirectEve.GetLocalSvc("starmap").Attribute("destinationPath").ToList<long>();
+            return DirectEve.GetLocalSvc("starmap").Attribute("destinationPath").ToList<int>();
         }
     }
 }
