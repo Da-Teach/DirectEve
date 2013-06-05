@@ -18,22 +18,22 @@ namespace DirectEve
 
         internal DirectStation(DirectEve directEve, PyObject pyo) : base(directEve)
         {
-            Id = (long) pyo.Attribute("stationID");
+            Id = (int) pyo.Attribute("stationID");
             Name = (string) pyo.Attribute("stationName");
             X = (double) pyo.Attribute("x");
             Y = (double) pyo.Attribute("y");
             Z = (double) pyo.Attribute("z");
             TypeId = (int) pyo.Attribute("stationTypeID");
-            SolarSystemId = (long) pyo.Attribute("solarSystemID");
+            SolarSystemId = (int) pyo.Attribute("solarSystemID");
         }
 
-        public long Id { get; private set; }
+        public int Id { get; private set; }
         public string Name { get; private set; }
         public double X { get; private set; }
         public double Y { get; private set; }
         public double Z { get; private set; }
 
-        public long SolarSystemId { get; private set; }
+        public int SolarSystemId { get; private set; }
 
         public DirectSolarSystem SolarSystem
         {
@@ -44,11 +44,11 @@ namespace DirectEve
             }
         }
 
-        public static Dictionary<long, DirectStation> GetStations(DirectEve directEve)
+        public static Dictionary<int, DirectStation> GetStations(DirectEve directEve)
         {
-            var result = new Dictionary<long, DirectStation>();
+            var result = new Dictionary<int, DirectStation>();
 
-            var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("stations").Attribute("data").ToDictionary<long>();
+            var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("stations").Attribute("data").ToDictionary<int>();
             foreach (var pair in pyDict)
                 result[pair.Key] = new DirectStation(directEve, pair.Value);
 

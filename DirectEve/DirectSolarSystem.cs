@@ -21,7 +21,7 @@ namespace DirectEve
         internal DirectSolarSystem(DirectEve directEve, PyObject pyo)
             : base(directEve)
         {
-            Id = (long) pyo.Attribute("solarSystemID");
+            Id = (int) pyo.Attribute("solarSystemID");
             Name = (string) pyo.Attribute("solarSystemName");
             Description = (string) pyo.Attribute("description");
             ConstellationId = (long) pyo.Attribute("constellationID");
@@ -30,7 +30,7 @@ namespace DirectEve
             IsWormholeSystem = ((long)directEve.Const.MapWormholeSystemMin < Id && Id < (long)directEve.Const.MapWormholeSystemMax);
         }
 
-        public long Id { get; private set; }
+        public int Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
 
@@ -64,11 +64,11 @@ namespace DirectEve
             get { return _stations ?? (_stations = DirectEve.Stations.Values.Where(s => s.SolarSystemId == Id).ToList()); }
         }
 
-        internal static Dictionary<long, DirectSolarSystem> GetSolarSystems(DirectEve directEve)
+        internal static Dictionary<int, DirectSolarSystem> GetSolarSystems(DirectEve directEve)
         {
-            var result = new Dictionary<long, DirectSolarSystem>();
+            var result = new Dictionary<int, DirectSolarSystem>();
 
-            var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("solarsystems").Attribute("data").ToDictionary<long>();
+            var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("solarsystems").Attribute("data").ToDictionary<int>();
             foreach (var pair in pyDict)
                 result[pair.Key] = new DirectSolarSystem(directEve, pair.Value);
 
@@ -79,7 +79,5 @@ namespace DirectEve
         {
             return (int)directEve.GetLocalSvc("pathfinder").Call("GetJumpCountFromCurrent", solarsystem1, solarsystem2);
         }
-
-
     }
 }

@@ -58,19 +58,19 @@ namespace DirectEve
             get { return (long?) Session.Attribute("fleetid"); }
         }
 
-        public long? StationId
+        public int? StationId
         {
-            get { return (long?) Session.Attribute("stationid"); }
+            get { return (int?) Session.Attribute("stationid"); }
         }
 
-        public long? LocationId
+        public int? LocationId
         {
-            get { return (long?) Session.Attribute("locationid"); }
+            get { return (int?) Session.Attribute("locationid"); }
         }
 
-        public long? SolarSystemId
+        public int? SolarSystemId
         {
-            get { return (long?) Session.Attribute("solarsystemid2"); }
+            get { return (int?) Session.Attribute("solarsystemid2"); }
         }
 
         public long? ConstellationId

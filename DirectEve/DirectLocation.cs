@@ -63,7 +63,7 @@ namespace DirectEve
 
                 region = constellation.Region;
             }
-            else if (directEve.SolarSystems.TryGetValue(locationId, out solarSystem))
+            else if (directEve.SolarSystems.TryGetValue((int)locationId, out solarSystem))
             {
                 isValid = true;
                 name = solarSystem.Name;
@@ -71,7 +71,7 @@ namespace DirectEve
                 constellation = solarSystem.Constellation;
                 region = constellation.Region;
             }
-            else if (directEve.Stations.TryGetValue(locationId, out station))
+            else if (directEve.Stations.TryGetValue((int)locationId, out station))
             {
                 isValid = true;
                 name = station.Name;

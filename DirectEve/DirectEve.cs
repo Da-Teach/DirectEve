@@ -145,7 +145,7 @@ namespace DirectEve
         /// <summary>
         ///   Cache the GetRegions call
         /// </summary>
-        private Dictionary<long, DirectSolarSystem> _solarSystems;
+        private Dictionary<int, DirectSolarSystem> _solarSystems;
 
         /// <summary>
         ///   Standings cache
@@ -155,7 +155,7 @@ namespace DirectEve
         /// <summary>
         ///   Cache the GetStations call
         /// </summary>
-        private Dictionary<long, DirectStation> _stations;
+        private Dictionary<int, DirectStation> _stations;
 
         /// <summary>
         ///   Cache the GetWindows call
@@ -409,7 +409,7 @@ namespace DirectEve
         /// <remarks>
         ///   This is cached throughout the existance of this DirectEve Instance
         /// </remarks>
-        public Dictionary<long, DirectStation> Stations
+        public Dictionary<int, DirectStation> Stations
         {
             get { return _stations ?? (_stations = DirectStation.GetStations(this)); }
         }
@@ -420,7 +420,7 @@ namespace DirectEve
         /// <remarks>
         ///   This is cached throughout the existance of this DirectEve Instance
         /// </remarks>
-        public Dictionary<long, DirectSolarSystem> SolarSystems
+        public Dictionary<int, DirectSolarSystem> SolarSystems
         {
             get { return _solarSystems ?? (_solarSystems = DirectSolarSystem.GetSolarSystems(this)); }
         }
@@ -1028,7 +1028,7 @@ namespace DirectEve
         /// </summary>
         /// <param name = "locationId"></param>
         /// <returns></returns>
-        public DirectLocation GetLocation(long locationId)
+        public DirectLocation GetLocation(int locationId)
         {
             return DirectLocation.GetLocation(this, locationId);
         }
