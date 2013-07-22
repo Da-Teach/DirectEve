@@ -10,6 +10,7 @@
 namespace DirectEve
 {
     using global::DirectEve.PySharp;
+    using System.Collections.Generic;
 
     public class DirectInvType : DirectObject
     {
@@ -40,6 +41,12 @@ namespace DirectEve
         internal DirectInvType(DirectEve directEve)
             : base(directEve)
         {
+        }
+
+        internal DirectInvType(DirectEve directEve, int typeId)
+            : base(directEve)
+        {
+            TypeId = typeId;
         }
 
         internal PyObject PyInvType
@@ -277,6 +284,17 @@ namespace DirectEve
 
                 return _dataId.Value;
             }
+        }
+
+        internal static Dictionary<int, DirectInvType> GetInvtypes(DirectEve directEve)
+        {
+            var result = new Dictionary<int, DirectInvType>();
+
+            var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("invtypes").Attribute("data").ToDictionary<int>();
+            foreach (var pair in pyDict)
+                result[pair.Key] = new DirectInvType(directEve, pair.Key);
+
+            return result;
         }
     }
 }

@@ -767,5 +767,14 @@ namespace DirectEve
 
             return DirectEve.ThreadedLocalSvcCall("menu", "Board", Id);
         }
+
+        public double GetBounty()
+        {
+            var bountyRow = DirectEve.GetLocalSvc("godma").Call("GetType", this.TypeId).Attribute("displayAttributes").ToList().FirstOrDefault(i => i.Attribute("attributeID").ToInt() == (int)DirectEve.Const.AttributeEntityKillBounty);
+            if (bountyRow == null)
+                return 0;
+
+            return (double)bountyRow.Attribute("value");
+        }
     }
 }

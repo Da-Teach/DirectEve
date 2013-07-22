@@ -430,6 +430,8 @@ namespace DirectEve
             return DirectSolarSystem.GetDistanceBetweenSolarsystems(solarsystem1, solarsystem2, this);
         }
 
+        private Dictionary<int, DirectInvType> _invtypes;
+
         /// <summary>
         ///   Return a dictionary of solar systems
         /// </summary>
@@ -450,6 +452,11 @@ namespace DirectEve
         public Dictionary<long, DirectRegion> Regions
         {
             get { return _regions ?? (_regions = DirectRegion.GetRegions(this)); }
+        }
+
+        public Dictionary<int, DirectInvType> InvTypes
+        {
+            get { return _invtypes ?? (_invtypes = DirectInvType.GetInvtypes(this)); }
         }
 
         /// <summary>

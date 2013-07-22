@@ -185,5 +185,10 @@ namespace DirectEve
         {
             get { return Const.Attribute("mapWormholeSystemMax"); }
         }
+
+        public PyObject AttributeEntityKillBounty
+        {
+            get { return Const.Attribute("attributeEntityKillBounty"); }
+        }
     }
 }
