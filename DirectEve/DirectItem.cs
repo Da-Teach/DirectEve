@@ -319,7 +319,8 @@ namespace DirectEve
             if (IsSingleton)
                 return false;
 
-            return DirectEve.ThreadedLocalSvcCall("menu", "AssembleShip", new List<PyObject>() { this.PyItem });
+			PyObject AssembleShip = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.invItemFunctions").Attribute("AssembleShip");
+            return DirectEve.ThreadedCall(AssembleShip, new List<PyObject>() { this.PyItem });
         }
 
         /// <summary>
@@ -334,7 +335,8 @@ namespace DirectEve
             if (IsSingleton)
                 return false;
 
-            return DirectEve.ThreadedLocalSvcCall("menu", "Board", ItemId);
+			PyObject Board = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("Board");
+			return DirectEve.ThreadedCall(Board, ItemId);
         }
 
         /// <summary>
@@ -370,7 +372,8 @@ namespace DirectEve
             if (ItemId == 0 || !PyItem.IsValid)
                 return false;
 
-            return DirectEve.ThreadedLocalSvcCall("menu", "InjectSkillIntoBrain", new List<PyObject> { PyItem });
+			PyObject InjectSkillIntoBrain = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.invItemFunctions").Attribute("InjectSkillIntoBrain");
+			return DirectEve.ThreadedCall(InjectSkillIntoBrain, new List<PyObject> { PyItem });
         }
 
         /// <summary>
@@ -412,7 +415,9 @@ namespace DirectEve
         {
             if (this.TypeId != 29668)
                 return false;
-            return DirectEve.ThreadedLocalSvcCall("menu", "ApplyPilotLicence", ItemId);
+
+			PyObject ApplyPilotLicence = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("ApplyPilotLicence");
+			return DirectEve.ThreadedCall(ApplyPilotLicence, ItemId);
         }
     }
 }

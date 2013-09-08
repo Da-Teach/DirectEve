@@ -1,4 +1,6 @@
-﻿// ------------------------------------------------------------------------------
+﻿#define NO_DIRECTEVE_SECURITY
+
+// ------------------------------------------------------------------------------
 //   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
 //     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
 // 
@@ -181,7 +183,6 @@ namespace DirectEve
             {
                 _framework = new InnerSpaceFramework();
             }
-
 #if !NO_DIRECTEVE_SECURITY
             try
             {                
@@ -661,8 +662,9 @@ namespace DirectEve
         }
 
         public bool OpenShipMaintenanceBay(long itemID)
-        { 
-            return ThreadedLocalSvcCall("menu", "OpenShipMaintenanceBayShip", itemID, global::DirectEve.PySharp.PySharp.PyNone);
+        {
+			PyObject OpenShipMaintenanceBayShip = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.openFunctions").Attribute("OpenShipMaintenanceBayShip");
+			return ThreadedCall(OpenShipMaintenanceBayShip, itemID, global::DirectEve.PySharp.PySharp.PyNone);
         }
 
         public bool OpenStructure(long itemID)
@@ -1017,7 +1019,8 @@ namespace DirectEve
             if (items.Any(i => i.LocationId != Session.StationId))
                 return false;
 
-            return ThreadedLocalSvcCall("menu", "Refine", items.Select(i => i.PyItem));
+			PyObject Refine = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.invItemFunctions").Attribute("Refine");
+			return ThreadedCall(Refine, items.Select(i => i.PyItem));
         }
 
         /// <summary>
@@ -1112,7 +1115,7 @@ namespace DirectEve
         {
             return ThreadedCallWithKeywords(pyCall, null, parms);
         }
-
+		
         /// <summary>
         ///   Perform a uthread.new(pyCall, parms) call
         /// </summary>

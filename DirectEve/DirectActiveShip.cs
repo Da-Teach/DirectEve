@@ -11,6 +11,7 @@ namespace DirectEve
 {
     using System.Collections.Generic;
     using System.Linq;
+	using global::DirectEve.PySharp;
 
     public class DirectActiveShip : DirectItem
     {
@@ -246,7 +247,8 @@ namespace DirectEve
         /// <returns></returns>
         public bool EjectFromShip()
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "Eject");
+			PyObject Eject = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("Eject");
+			return DirectEve.ThreadedCall(Eject);
         }
 
         /// <summary>

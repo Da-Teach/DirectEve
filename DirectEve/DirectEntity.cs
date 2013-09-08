@@ -582,7 +582,9 @@ namespace DirectEve
             if (DateTime.Now.Subtract(lastKeepAtRange).TotalSeconds < 10)
                 return false;
             lastKeepAtRange = DateTime.Now;
-            return DirectEve.ThreadedLocalSvcCall("menu", "KeepAtRange", Id, range);
+
+			PyObject KeepAtRange = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("KeepAtRange");
+			return DirectEve.ThreadedCall(KeepAtRange, Id, range);
         }
 
         /// <summary>
@@ -601,7 +603,8 @@ namespace DirectEve
         /// <returns></returns>
         public bool Orbit(int range)
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "Orbit", Id, range);
+			PyObject Orbit = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("Orbit");
+			return DirectEve.ThreadedCall(Orbit, Id, range);
         }
 
         /// <summary>
@@ -610,7 +613,8 @@ namespace DirectEve
         /// <returns></returns>
         public bool WarpTo()
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "WarpToItem", Id);
+			PyObject WarpToItem = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("WarpToItem");
+			return DirectEve.ThreadedCall(WarpToItem, Id);
         }
 
         /// <summary>
@@ -619,7 +623,8 @@ namespace DirectEve
         /// <returns></returns>
         public bool WarpTo(double range)
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "WarpToItem", Id, range);
+			PyObject WarpToItem = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("WarpToItem");
+			return DirectEve.ThreadedCall(WarpToItem, Id, range);
         }
 
 
@@ -629,7 +634,8 @@ namespace DirectEve
         /// <returns></returns>
         public bool WarpToAndDock()
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
+			PyObject DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
+			return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
         }
 
         /// <summary>
@@ -670,8 +676,9 @@ namespace DirectEve
         /// <returns></returns>
         public bool Dock()
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
-        }
+			PyObject DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
+			return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
+		}
 
 
         /// <summary>
@@ -697,9 +704,10 @@ namespace DirectEve
         /// </summary>
         /// <returns></returns>
         public bool Jump()
-        {            
-            return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
-        }
+        {
+			PyObject DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
+			return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
+		}
 
         /// <summary>
         ///   Jump Wormhole (Wormholes only)
@@ -715,9 +723,10 @@ namespace DirectEve
         /// </summary>
         /// <returns></returns>
         public bool Activate()
-        {            
-            return DirectEve.ThreadedLocalSvcCall("menu", "DockOrJumpOrActivateGate", Id);
-        }
+        {
+			PyObject DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
+			return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
+		}
 
         /// <summary>
         ///   Make this your active target
@@ -750,7 +759,8 @@ namespace DirectEve
             if (GroupId != (int)DirectEve.Const.GroupWreck)
                 return false;
 
-            return DirectEve.ThreadedLocalSvcCall("menu", "AbandonAllLoot", Id);
+			PyObject AbandonAllLoot = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("AbandonAllLoot");
+			return DirectEve.ThreadedCall(AbandonAllLoot, Id);
         }
 
         /// <summary>
@@ -765,7 +775,8 @@ namespace DirectEve
             if (Distance > 6500)
                 return false;
 
-            return DirectEve.ThreadedLocalSvcCall("menu", "Board", Id);
+			PyObject Board = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("Board");
+			return DirectEve.ThreadedCall(Board, Id);
         }
 
         public double GetBounty()
