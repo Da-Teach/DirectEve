@@ -49,7 +49,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DocumentationFile />
     <NoWarn>1591</NoWarn>
-    <OutputPath>..\..\..\..\..\..\..\Program Files %28x86%29\InnerSpace\.NET Programs\</OutputPath>
+    <!--<OutputPath>..\..\..\..\..\..\..\Program Files %28x86%29\InnerSpace\.NET Programs\</OutputPath>-->
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
