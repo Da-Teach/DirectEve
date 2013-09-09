@@ -102,8 +102,8 @@ namespace DirectEve
             agent.Quality = (int) pyAgent.Item(6);
             agent.CorpId = (long) pyAgent.Item(7);
             agent.Gender = (bool) pyAgent.Item(8);
-            agent.FactionId = (long) pyAgent.Item(9);
-            agent.SolarSystemId = (long) pyAgent.Item(10);
+            agent.FactionId = (long) pyAgent.Item(10);
+            agent.SolarSystemId = (long) pyAgent.Item(11);
             return agent;
         }
 
