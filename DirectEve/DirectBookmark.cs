@@ -149,12 +149,14 @@ namespace DirectEve
 
         public bool WarpTo(double distance)
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "WarpToBookmark", PyBookmark, distance);
+            PyObject warpToBookmark = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("WarpToBookmark");
+            return DirectEve.ThreadedCall(warpToBookmark, PyBookmark, distance);
         }
 
         public bool Approach()
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "ApproachLocation", PyBookmark);
+            PyObject approachLocation = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("ApproachLocation");
+            return DirectEve.ThreadedCall(approachLocation, PyBookmark);
         }
 
         public bool Delete()
