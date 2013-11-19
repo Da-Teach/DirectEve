@@ -26,7 +26,7 @@ namespace DirectEve
         /// </summary>
         public long CharId
         {
-            get { return (long) _pySlot.Attribute("sr").Attribute("charid"); }
+            get { return (long) _pySlot.Attribute("characterID"); }
         }
 
         /// <summary>
@@ -36,9 +36,7 @@ namespace DirectEve
         {
             get
             {
-                var strip = new Regex(@"<(.|\n)*?>");                
-                string text = (string)_pySlot.Attribute("sr").Attribute("smallcaption").Attribute("text");
-                return strip.Replace(text.Substring(text.IndexOf('>', 0) + 1), string.Empty);                
+                return (string)_pySlot.Attribute("characterName");              
             }
         }
 
@@ -53,8 +51,8 @@ namespace DirectEve
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            
-            var selectSlot = PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("charsel").Attribute("SelectSlot");
+
+            var selectSlot = PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("charsel").Attribute("EnterGameWithCharacter");
             return DirectEve.ThreadedCall(selectSlot, _pySlot);
         }
     }

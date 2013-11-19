@@ -93,9 +93,8 @@ namespace DirectEve
                 if (_slots == null)
                 {
                     _slots = new List<DirectLoginSlot>();
-                    _slots.Add(new DirectLoginSlot(DirectEve, CharSelectLayer.Attribute("sr").Attribute("slot0")));
-                    _slots.Add(new DirectLoginSlot(DirectEve, CharSelectLayer.Attribute("sr").Attribute("slot1")));
-                    _slots.Add(new DirectLoginSlot(DirectEve, CharSelectLayer.Attribute("sr").Attribute("slot2")));
+                    foreach (var slot in CharSelectLayer.Attribute("chars").ToList())
+                        _slots.Add(new DirectLoginSlot(DirectEve, slot));
                 }
 
                 return _slots;
