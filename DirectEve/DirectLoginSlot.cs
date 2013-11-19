@@ -26,7 +26,7 @@ namespace DirectEve
         /// </summary>
         public long CharId
         {
-            get { return (long) _pySlot.Attribute("characterID"); }
+            get { return (long)_pySlot.Attribute("characterDetails").Attribute("charDetails").Attribute("characterID"); }
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace DirectEve
         {
             get
             {
-                return (string)_pySlot.Attribute("characterName");              
+                return (string)_pySlot.Attribute("characterDetails").Attribute("charDetails").Attribute("characterName");              
             }
         }
 
