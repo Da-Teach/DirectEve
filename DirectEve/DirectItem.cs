@@ -416,7 +416,7 @@ namespace DirectEve
             if (this.TypeId != 29668)
                 return false;
 
-			PyObject ApplyPilotLicence = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("ApplyPilotLicence");
+            PyObject ApplyPilotLicence = PySharp.Import("__builtin__").Attribute("sm").Call("RemoteSvc", "userSvc").Attribute("ApplyPilotLicence");
 			return DirectEve.ThreadedCall(ApplyPilotLicence, ItemId);
         }
     }
