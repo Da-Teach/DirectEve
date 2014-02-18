@@ -43,7 +43,7 @@ namespace DirectEve
             var result = new Dictionary<long, DirectRegion>();
 
             dynamic ps = directEve.PySharp;
-            Dictionary<long,PyObject> pyDict = ps.__builtin__.cfg.regions.data.ToDictionary<long>();
+            Dictionary<long,PyObject> pyDict = ps.__builtin__.cfg.mapRegionCache.ToDictionary<long>();
             foreach (var pair in pyDict)
                 result[pair.Key] = new DirectRegion(directEve, pair.Value);
 
