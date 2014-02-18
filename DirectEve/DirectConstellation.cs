@@ -22,7 +22,7 @@ namespace DirectEve
             : base(directEve)
         {
             Id = (long) pyo.Attribute("constellationID");
-            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id);
+            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id).Attribute("name");
             RegionId = (long) pyo.Attribute("regionID");
             FactionId = (long?) pyo.Attribute("factionID");
         }

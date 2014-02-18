@@ -22,7 +22,7 @@ namespace DirectEve
             : base(directEve)
         {
             Id = (int) pyo.Attribute("solarSystemID");
-            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id);
+            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id).Attribute("name");
             ConstellationId = (long) pyo.Attribute("constellationID");
             FactionId = (long?) pyo.Attribute("factionID");
             Security = (double) pyo.Attribute("securityStatus");
@@ -46,7 +46,7 @@ namespace DirectEve
         public int GetClassOfWormhole()
         {
             var regionId = DirectEve.Constellations[ConstellationId].RegionId;
-            return (int)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Call("GetLocationWormholeClass", Id, ConstellationId, regionId);
+            return (int)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Call("GetLocationWormholeClass", Id);
         }
 
         public long? FactionId { get; private set; }
