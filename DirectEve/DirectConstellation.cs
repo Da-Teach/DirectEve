@@ -22,16 +22,13 @@ namespace DirectEve
             : base(directEve)
         {
             Id = (long) pyo.Attribute("constellationID");
-            Name = (string) pyo.Attribute("constellationName");
-            Description = (string) pyo.Attribute("description");
+            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id);
             RegionId = (long) pyo.Attribute("regionID");
             FactionId = (long?) pyo.Attribute("factionID");
         }
 
         public long Id { get; private set; }
         public string Name { get; private set; }
-        public string Description { get; private set; }
-
         public long RegionId { get; private set; }
 
         public DirectRegion Region
@@ -57,7 +54,7 @@ namespace DirectEve
         {
             var result = new Dictionary<long, DirectConstellation>();
 
-            var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("constellations").Attribute("data").ToDictionary<long>();
+            var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("mapConstellationCache").ToDictionary<long>();
             foreach (var pair in pyDict)
                 result[pair.Key] = new DirectConstellation(directEve, pair.Value);
 

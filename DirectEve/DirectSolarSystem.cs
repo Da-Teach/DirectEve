@@ -22,17 +22,15 @@ namespace DirectEve
             : base(directEve)
         {
             Id = (int) pyo.Attribute("solarSystemID");
-            Name = (string) pyo.Attribute("solarSystemName");
-            Description = (string) pyo.Attribute("description");
+            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id);
             ConstellationId = (long) pyo.Attribute("constellationID");
             FactionId = (long?) pyo.Attribute("factionID");
-            Security = (double) pyo.Attribute("security");
+            Security = (double) pyo.Attribute("securityStatus");
             IsWormholeSystem = ((long)directEve.Const.MapWormholeSystemMin < Id && Id < (long)directEve.Const.MapWormholeSystemMax);
         }
 
         public int Id { get; private set; }
         public string Name { get; private set; }
-        public string Description { get; private set; }
 
         public long ConstellationId { get; private set; }
 
@@ -68,7 +66,7 @@ namespace DirectEve
         {
             var result = new Dictionary<int, DirectSolarSystem>();
 
-            var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("solarsystems").Attribute("data").ToDictionary<int>();
+            var pyDict = directEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("mapSystemCache").ToDictionary<int>();
             foreach (var pair in pyDict)
                 result[pair.Key] = new DirectSolarSystem(directEve, pair.Value);
 
@@ -77,7 +75,7 @@ namespace DirectEve
 
         internal static int GetDistanceBetweenSolarsystems(int solarsystem1, int solarsystem2, DirectEve directEve)
         {
-            return (int)directEve.GetLocalSvc("pathfinder").Call("GetJumpCountFromCurrent", solarsystem1, solarsystem2);
+            return (int)directEve.GetLocalSvc("clientPathfinderService").Call("GetJumpCountFromCurrent", solarsystem1, solarsystem2);
         }
     }
 }

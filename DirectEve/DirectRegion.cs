@@ -21,8 +21,7 @@ namespace DirectEve
             : base(directEve)
         {
             Id = (long) pyo.regionID;
-            Name = (string) pyo.regionName;
-            Description = (string) pyo.description;
+            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id);
             FactionId = (long?) pyo.factionID;
         }
 
