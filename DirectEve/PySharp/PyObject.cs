@@ -260,7 +260,18 @@ namespace DirectEve.PySharp
             PyObject result;
             if (!_dictionaryCache.TryGetValue(key, out result))
             {
-                result = new PyObject(_pySharp, Py.PyDict_GetItem(this, key), false);
+                PyType thisType = this.GetPyType();
+                if (thisType == PyType.DerivedDictType || thisType == PyType.DictType)
+                {
+                    // This only works for objects derived from PyDict_Type
+                    result = new PyObject(_pySharp, Py.PyDict_GetItem(this, key), false);
+                }
+                else
+                {
+                    // This works for any container object that defines __getitem__
+                    // If __getitem__ is not defined then result will be PySharp.PyZero
+                    result = new PyObject(_pySharp, this.Call("__getitem__", key), false);
+                }
                 _dictionaryCache[key] = result;
             }
             return result;
