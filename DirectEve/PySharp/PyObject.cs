@@ -11,6 +11,7 @@ namespace DirectEve.PySharp
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
 
@@ -193,6 +194,18 @@ namespace DirectEve.PySharp
                 return new Dictionary<string, PyObject>();
 
             return new PyObject(_pySharp, Py.PyObject_Dir(this), true).ToList<string>().ToDictionary(attr => attr, Attribute);
+        }
+
+        /// <summary>
+        /// Logs debug information about this PyObject
+        /// </summary>
+        public void LogObject()
+        {
+            Debugger.Log(0, "", string.Format("\nDumping attributes of {1}...\n",this.Repr));
+            foreach (KeyValuePair<string, PyObject> pair in this.Attributes())
+            {
+                Debugger.Log(0, "", string.Format("  {1} : {2}\n", pair.Key, pair.Value.Repr));
+            }
         }
 
         /// <summary>
@@ -966,6 +979,14 @@ namespace DirectEve.PySharp
                 Py.PyErr_Clear();
 
             return;
+        }
+
+        private string Repr
+        {
+            get
+            {
+                return (string)new PyObject(_pySharp, Py.PyObject_Repr(this), true);
+            }
         }
     }
 }

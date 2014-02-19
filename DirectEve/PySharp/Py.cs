@@ -342,6 +342,9 @@ namespace DirectEve.PySharp
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyCFunction_NewEx(IntPtr md, IntPtr self, IntPtr name);
 
+        [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr PyObject_Repr(IntPtr v);
+
         [StructLayout(LayoutKind.Sequential)]
         internal struct PyMethodDef 
         {
