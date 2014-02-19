@@ -201,10 +201,10 @@ namespace DirectEve.PySharp
         /// </summary>
         public void LogObject()
         {
-            Debugger.Log(0, "", string.Format("\nDumping attributes of {1}...\n",this.Repr));
+            Debugger.Log(0, "", string.Format("\nDumping attributes of {0}...\n",this.Repr));
             foreach (KeyValuePair<string, PyObject> pair in this.Attributes())
             {
-                Debugger.Log(0, "", string.Format("  {1} : {2}\n", pair.Key, pair.Value.Repr));
+                Debugger.Log(0, "", string.Format("  {0} : {1}\n", pair.Key, pair.Value.Repr));
             }
         }
 
