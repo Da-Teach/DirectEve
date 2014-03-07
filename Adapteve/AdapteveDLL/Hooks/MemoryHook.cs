@@ -30,13 +30,19 @@ namespace AdapteveDLL
         }
 
         private ulong _totalPhys;
+        private MEMORYSTATUSEX _struct;
         private bool GlobalMemoryStatusDetour(IntPtr memStruct)
         {
-            var result = GlobalMemoryStatusEx(memStruct);
-            MEMORYSTATUSEX structure = (MEMORYSTATUSEX)Marshal.PtrToStructure(memStruct, typeof(MEMORYSTATUSEX));
-            structure.ullTotalPhys = _totalPhys * 1024 * 1024;
-            Marshal.StructureToPtr(structure, memStruct, true);
-            return result;
+			////Prevents eve crashes
+            if (_struct == null)
+            {
+                var result = GlobalMemoryStatusEx(memStruct);
+                _struct = (MEMORYSTATUSEX)Marshal.PtrToStructure(memStruct, typeof(MEMORYSTATUSEX));
+                _struct.ullTotalPhys = _totalPhys * 1024 * 1024;
+            }
+
+            Marshal.StructureToPtr(_struct, memStruct, true);
+            return true;
         }
 
         [StructLayout(LayoutKind.Sequential)]
