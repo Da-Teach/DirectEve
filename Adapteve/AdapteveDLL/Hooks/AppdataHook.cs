@@ -25,7 +25,7 @@ namespace AdapteveDLL
         {
             this._userLogin = userLogin;            
 
-            _name = string.Format("LibraryCallHook_{0:X}", address.ToInt32());
+            _name = string.Format("AppDataHook_{0:X}", address.ToInt32());
             _hook = LocalHook.Create(address, new SHGetFolderPathDelegate(SHGetFolderPathDetour), this);
             _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
         }

@@ -8,41 +8,43 @@ using EasyHook;
 
 namespace AdapteveDLL
 {
-    public class GraphicsCardHook2 : IDisposable
+    public class GraphicsCardHook : IDisposable
     {
-        [DllImport("dxgi.dll", SetLastError = true, EntryPoint = "CreateDXGIFactory", CallingConvention = CallingConvention.StdCall), System.Security.SuppressUnmanagedCodeSecurity]
-        public static extern uint CreateDXGIFactory([In, MarshalAs(UnmanagedType.LPStruct)] Guid riid, [In][Out]IntPtr ppFactory);
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
-        private delegate uint EnumAdaptersDelegate(uint index, IntPtr ppAdapter);
-
-        private EnumAdaptersDelegate EnumAdaptersOriginal;
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate uint GetDesc1Delegate(int index, IntPtr adapter);
+        private GetDesc1Delegate GetDesc1Original;
 
         private string _name;
         private LocalHook _hook;
-        private List<IDisposable> _adapterHooks = new List<IDisposable>();
+        private int getDescOffset = 0xba24;
 
         private Settings _settings;
-        public GraphicsCardHook2(IntPtr address, Settings settings)
+        public GraphicsCardHook(IntPtr address, Settings settings)
         {
             this._settings = settings;
 
-            var iid = Guid.Parse("7b7166ec-21c7-44ae-b21a-c9ae321ae369"); //iid of IDXGIFactory
-            IntPtr test = Marshal.AllocHGlobal(4);
-            var result = CreateDXGIFactory(iid, test);
+            var dxgiHandle = Utility.GetModuleHandle("dxgi.dll");
+            var getDescPtr = dxgiHandle + getDescOffset;
+            GetDesc1Original = (GetDesc1Delegate)Marshal.GetDelegateForFunctionPointer(getDescPtr, typeof(GetDesc1Delegate));
 
-            var enumAdapterPtr = Marshal.ReadIntPtr(Marshal.ReadIntPtr(Marshal.ReadIntPtr(test)), 28); //ppFactory --> pFactory --> Vtable --> pointer index 7 EnumAdapters?
-            EnumAdaptersOriginal = (EnumAdaptersDelegate)Marshal.GetDelegateForFunctionPointer(enumAdapterPtr, typeof(EnumAdaptersDelegate));
-
-            _name = string.Format("LibraryCallHook_{0:X}", enumAdapterPtr.ToInt32());
-            _hook = LocalHook.Create(enumAdapterPtr, new EnumAdaptersDelegate(EnumAdaptersDetour), this);
+            _name = string.Format("GetDescHook_{0:X}", getDescPtr.ToInt32());
+            _hook = LocalHook.Create(getDescPtr, new GetDesc1Delegate(GetDesc1Detour), this);
             _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
-
         }
 
-        private uint EnumAdaptersDetour(uint index, IntPtr ppAdapter)
+        private uint GetDesc1Detour(int index, IntPtr adapter)
         {
-            var result = EnumAdaptersOriginal(index, ppAdapter);
+            var result = GetDesc1Original(index, adapter);
+
+            if (result == 0)
+            {
+                var structure = (DXGI_ADAPTER_DESC1)Marshal.PtrToStructure(adapter, typeof(DXGI_ADAPTER_DESC1));
+                structure.Description = _settings.GpuDescription;
+                structure.DeviceId = _settings.GpuDeviceId;
+                structure.Revision = _settings.GpuRevision;
+                structure.VendorId = _settings.GpuVendorId;
+                Marshal.StructureToPtr(structure, adapter, true);
+            }
             return result;
         }
 

@@ -22,9 +22,7 @@ namespace AdapteveDLL
         public string ProcessorLevel { get; set; }        
         public string GpuDescription { get; set; }        
         public uint GpuDeviceId { get; set; }
-        public uint VendorId { get; set; }        
-        public string GpuIdentifier { get; set; }        
-        public long GpuDriverVersion { get; set; }        
+        public uint GpuVendorId { get; set; }          
         public uint GpuRevision { get; set; }
                
 
@@ -96,15 +94,7 @@ namespace AdapteveDLL
                         break;
 
                     case "VendorId":
-                        VendorId = Convert.ToUInt32(sLine[1]);
-                        break;
-
-                    case "GpuIdentifier":
-                        GpuIdentifier = sLine[1];
-                        break;
-
-                    case "GpuDriverVersion":
-                        GpuDriverVersion = Convert.ToInt64(sLine[1]);
+                        GpuVendorId = Convert.ToUInt32(sLine[1]);
                         break;
 
                     case "GpuRevision":

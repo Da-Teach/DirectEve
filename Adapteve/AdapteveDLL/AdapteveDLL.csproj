@@ -48,7 +48,6 @@
     <Compile Include="Hooks\AppdataHook.cs" />
     <Compile Include="Hooks\BlockMinidumpHook.cs" />
     <Compile Include="Hooks\Environment.cs" />
-    <Compile Include="Hooks\GetAdapterHook.cs" />
     <Compile Include="Hooks\GraphicsCardHook.cs" />
     <Compile Include="Hooks\HideProcessHook.cs" />
     <Compile Include="Hooks\MemoryHook.cs" />

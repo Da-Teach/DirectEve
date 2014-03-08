@@ -41,7 +41,6 @@ namespace AdapteveDLL
             Utility.LoadLibrary("dbghelp.dll");
             Utility.LoadLibrary("_ctypes.pyd");
             Utility.LoadLibrary("d3d11.dll");
-            Utility.LoadLibrary("dxgi.dll");
 
             _hooks.Add(new MemoryHook(LocalHook.GetProcAddress("kernel32.dll", "GlobalMemoryStatusEx"), settings.TotalPhysRam));
             _hooks.Add(new AppdataHook(LocalHook.GetProcAddress("shell32.dll", "SHGetFolderPathW"), settings.WindowsUserLogin));
@@ -49,20 +48,16 @@ namespace AdapteveDLL
             _hooks.Add(new NetworkAdapterHook(LocalHook.GetProcAddress("Iphlpapi.dll", "GetAdaptersInfo"), settings.NetworkAdapterGuid, settings.MacAddress, settings.NetworkAddress));
             _hooks.Add(new BlockMinidumpHook(LocalHook.GetProcAddress("dbghelp.dll", "MiniDumpWriteDump")));
             _hooks.Add(new HideProcessHook(LocalHook.GetProcAddress("kernel32.dll", "K32EnumProcesses")));
-            _hooks.Add(new GraphicsCardHook2(LocalHook.GetProcAddress("d3d11.dll", "D3D11CreateDevice"), settings));
+            _hooks.Add(new GraphicsCardHook(LocalHook.GetProcAddress("d3d11.dll", "D3D11CreateDevice"), settings));
             
-            //HookImports("_ctypes.pyd");
+            HookImports("_ctypes.pyd");
             HookImports("blue.dll");
             HookImports("exefile.exe");
-            //HookImports("psapi.dll");
+            HookImports("psapi.dll");
         }
 
         public void HookImports(string module)
         {
-            //var address = Utility.GetImportAddress(module, "kernel32.dll", "GlobalMemoryStatusEx");
-            //if (address != null && address != IntPtr.Zero)
-            //    _hooks.Add(new MemoryHook(address, settings.TotalPhysRam));
-
             var address = Utility.GetImportAddress(module, "shell32.dll", "SHGetFolderPathW");
             if (address != null && address != IntPtr.Zero)
                 _hooks.Add(new AppdataHook(address, settings.WindowsUserLogin));
