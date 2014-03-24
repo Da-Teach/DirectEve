@@ -1249,7 +1249,10 @@ namespace DirectEve
         /// <returns>True if the user has support instances.</returns>
         public bool HasSupportInstances()
         {
+#if !NO_DIRECTEVE_SECURITY
             return _security.Email != "anonymous" && _security.SupportInstances >= 0 && _security.ActiveInstances <= _security.SupportInstances;
+#endif
+            return true;
         }
 
         public bool Sell(DirectItem item, int StationId, int quantity, double price, int duration, bool useCorp)

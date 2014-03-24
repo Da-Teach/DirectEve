@@ -37,13 +37,15 @@ namespace DirectEve
         public bool IsPendingOverloading { get; internal set; }
         public bool IsPendingStopOverloading { get; internal set; }
         public bool IsBeingRepaired { get; internal set; }
+        public bool AutoReload { get; internal set; }
 
         public DirectItem Charge { get; internal set; }
 
         public double Damage { get; internal set; }
         public double Hp { get; internal set; }
 
-        private DateTime lastActivation = DateTime.MinValue;
+        private DateTime lastActivation = DateTime.MinValue; ////Does this even work? We dispose everything after this frame ~ Ferox
+
         private long lastTarget = 0;
 
         public int CurrentCharges
@@ -127,7 +129,7 @@ namespace DirectEve
                 module.IsOnline = (bool) pyModule.Value.Attribute("online");
                 module.IsGoingOnline = (bool) pyModule.Value.Attribute("goingOnline");
                 module.IsReloadingAmmo = (bool) pyModule.Value.Attribute("reloadingAmmo");
-                module.IsChangingAmmo = (bool) pyModule.Value.Attribute("changingAmmo");
+                module.IsChangingAmmo = (bool)pyModule.Value.Attribute("changingAmmo");
 
                 module.Damage = (double)pyModule.Value.Attribute("sr").Attribute("damage");
                 module.Hp = (double)pyModule.Value.Attribute("sr").Attribute("hp");
@@ -135,6 +137,7 @@ namespace DirectEve
                 module.IsPendingOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 2;
                 module.IsPendingStopOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 3;
                 module.IsBeingRepaired = (bool)pyModule.Value.Attribute("isBeingRepaired");
+                module.AutoReload = (bool)pyModule.Value.Attribute("autoreload");
 
                 var effect = pyModule.Value.Attribute("def_effect");
                 module.IsActivatable = effect.IsValid;
@@ -240,6 +243,11 @@ namespace DirectEve
         public bool Deactivate()
         {
             return DirectEve.ThreadedCall(_pyModule.Attribute("DeactivateEffect"), _pyModule.Attribute("def_effect"));
+        }
+
+        public bool SetAutoReload(bool on)
+        {
+            return DirectEve.ThreadedCall(_pyModule.Attribute("SetAutoReload"), on);
         }
     }
 }
