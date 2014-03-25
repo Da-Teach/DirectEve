@@ -51,6 +51,17 @@ namespace DirectEve
         }
 
         /// <summary>
+        /// Set destination to locationId without actually retrieving the directLocation ~ CPU Intensive
+        /// </summary>
+        /// <param name="locationId2"></param>
+        /// <param name="directEve"></param>
+        /// <returns></returns>
+        internal static bool SetDestination(long locationId, DirectEve directEve)
+        {
+            return directEve.ThreadedLocalSvcCall("starmap", "SetWaypoint", locationId, true, true);
+        }
+
+        /// <summary>
         ///   Return destination path (locationId's only)
         /// </summary>
         /// <returns></returns>

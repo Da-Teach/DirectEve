@@ -17,6 +17,7 @@ namespace DirectEve
     using System.Runtime.InteropServices;
     using Hooking;
     using global::DirectEve.PySharp;
+    using System.Diagnostics;
 
     public delegate void LoggingDelegate(string msg);
 
@@ -162,16 +163,34 @@ namespace DirectEve
         /// </summary>
         private List<DirectWindow> _windows;
 
+        private bool _enableStatisticsModifying;
+
         /// <summary>
         /// The framework object that wraps OnFrame and Log
         /// </summary>
         private IFramework _framework;
 
+        ////Statistic variables
+        private long _lastOnframeTook;
+
+        private double _frameTimeAbove100ms;
+        private double _prevFrameTimeAbove100ms;
+        private double _frameTimeAbove200ms;
+        private double _prevFrameTimeAbove200ms;
+        private double _frameTimeAbove300ms;
+        private double _prevFrameTimeAbove300ms;
+        private double _frameTimeAbove400ms;
+        private double _prevFrameTimeAbove400ms;
+        private double _frameTimeAbove500ms;
+        private double _prevFrameTimeAbove500ms;
+
         /// <summary>
         /// Create a DirectEve object
         /// </summary>
-        public DirectEve(IFramework framework = null, bool enableStealth = true)
+        public DirectEve(IFramework framework = null, bool enableStealth = true, bool enableStatisticModifying = false)
         {
+            _enableStatisticsModifying = enableStatisticModifying;
+
             // create an instance of IFramework
             if (framework != null)
             {
@@ -424,6 +443,16 @@ namespace DirectEve
             get { return _solarSystems ?? (_solarSystems = DirectSolarSystem.GetSolarSystems(this)); }
         }
 
+        /// <summary>
+        /// Set destination without fetching DirectLocation ~ CPU Intensive
+        /// </summary>
+        /// <param name="locationId"></param>
+        /// <returns></returns>
+        public bool SetDestination(long locationId)
+        {
+            return DirectNavigation.SetDestination(locationId, this);
+        }
+
         public int GetDistanceBetweenSolarsystems(int solarsystem1, int solarsystem2)
         {
             return DirectSolarSystem.GetDistanceBetweenSolarsystems(solarsystem1, solarsystem2, this);
@@ -551,6 +580,8 @@ namespace DirectEve
         /// <param name = "e"></param>
         private void FrameworkOnFrame(object sender, EventArgs e)
         {
+            Stopwatch st = new Stopwatch();
+            st.Start();
             using (var pySharp = new PySharp.PySharp(true))
             {
                 // Make the link to the instance
@@ -591,6 +622,12 @@ namespace DirectEve
                     _lastKnownTargets.Remove(t);
                 }
 
+                ////Populate the statistic variables
+                if (_enableStatisticsModifying)
+                {
+                    CheckStatistics();
+                }
+
                 // Check if we're still valid
                 if (OnFrame != null)
                     OnFrame(this, new EventArgs());
@@ -622,6 +659,9 @@ namespace DirectEve
 
                 // Remove the link
                 PySharp = null;
+
+                st.Stop();
+                _lastOnframeTook = st.ElapsedMilliseconds;
             }
         }
 
@@ -1365,6 +1405,33 @@ namespace DirectEve
         public bool AddToAddressbook(int charid)
         {
             return ThreadedLocalSvcCall("addressbook", "AddToPersonalMulti", new List<int> { charid });
+        }
+
+        /// <summary>
+        /// Reset DE caused freezes ~ Will be expanded later
+        /// </summary>
+        private void CheckStatistics()
+        {
+            _frameTimeAbove100ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove100msStat").Attribute("value");
+            _frameTimeAbove200ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove200msStat").Attribute("value");
+            _frameTimeAbove300ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove300msStat").Attribute("value");
+            _frameTimeAbove400ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove400msStat").Attribute("value");
+            _frameTimeAbove500ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove500msStat").Attribute("value");
+
+            if (_lastOnframeTook > 80)
+            {
+                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove100msStat").Call("Set", _prevFrameTimeAbove100ms);
+                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove200msStat").Call("Set", _prevFrameTimeAbove200ms);
+                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove300msStat").Call("Set", _prevFrameTimeAbove300ms);
+                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove400msStat").Call("Set", _prevFrameTimeAbove400ms);
+                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove500msStat").Call("Set", _prevFrameTimeAbove500ms);
+            }
+
+            _prevFrameTimeAbove100ms = _frameTimeAbove100ms;
+            _prevFrameTimeAbove200ms = _frameTimeAbove200ms;
+            _prevFrameTimeAbove300ms = _frameTimeAbove300ms;
+            _prevFrameTimeAbove400ms = _frameTimeAbove400ms;
+            _prevFrameTimeAbove500ms = _frameTimeAbove500ms;
         }
     }
 }
