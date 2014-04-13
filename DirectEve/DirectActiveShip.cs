@@ -259,5 +259,19 @@ namespace DirectEve
         {
             return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("menu").Attribute("invCache").Call("GetInventoryFromId", ItemId).Attribute("StripFitting"));
         }
+
+        public bool MoveTo(double x, double y, double z)
+        {
+            ////Create unit length
+            var length = System.Math.Sqrt(x * x + y * y + z * z);
+            if (length == 0)
+                return false;
+
+            x = x / length;
+            y = y / length;
+            z = z / length;
+
+            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("michelle").Call("GetRemotePark").Attribute("CmdGotoDirection"), x, y, z);
+        }
     }
 }

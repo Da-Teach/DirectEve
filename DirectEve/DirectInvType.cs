@@ -38,6 +38,22 @@ namespace DirectEve
         private string _typeName;
         private double? _volume;
 
+        private double? _shield;
+        private double? _armor;
+        private double? _structure;
+
+        private double? _shieldResistanceEM;
+        private double? _shieldResistanceKinetic;
+        private double? _shieldResistanceExplosion;
+        private double? _shieldResistanceThermal;
+
+        private double? _armorResistanceEM;
+        private double? _armorResistanceKinetic;
+        private double? _armorResistanceExplosion;
+        private double? _armorResistanceThermal;
+
+        private double? _signatureRadius;
+
         internal DirectInvType(DirectEve directEve)
             : base(directEve)
         {
@@ -283,6 +299,282 @@ namespace DirectEve
                     _dataId = (int) PyInvType.Attribute("dataID");
 
                 return _dataId.Value;
+            }
+        }
+
+        public double? Shield
+        {
+            get
+            {
+                if (!_shield.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldCapacity)
+                            {
+                                _shield = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _shield;
+            }
+        }
+
+        public double? Armor
+        {
+            get
+            {
+                if (!_armor.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorHP)
+                            {
+                                _armor = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _armor;
+            }
+        }
+
+        public double? Structure
+        {
+            get
+            {
+                if (!_structure.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeHullHP)
+                            {
+                                _structure = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _structure;
+            }
+        }
+
+        public double? ShieldResistanceEM
+        {
+            get
+            {
+                if (!_shieldResistanceEM.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldEmDamageResonance)
+                            {
+                                _shieldResistanceEM = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _shieldResistanceEM;
+            }
+        }
+
+        public double? ShieldResistanceKinetic
+        {
+            get
+            {
+                if (!_shieldResistanceKinetic.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldKineticDamageResonance)
+                            {
+                                _shieldResistanceKinetic = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _shieldResistanceKinetic;
+            }
+        }
+
+        public double? ShieldResistanceExplosion
+        {
+            get
+            {
+                if (!_shieldResistanceExplosion.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldExplosiveDamageResonance)
+                            {
+                                _shieldResistanceExplosion = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _shieldResistanceExplosion;
+            }
+        }
+
+        public double? ShieldResistanceThermal
+        {
+            get
+            {
+                if (!_shieldResistanceThermal.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldThermalDamageResonance)
+                            {
+                                _shieldResistanceThermal = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _shieldResistanceThermal;
+            }
+        }
+
+        public double? ArmorResistanceEM
+        {
+            get
+            {
+                if (!_armorResistanceEM.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorEmDamageResonance)
+                            {
+                                _armorResistanceEM = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _armorResistanceEM;
+            }
+        }
+
+        public double? ArmorResistanceKinetic
+        {
+            get
+            {
+                if (!_armorResistanceKinetic.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorKineticDamageResonance)
+                            {
+                                _armorResistanceKinetic = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _armorResistanceKinetic;
+            }
+        }
+
+        public double? ArmorResistanceExplosion
+        {
+            get
+            {
+                if (!_armorResistanceExplosion.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorExplosiveDamageResonance)
+                            {
+                                _armorResistanceExplosion = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _armorResistanceExplosion;
+            }
+        }
+
+        public double? ArmorResistanceThermal
+        {
+            get
+            {
+                if (!_armorResistanceThermal.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorThermalDamageResonance)
+                            {
+                                _armorResistanceThermal = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _armorResistanceThermal;
+            }
+        }
+
+        public double? SignatureRadius
+        {
+            get
+            {
+                if (!_signatureRadius.HasValue)
+                {
+                    var dmgAttributes = DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("dgmtypeattribs").Call("get", TypeId);
+                    if (dmgAttributes.IsValid)
+                    {
+                        foreach (var row in dmgAttributes.ToList())
+                        {
+                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeSignatureRadius)
+                            {
+                                _signatureRadius = (double)row.Attribute("value");
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _signatureRadius;
             }
         }
 

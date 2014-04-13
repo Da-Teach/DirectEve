@@ -291,8 +291,11 @@ namespace DirectEve
             if (ItemId != DirectEve.Session.ShipId)
                 return false;
 
-            if (LocationId != DirectEve.Session.StationId)
+            if (Quantity > 0)
                 return false;
+
+            //if (LocationId != DirectEve.Session.StationId)
+            //    return false;
 
             if (CategoryId != (int) DirectEve.Const.CategoryShip)
                 return false;

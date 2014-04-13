@@ -190,5 +190,67 @@ namespace DirectEve
         {
             get { return Const.Attribute("attributeEntityKillBounty"); }
         }
+
+
+
+        public PyObject AttributeShieldCapacity
+        {
+            get { return Const.Attribute("attributeShieldCapacity"); }
+        }
+
+        public PyObject AttributeShieldEmDamageResonance
+        {
+            get { return Const.Attribute("attributeShieldEmDamageResonance"); }
+        }
+
+        public PyObject AttributeShieldExplosiveDamageResonance
+        {
+            get { return Const.Attribute("attributeShieldExplosiveDamageResonance"); }
+        }
+
+        public PyObject AttributeShieldKineticDamageResonance
+        {
+            get { return Const.Attribute("attributeShieldKineticDamageResonance"); }
+        }
+
+        public PyObject AttributeShieldThermalDamageResonance
+        {
+            get { return Const.Attribute("attributeShieldThermalDamageResonance"); }
+        }
+
+        public PyObject AttributeArmorHP
+        {
+            get { return Const.Attribute("attributeArmorHP"); }
+        }
+
+        public PyObject AttributeArmorKineticDamageResonance
+        {
+            get { return Const.Attribute("attributeArmorKineticDamageResonance"); }
+        }
+
+        public PyObject AttributeArmorThermalDamageResonance
+        {
+            get { return Const.Attribute("attributeArmorThermalDamageResonance"); }
+        }
+
+        public PyObject AttributeArmorEmDamageResonance
+        {
+            get { return Const.Attribute("attributeArmorEmDamageResonance"); }
+        }
+
+        public PyObject AttributeArmorExplosiveDamageResonance
+        {
+            get { return Const.Attribute("attributeArmorExplosiveDamageResonance"); }
+        }
+
+        public PyObject AttributeHullHP
+        {
+            get { return Const.Attribute("attributeHp"); }
+        }
+
+        public PyObject AttributeSignatureRadius
+        {
+            get { return Const.Attribute("attributeSignatureRadius"); }
+        }
     }
 }
