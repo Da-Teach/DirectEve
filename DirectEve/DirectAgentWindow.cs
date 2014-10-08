@@ -31,8 +31,8 @@ namespace DirectEve
 
             AgentResponses = new List<DirectAgentResponse>();
 
-            var buttonPathRight = new[] {"__maincontainer", "main", "rightPane", "rightPaneBottom", "btnsmainparent", "btns"};
-            var buttonPathLeft = new[] {"__maincontainer", "main", "rightPaneBottom", "btnsmainparent", "btns"};
+            var buttonPathRight = new[] {"__maincontainer", "main", "rightPane", "rightPaneBottom"};
+            var buttonPathLeft = new[] {"__maincontainer", "main", "rightPaneBottom"};
 
             var viewMode = (string) pyWindow.Attribute("viewMode");
             var isRight = viewMode != "SinglePaneView";
