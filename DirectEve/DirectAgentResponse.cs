@@ -16,8 +16,8 @@ namespace DirectEve
     {
         private PyObject _container;
 
-        private string[] _responseButtonsPathLeft = {"__maincontainer", "main", "rightPaneBottom", "btnsmainparent", "btns"};
-        private string[] _responseButtonsPathRight = {"__maincontainer", "main", "rightPane", "rightPaneBottom", "btnsmainparent", "btns"};
+        private string[] _responseButtonsPathLeft = {"__maincontainer", "main", "rightPaneBottom"};
+        private string[] _responseButtonsPathRight = {"__maincontainer", "main", "rightPane", "rightPaneBottom"};
 
         internal DirectAgentResponse(DirectEve directEve, PyObject container)
             : base(directEve)

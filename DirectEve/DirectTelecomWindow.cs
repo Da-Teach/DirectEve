@@ -10,6 +10,9 @@
 namespace DirectEve
 {
     using global::DirectEve.PySharp;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
 
     public class DirectTelecomWindow : DirectWindow
     {
@@ -21,7 +24,7 @@ namespace DirectEve
         {
             //try to find the close Button
             string[] closeButtonPath = {"__maincontainer", "bottom", "btnsmainparent", "btns", "Close_Btn"};
-            var btn = FindChildWithPath(PyWindow, closeButtonPath);
+            var btn = DirectTelecomWindow.FindChildWithPath(PyWindow, closeButtonPath);
             if (btn != null)
                 return DirectEve.ThreadedCall(btn.Attribute("OnClick"));
             else
@@ -30,6 +33,29 @@ namespace DirectEve
             }
 
             //return DirectEve.ThreadedCall(PyWindow.Attribute("SelfDestruct"));
+        }
+
+        /// <summary>
+        ///   Find a child object (usually button)
+        /// </summary>
+        /// <param name = "container"></param>
+        /// <param name = "name"></param>
+        /// <returns></returns>
+        new internal static PyObject FindChild(PyObject container, string name)
+        {
+            var childs = container.Attribute("children").Attribute("_childrenObjects").ToList();
+            return childs.Find(c => String.Compare((string)c.Attribute("name"), name) == 0) ?? global::DirectEve.PySharp.PySharp.PyZero;
+        }
+
+        /// <summary>
+        ///   Find a child object (using the supplied path)
+        /// </summary>
+        /// <param name = "container"></param>
+        /// <param name = "path"></param>
+        /// <returns></returns>
+        new internal static PyObject FindChildWithPath(PyObject container, IEnumerable<string> path)
+        {
+            return path.Aggregate(container, DirectTelecomWindow.FindChild);
         }
     }
 }
