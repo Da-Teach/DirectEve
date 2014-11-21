@@ -1,20 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Remoting;
-using System.Text;
-using System.IO;
-using EasyHook;
-using System.Windows.Forms;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace Aphack
 {
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.Remoting;
+    using System.Windows.Forms;
+    using EasyHook;
+
     public class AphackInterface : MarshalByRefObject
     {
         public void IsInstalled(Int32 InClientPID)
         {
             Console.WriteLine("aphack has been installed in target {0}.\r\n", InClientPID);
         }
-        
+
         public void ReportException(Exception InInfo)
         {
             Console.WriteLine("The target process has reported an error:\r\n" + InInfo.ToString());
@@ -25,19 +33,19 @@ namespace Aphack
         }
     }
 
-    class Program
+    internal class Program
     {
-        static String ChannelName = null;
+        private static String ChannelName = null;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Int32 TargetPID = 0;
+            var TargetPID = 0;
             //TargetPID = System.Diagnostics.Process.GetProcessesByName("exefile")[0].Id;
-            foreach (var exefile in System.Diagnostics.Process.GetProcessesByName("exefile"))
+            foreach (var exefile in Process.GetProcessesByName("exefile"))
             {
-                ChannelName = null; 
+                ChannelName = null;
                 TargetPID = exefile.Id;
-                
+
                 try
                 {
                     try
@@ -51,7 +59,7 @@ namespace Aphack
                     {
                         MessageBox.Show("This is an administrative task!", "Permission denied...", MessageBoxButtons.OK);
 
-                        System.Diagnostics.Process.GetCurrentProcess().Kill();
+                        Process.GetCurrentProcess().Kill();
                     }
 
                     RemoteHooking.IpcCreateServer<AphackInterface>(ref ChannelName, WellKnownObjectMode.SingleCall);
@@ -61,8 +69,6 @@ namespace Aphack
                         "AphackInject.dll",
                         "AphackInject.dll",
                         ChannelName);
-
-                    
                 }
                 catch (Exception ExtInfo)
                 {
@@ -70,7 +76,6 @@ namespace Aphack
                 }
             }
             Console.ReadLine();
-
         }
     }
 }

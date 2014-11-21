@@ -7,11 +7,12 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
     using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectConstellation : DirectObject
     {
@@ -22,7 +23,7 @@ namespace DirectEve
             : base(directEve)
         {
             Id = (long) pyo.Attribute("constellationID");
-            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id).Attribute("name");
+            Name = (string) DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id).Attribute("name");
             RegionId = (long) pyo.Attribute("regionID");
             FactionId = (long?) pyo.Attribute("factionID");
         }
@@ -43,7 +44,7 @@ namespace DirectEve
         public long? FactionId { get; private set; }
 
         /// <summary>
-        ///   List all solar systems within this constellation
+        ///     List all solar systems within this constellation
         /// </summary>
         public List<DirectSolarSystem> SolarSystems
         {

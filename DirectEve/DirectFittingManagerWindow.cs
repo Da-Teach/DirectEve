@@ -7,10 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectFittingManagerWindow : DirectWindow
     {
@@ -26,10 +27,10 @@ namespace DirectEve
         public bool IsReady { get; internal set; }
 
         /// <summary>
-        ///   List all your saved fittings
+        ///     List all your saved fittings
         /// </summary>
         /// <remarks>
-        ///   Only personal fittings are listed
+        ///     Only personal fittings are listed
         /// </remarks>
         public List<DirectFitting> Fittings
         {

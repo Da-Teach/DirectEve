@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace PythonBrowser.PySharp
 {
     using System;
@@ -19,62 +20,62 @@ namespace PythonBrowser.PySharp
         public static PyObject PyNone = new PyObject(null, Py.PyNoneStruct, false);
 
         /// <summary>
-        ///   Dummy code
+        ///     Dummy code
         /// </summary>
         private PyObject _dummyCode;
 
         /// <summary>
-        ///   Dummy frame
+        ///     Dummy frame
         /// </summary>
         private PyObject _frame;
 
         /// <summary>
-        ///   Import cache
+        ///     Import cache
         /// </summary>
         private Dictionary<string, PyObject> _importCache;
 
         /// <summary>
-        ///   Int cache
+        ///     Int cache
         /// </summary>
         private Dictionary<int, PyObject> _intCache;
 
         /// <summary>
-        ///   Long cache
+        ///     Long cache
         /// </summary>
         private Dictionary<long, PyObject> _longCache;
 
         /// <summary>
-        ///   Old frame
+        ///     Old frame
         /// </summary>
         private PyObject _oldFrame;
 
         /// <summary>
-        ///   PyFalse cache
+        ///     PyFalse cache
         /// </summary>
         private PyObject _pyFalse;
 
         /// <summary>
-        ///   List of python objects, these will be released when disposing of PySharp
+        ///     List of python objects, these will be released when disposing of PySharp
         /// </summary>
         private List<PyObject> _pyReferences;
 
         /// <summary>
-        ///   PyTrue cache
+        ///     PyTrue cache
         /// </summary>
         private PyObject _pyTrue;
 
         /// <summary>
-        ///   String cache
+        ///     String cache
         /// </summary>
         private Dictionary<string, PyObject> _stringCache;
 
         /// <summary>
-        ///   Unicode cache
+        ///     Unicode cache
         /// </summary>
         private Dictionary<string, PyObject> _unicodeCache;
 
         /// <summary>
-        ///   Create a new PySharp object
+        ///     Create a new PySharp object
         /// </summary>
         public PySharp()
         {
@@ -105,7 +106,7 @@ namespace PythonBrowser.PySharp
         #region IDisposable Members
 
         /// <summary>
-        ///   Dispose of all PyReferences
+        ///     Dispose of all PyReferences
         /// </summary>
         public void Dispose()
         {
@@ -129,9 +130,9 @@ namespace PythonBrowser.PySharp
         #endregion
 
         /// <summary>
-        ///   Import a PyModule
+        ///     Import a PyModule
         /// </summary>
-        /// <param name = "module"></param>
+        /// <param name="module"></param>
         /// <returns></returns>
         public PyObject Import(string module)
         {
@@ -145,9 +146,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from an object
+        ///     Get a PyObject from an object
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(object value)
         {
@@ -183,9 +184,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from an integer
+        ///     Get a PyObject from an integer
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(bool value)
         {
@@ -199,9 +200,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from an integer
+        ///     Get a PyObject from an integer
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(int value)
         {
@@ -215,9 +216,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a long
+        ///     Get a PyObject from a long
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(long value)
         {
@@ -231,9 +232,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a double
+        ///     Get a PyObject from a double
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(float value)
         {
@@ -242,9 +243,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a double
+        ///     Get a PyObject from a double
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(double value)
         {
@@ -253,9 +254,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a string
+        ///     Get a PyObject from a string
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(string value)
         {
@@ -269,9 +270,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a string
+        ///     Get a PyObject from a string
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject UnicodeFrom(string value)
         {
@@ -285,10 +286,10 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a list
+        ///     Get a PyObject from a list
         /// </summary>
-        /// <typeparam name = "TItem"></typeparam>
-        /// <param name = "value"></param>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From<TItem>(IEnumerable<TItem> value)
         {
@@ -312,9 +313,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Add a reference to the reference stack
+        ///     Add a reference to the reference stack
         /// </summary>
-        /// <param name = "reference">The reference to add to the stack</param>
+        /// <param name="reference">The reference to add to the stack</param>
         /// <returns>The reference that was added to the reference stack</returns>
         internal PyObject AddReference(PyObject reference)
         {
@@ -325,9 +326,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Remove a reference from the reference stack
+        ///     Remove a reference from the reference stack
         /// </summary>
-        /// <param name = "reference">The reference to remove from the stack</param>
+        /// <param name="reference">The reference to remove from the stack</param>
         /// <returns>The reference that was removed from the reference stack</returns>
         internal PyObject RemoveReference(PyObject reference)
         {

@@ -7,41 +7,43 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectFleetMember : DirectObject
     {
         internal DirectFleetMember(DirectEve directEve, PyObject memberObject)
             : base(directEve)
         {
-            CharacterId = (int)memberObject.Attribute("charID");
-            SquadID = (long)memberObject.Attribute("squadID");
-            WingID = (long)memberObject.Attribute("wingID");
-            Skills = new List<int> { (int)memberObject.Attribute("skills").ToList()[0],
-                (int)memberObject.Attribute("skills").ToList()[1],
-                (int)memberObject.Attribute("skills").ToList()[2] };
+            CharacterId = (int) memberObject.Attribute("charID");
+            SquadID = (long) memberObject.Attribute("squadID");
+            WingID = (long) memberObject.Attribute("wingID");
+            Skills = new List<int>
+            {
+                (int) memberObject.Attribute("skills").ToList()[0],
+                (int) memberObject.Attribute("skills").ToList()[1],
+                (int) memberObject.Attribute("skills").ToList()[2]
+            };
 
-            if ((int)memberObject.Attribute("job") == (int)directEve.Const.FleetJobCreator)
-                Job = DirectFleetMember.JobRole.Boss;
+            if ((int) memberObject.Attribute("job") == (int) directEve.Const.FleetJobCreator)
+                Job = JobRole.Boss;
             else
-                Job = DirectFleetMember.JobRole.RegularMember;
+                Job = JobRole.RegularMember;
 
-            if ((int)memberObject.Attribute("role") == (int)directEve.Const.FleetRoleLeader)
-                Role = DirectFleetMember.FleetRole.FleetCommander;
-            else if ((int)memberObject.Attribute("role") == (int)directEve.Const.FleetRoleWingCmdr)
-                Role = DirectFleetMember.FleetRole.WingCommander;
-            else if ((int)memberObject.Attribute("role") == (int)directEve.Const.FleetRoleSquadCmdr)
-                Role = DirectFleetMember.FleetRole.SquadCommander;
-            else if ((int)memberObject.Attribute("role") == (int)directEve.Const.FleetRoleMember)
-                Role = DirectFleetMember.FleetRole.Member;
+            if ((int) memberObject.Attribute("role") == (int) directEve.Const.FleetRoleLeader)
+                Role = FleetRole.FleetCommander;
+            else if ((int) memberObject.Attribute("role") == (int) directEve.Const.FleetRoleWingCmdr)
+                Role = FleetRole.WingCommander;
+            else if ((int) memberObject.Attribute("role") == (int) directEve.Const.FleetRoleSquadCmdr)
+                Role = FleetRole.SquadCommander;
+            else if ((int) memberObject.Attribute("role") == (int) directEve.Const.FleetRoleMember)
+                Role = FleetRole.Member;
 
-            ShipTypeID = (int?)memberObject.Attribute("shipTypeID");
-            SolarSystemID = (int)memberObject.Attribute("solarSystemID");
+            ShipTypeID = (int?) memberObject.Attribute("shipTypeID");
+            SolarSystemID = (int) memberObject.Attribute("solarSystemID");
         }
 
         public int CharacterId { get; internal set; }
@@ -60,7 +62,7 @@ namespace DirectEve
 
         public bool WarpToMember(double distance = 0)
         {
-            return DirectEve.ThreadedLocalSvcCall("menu", "WarpToMember", this.CharacterId, distance);
+            return DirectEve.ThreadedLocalSvcCall("menu", "WarpToMember", CharacterId, distance);
         }
 
         public enum FleetRole
@@ -76,7 +78,5 @@ namespace DirectEve
             Boss,
             RegularMember
         }
-
-
     }
 }

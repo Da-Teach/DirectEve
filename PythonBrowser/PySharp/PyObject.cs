@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace PythonBrowser.PySharp
 {
     using System;
@@ -17,46 +18,46 @@ namespace PythonBrowser.PySharp
     internal partial class PyObject
     {
         /// <summary>
-        ///   Attribute cache
+        ///     Attribute cache
         /// </summary>
         private Dictionary<string, PyObject> _attributeCache;
 
         /// <summary>
-        ///   Dictionary cache (used by DictionaryItem)
+        ///     Dictionary cache (used by DictionaryItem)
         /// </summary>
         private Dictionary<PyObject, PyObject> _dictionaryCache;
 
         /// <summary>
-        ///   Item cache (used by Item)
+        ///     Item cache (used by Item)
         /// </summary>
         private Dictionary<int, PyObject> _itemCache;
 
         /// <summary>
-        ///   Store if its a new reference
+        ///     Store if its a new reference
         /// </summary>
         private bool _newReference;
 
         /// <summary>
-        ///   Reference to the actual python object
+        ///     Reference to the actual python object
         /// </summary>
         private IntPtr _pyReference;
 
         /// <summary>
-        ///   Reference to the overall PySharp object
+        ///     Reference to the overall PySharp object
         /// </summary>
         private PySharp _pySharp;
 
         /// <summary>
-        ///   PyType cache
+        ///     PyType cache
         /// </summary>
         private PyType? _pyType;
 
         /// <summary>
-        ///   Create a PyObject
+        ///     Create a PyObject
         /// </summary>
-        /// <param name = "pySharp">The main PySharp object</param>
-        /// <param name = "pyReference">The Python Reference</param>
-        /// <param name = "newReference">Is this a new reference? (e.g. did the reference counter get increased?)</param>
+        /// <param name="pySharp">The main PySharp object</param>
+        /// <param name="pyReference">The Python Reference</param>
+        /// <param name="newReference">Is this a new reference? (e.g. did the reference counter get increased?)</param>
         internal PyObject(PySharp pySharp, IntPtr pyReference, bool newReference)
         {
             _pyReference = pyReference;
@@ -78,10 +79,10 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Is this PyObject valid?
+        ///     Is this PyObject valid?
         /// </summary>
         /// <remarks>
-        ///   Both null and none values are considered invalid
+        ///     Both null and none values are considered invalid
         /// </remarks>
         public bool IsValid
         {
@@ -89,7 +90,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Is this PyObject Null?
+        ///     Is this PyObject Null?
         /// </summary>
         public bool IsNull
         {
@@ -97,7 +98,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Is this PyObject a PyNone?
+        ///     Is this PyObject a PyNone?
         /// </summary>
         public bool IsNone
         {
@@ -105,7 +106,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Return the Python Reference Count
+        ///     Return the Python Reference Count
         /// </summary>
         public int ReferenceCount
         {
@@ -113,9 +114,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a IntPtr
+        ///     Cast a PyObject to a IntPtr
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static implicit operator IntPtr(PyObject pyObject)
         {
@@ -123,7 +124,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Release the PyObject's internal reference
+        ///     Release the PyObject's internal reference
         /// </summary>
         public void Release()
         {
@@ -134,9 +135,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Attach the PyObject to a new PySharp object
+        ///     Attach the PyObject to a new PySharp object
         /// </summary>
-        /// <param name = "pySharp">New PySharp object</param>
+        /// <param name="pySharp">New PySharp object</param>
         /// <returns>A new copy of itself</returns>
         public PyObject Attach(PySharp pySharp)
         {
@@ -147,7 +148,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Return python type
+        ///     Return python type
         /// </summary>
         /// <returns></returns>
         public PyType GetPyType()
@@ -165,9 +166,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns an attribute from the current Python object
+        ///     Returns an attribute from the current Python object
         /// </summary>
-        /// <param name = "attribute"></param>
+        /// <param name="attribute"></param>
         /// <returns></returns>
         public PyObject Attribute(string attribute)
         {
@@ -184,7 +185,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns a dictionary of all attributes within the current Python object
+        ///     Returns a dictionary of all attributes within the current Python object
         /// </summary>
         /// <returns></returns>
         public Dictionary<string, PyObject> Attributes()
@@ -196,9 +197,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns a dictionary item from the current Python object
+        ///     Returns a dictionary item from the current Python object
         /// </summary>
-        /// <param name = "key"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public PyObject DictionaryItem(int key)
         {
@@ -209,9 +210,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns a dictionary item from the current Python object
+        ///     Returns a dictionary item from the current Python object
         /// </summary>
-        /// <param name = "key"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public PyObject DictionaryItem(long key)
         {
@@ -222,9 +223,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns a dictionary item from the current Python object
+        ///     Returns a dictionary item from the current Python object
         /// </summary>
-        /// <param name = "key"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public PyObject DictionaryItem(string key)
         {
@@ -235,9 +236,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns a dictionary item from the current Python object
+        ///     Returns a dictionary item from the current Python object
         /// </summary>
-        /// <param name = "key"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public PyObject DictionaryItem(PyObject key)
         {
@@ -254,9 +255,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns a list item from the current Python object
+        ///     Returns a list item from the current Python object
         /// </summary>
-        /// <param name = "index"></param>
+        /// <param name="index"></param>
         /// <returns></returns>
         public PyObject Item(int index)
         {
@@ -264,10 +265,10 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns a list item from the current Python object
+        ///     Returns a list item from the current Python object
         /// </summary>
-        /// <param name = "index"></param>
-        /// <param name = "type">Force the PyType to List or Tuple</param>
+        /// <param name="index"></param>
+        /// <param name="type">Force the PyType to List or Tuple</param>
         /// <returns></returns>
         public PyObject Item(int index, PyType type)
         {
@@ -286,7 +287,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the size of the list or tuple
+        ///     Returns the size of the list or tuple
         /// </summary>
         /// <returns></returns>
         public int Size()
@@ -295,9 +296,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the size of the given type (tuple, otherwise list)
+        ///     Returns the size of the given type (tuple, otherwise list)
         /// </summary>
-        /// <param name = "type"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
         public int Size(PyType type)
         {
@@ -316,10 +317,10 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Call a python function
+        ///     Call a python function
         /// </summary>
-        /// <param name = "function"></param>
-        /// <param name = "parms"></param>
+        /// <param name="function"></param>
+        /// <param name="parms"></param>
         /// <returns></returns>
         public PyObject Call(string function, params object[] parms)
         {
@@ -328,11 +329,11 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Call a python function
+        ///     Call a python function
         /// </summary>
-        /// <param name = "function"></param>
-        /// <param name = "keywords"></param>
-        /// <param name = "parms"></param>
+        /// <param name="function"></param>
+        /// <param name="keywords"></param>
+        /// <param name="parms"></param>
         /// <returns></returns>
         public PyObject CallWithKeywords(string function, Dictionary<string, object> keywords, params object[] parms)
         {
@@ -341,9 +342,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Call this PyObject as a python function
+        ///     Call this PyObject as a python function
         /// </summary>
-        /// <param name = "parms"></param>
+        /// <param name="parms"></param>
         /// <returns></returns>
         public PyObject CallThis(params object[] parms)
         {
@@ -351,10 +352,10 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Call this PyObject as a python function
+        ///     Call this PyObject as a python function
         /// </summary>
-        /// <param name = "keywords"></param>
-        /// <param name = "parms"></param>
+        /// <param name="keywords"></param>
+        /// <param name="parms"></param>
         /// <returns></returns>
         public PyObject CallThisWithKeywords(Dictionary<string, object> keywords, params object[] parms)
         {
@@ -420,7 +421,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Return the PyObject as a string
+        ///     Return the PyObject as a string
         /// </summary>
         /// <returns></returns>
         public string ToUnicodeString()
@@ -463,9 +464,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a string
+        ///     Cast a PyObject to a string
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator string(PyObject pyObject)
         {
@@ -473,7 +474,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the PyObject as a bool
+        ///     Returns the PyObject as a bool
         /// </summary>
         /// <returns></returns>
         public bool ToBool()
@@ -482,9 +483,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to an bool
+        ///     Cast a PyObject to an bool
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator bool(PyObject pyObject)
         {
@@ -492,9 +493,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a nullable bool
+        ///     Cast a PyObject to a nullable bool
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator bool?(PyObject pyObject)
         {
@@ -502,7 +503,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the PyObject as an integer
+        ///     Returns the PyObject as an integer
         /// </summary>
         /// <returns></returns>
         public int ToInt()
@@ -518,9 +519,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to an integer
+        ///     Cast a PyObject to an integer
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator int(PyObject pyObject)
         {
@@ -528,9 +529,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a nullable integer
+        ///     Cast a PyObject to a nullable integer
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator int?(PyObject pyObject)
         {
@@ -538,7 +539,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the PyObject as a long
+        ///     Returns the PyObject as a long
         /// </summary>
         /// <returns></returns>
         public long ToLong()
@@ -554,9 +555,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a nullable long
+        ///     Cast a PyObject to a nullable long
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator long?(PyObject pyObject)
         {
@@ -564,9 +565,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to an integer
+        ///     Cast a PyObject to an integer
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator long(PyObject pyObject)
         {
@@ -574,7 +575,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the PyObject as a double
+        ///     Returns the PyObject as a double
         /// </summary>
         /// <returns></returns>
         public double ToDouble()
@@ -590,7 +591,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the PyObject as a float
+        ///     Returns the PyObject as a float
         /// </summary>
         /// <returns></returns>
         public float ToFloat()
@@ -606,9 +607,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to an integer
+        ///     Cast a PyObject to an integer
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator double(PyObject pyObject)
         {
@@ -616,9 +617,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a nullable long
+        ///     Cast a PyObject to a nullable long
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator double?(PyObject pyObject)
         {
@@ -626,9 +627,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to an integer
+        ///     Cast a PyObject to an integer
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator float(PyObject pyObject)
         {
@@ -636,9 +637,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a nullable long
+        ///     Cast a PyObject to a nullable long
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator float?(PyObject pyObject)
         {
@@ -646,7 +647,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the PyObject as a DateTime
+        ///     Returns the PyObject as a DateTime
         /// </summary>
         /// <returns></returns>
         public DateTime ToDateTime()
@@ -655,9 +656,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to an integer
+        ///     Cast a PyObject to an integer
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator DateTime(PyObject pyObject)
         {
@@ -665,9 +666,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a nullable long
+        ///     Cast a PyObject to a nullable long
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator DateTime?(PyObject pyObject)
         {
@@ -675,7 +676,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the PyObject as a list
+        ///     Returns the PyObject as a list
         /// </summary>
         /// <returns></returns>
         public List<PyObject> ToList()
@@ -684,9 +685,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a List
+        ///     Cast a PyObject to a List
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator List<PyObject>(PyObject pyObject)
         {
@@ -694,9 +695,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a List
+        ///     Cast a PyObject to a List
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator List<int>(PyObject pyObject)
         {
@@ -704,9 +705,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a List
+        ///     Cast a PyObject to a List
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator List<long>(PyObject pyObject)
         {
@@ -714,9 +715,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a List
+        ///     Cast a PyObject to a List
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator List<string>(PyObject pyObject)
         {
@@ -724,7 +725,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the PyObject as a list
+        ///     Returns the PyObject as a list
         /// </summary>
         /// <returns></returns>
         public List<T> ToList<T>()
@@ -762,7 +763,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Returns the PyObject as a dictionary
+        ///     Returns the PyObject as a dictionary
         /// </summary>
         /// <returns></returns>
         public Dictionary<PyObject, PyObject> ToDictionary()
@@ -771,7 +772,7 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a dictionary
+        ///     Cast a PyObject to a dictionary
         /// </summary>
         /// <returns></returns>
         public Dictionary<TKey, PyObject> ToDictionary<TKey>()
@@ -808,9 +809,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a dictionary
+        ///     Cast a PyObject to a dictionary
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator Dictionary<PyObject, PyObject>(PyObject pyObject)
         {
@@ -818,9 +819,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a dictionary
+        ///     Cast a PyObject to a dictionary
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator Dictionary<int, PyObject>(PyObject pyObject)
         {
@@ -828,9 +829,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a dictionary
+        ///     Cast a PyObject to a dictionary
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator Dictionary<long, PyObject>(PyObject pyObject)
         {
@@ -838,9 +839,9 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Cast a PyObject to a dictionary
+        ///     Cast a PyObject to a dictionary
         /// </summary>
-        /// <param name = "pyObject"></param>
+        /// <param name="pyObject"></param>
         /// <returns></returns>
         public static explicit operator Dictionary<string, PyObject>(PyObject pyObject)
         {
@@ -848,11 +849,11 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Set an attribute value
+        ///     Set an attribute value
         /// </summary>
-        /// <typeparam name = "T"></typeparam>
-        /// <param name = "attribute"></param>
-        /// <param name = "value"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="attribute"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public bool SetAttribute<T>(string attribute, T value)
         {
@@ -905,12 +906,12 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Clear this PyObject (the PyObject must be a List, Tuple or Dictionary)
+        ///     Clear this PyObject (the PyObject must be a List, Tuple or Dictionary)
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   For a list attribute, the list is cleared
-        ///   For a Dictionary attribute, the dictionary is cleared
+        ///     For a list attribute, the list is cleared
+        ///     For a Dictionary attribute, the dictionary is cleared
         /// </remarks>
         public bool Clear()
         {
@@ -918,13 +919,13 @@ namespace PythonBrowser.PySharp
         }
 
         /// <summary>
-        ///   Clear this PyObject (the PyObject must be a List or Dictionary)
+        ///     Clear this PyObject (the PyObject must be a List or Dictionary)
         /// </summary>
-        /// <param name = "pyType">Force this Python Type</param>
+        /// <param name="pyType">Force this Python Type</param>
         /// <returns></returns>
         /// <remarks>
-        ///   For a list attribute, the list is cleared
-        ///   For a Dictionary attribute, the dictionary is cleared
+        ///     For a list attribute, the list is cleared
+        ///     For a Dictionary attribute, the dictionary is cleared
         /// </remarks>
         public bool Clear(PyType pyType)
         {
@@ -952,12 +953,11 @@ namespace PythonBrowser.PySharp
         }
 
 
-
         /// <summary>
-        ///   Handle a python error (e.g. clear error)
+        ///     Handle a python error (e.g. clear error)
         /// </summary>
         /// <remarks>
-        ///   This checks if an error actually occured and clears the error
+        ///     This checks if an error actually occured and clears the error
         /// </remarks>
         private void HandlePythonError()
         {

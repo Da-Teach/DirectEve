@@ -7,9 +7,10 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectAgentMissionBookmark : DirectBookmark
     {

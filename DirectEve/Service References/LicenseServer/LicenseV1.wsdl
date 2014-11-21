@@ -1,10 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://license.thehackerwithin.com" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:i0="http://tempuri.org/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="LicenseV1" targetNamespace="http://license.thehackerwithin.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+                  xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://license.thehackerwithin.com"
+                  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:i0="http://tempuri.org/"
+                  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="LicenseV1"
+                  targetNamespace="http://license.thehackerwithin.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:import namespace="http://tempuri.org/" location="http://localhost:49772/LicenseV1.svc?wsdl=wsdl0" />
   <wsdl:types>
     <xsd:schema targetNamespace="http://license.thehackerwithin.com/Imports">
-      <xsd:import schemaLocation="http://localhost:49772/LicenseV1.svc?xsd=xsd0" namespace="http://license.thehackerwithin.com" />
-      <xsd:import schemaLocation="http://localhost:49772/LicenseV1.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:49772/LicenseV1.svc?xsd=xsd0"
+                  namespace="http://license.thehackerwithin.com" />
+      <xsd:import schemaLocation="http://localhost:49772/LicenseV1.svc?xsd=xsd1"
+                  namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="ILicenseV1_Startup_InputMessage">
@@ -36,19 +52,28 @@
   </wsdl:message>
   <wsdl:portType name="ILicenseV1">
     <wsdl:operation name="Startup">
-      <wsdl:input wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/Startup" message="tns:ILicenseV1_Startup_InputMessage" />
-      <wsdl:output wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/StartupResponse" message="tns:ILicenseV1_Startup_OutputMessage" />
-      <wsdl:fault wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/StartupLicenseFaultFault" name="LicenseFaultFault" message="tns:ILicenseV1_Startup_LicenseFaultFault_FaultMessage" />
+      <wsdl:input wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/Startup"
+                  message="tns:ILicenseV1_Startup_InputMessage" />
+      <wsdl:output wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/StartupResponse"
+                   message="tns:ILicenseV1_Startup_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/StartupLicenseFaultFault"
+                  name="LicenseFaultFault" message="tns:ILicenseV1_Startup_LicenseFaultFault_FaultMessage" />
     </wsdl:operation>
     <wsdl:operation name="KeepAlive">
-      <wsdl:input wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/KeepAlive" message="tns:ILicenseV1_KeepAlive_InputMessage" />
-      <wsdl:output wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/KeepAliveResponse" message="tns:ILicenseV1_KeepAlive_OutputMessage" />
-      <wsdl:fault wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/KeepAliveLicenseFaultFault" name="LicenseFaultFault" message="tns:ILicenseV1_KeepAlive_LicenseFaultFault_FaultMessage" />
+      <wsdl:input wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/KeepAlive"
+                  message="tns:ILicenseV1_KeepAlive_InputMessage" />
+      <wsdl:output wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/KeepAliveResponse"
+                   message="tns:ILicenseV1_KeepAlive_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/KeepAliveLicenseFaultFault"
+                  name="LicenseFaultFault" message="tns:ILicenseV1_KeepAlive_LicenseFaultFault_FaultMessage" />
     </wsdl:operation>
     <wsdl:operation name="Shutdown">
-      <wsdl:input wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/Shutdown" message="tns:ILicenseV1_Shutdown_InputMessage" />
-      <wsdl:output wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/ShutdownResponse" message="tns:ILicenseV1_Shutdown_OutputMessage" />
-      <wsdl:fault wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/ShutdownLicenseFaultFault" name="LicenseFaultFault" message="tns:ILicenseV1_Shutdown_LicenseFaultFault_FaultMessage" />
+      <wsdl:input wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/Shutdown"
+                  message="tns:ILicenseV1_Shutdown_InputMessage" />
+      <wsdl:output wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/ShutdownResponse"
+                   message="tns:ILicenseV1_Shutdown_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://license.thehackerwithin.com/ILicenseV1/ShutdownLicenseFaultFault"
+                  name="LicenseFaultFault" message="tns:ILicenseV1_Shutdown_LicenseFaultFault_FaultMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:service name="LicenseV1">

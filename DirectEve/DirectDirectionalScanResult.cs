@@ -7,9 +7,10 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     // a scan result is like an entity but we cannot base directly of DirectEntity
     // as it stands today.  Maybe in the future DirectEntity can handle scan results
@@ -72,17 +73,17 @@ namespace DirectEve
                     {
                         var c = new DirectConst(DirectEve);
                         _name = (string) PyInvType.Attribute("name");
-                        if (this.GroupId == (int) c["groupHarvestableCloud"])
+                        if (GroupId == (int) c["groupHarvestableCloud"])
                         {
                             _name = (string) PySharp.Import("localization").Call("GetByLabel", "UI/Inventory/SlimItemNames/SlimHarvestableCloud", _name);
                         }
-                        else if (this.CategoryId == (int) c["categoryAsteroid"])
+                        else if (CategoryId == (int) c["categoryAsteroid"])
                         {
                             _name = (string) PySharp.Import("localization").Call("GetByLabel", "UI/Inventory/SlimItemNames/SlimAsteroid", _name);
                         }
                         else
                         {
-                            _name = DirectEve.GetLocationName(this.ItemID);
+                            _name = DirectEve.GetLocationName(ItemID);
                         }
                     }
                 }
@@ -98,8 +99,8 @@ namespace DirectEve
                 if (_celestialRec.IsValid && _ball.IsValid)
                 {
                     var ballpark = DirectEve.GetLocalSvc("michelle").Call("GetBallpark");
-                    var slimItem = ballpark.Call("GetInvItem", this.ItemID);
-                    entity = new DirectEntity(DirectEve, ballpark, _ball, slimItem, this.ItemID);
+                    var slimItem = ballpark.Call("GetInvItem", ItemID);
+                    entity = new DirectEntity(DirectEve, ballpark, _ball, slimItem, ItemID);
                 }
                 return entity;
             }

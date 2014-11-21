@@ -1,10 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AphackInject
 {
+    using System;
+    using System.Collections.Generic;
+
     public class PyObject
     {
         private IntPtr _pyReference;
@@ -20,7 +28,6 @@ namespace AphackInject
         internal PyObject(IntPtr pyReference)
         {
             _pyReference = pyReference;
-
         }
 
         public int? Size
@@ -46,6 +53,7 @@ namespace AphackInject
                 return _size;
             }
         }
+
         public Py.PyType Type
         {
             get
@@ -67,9 +75,9 @@ namespace AphackInject
                 if (Type == Py.PyType.ListType)
                 {
                     _list = new List<PyObject>();
-                    int size = Py.PyList_Size(_pyReference);
+                    var size = Py.PyList_Size(_pyReference);
                     if (size > 0)
-                        for (int i = 0; i < size; i++)
+                        for (var i = 0; i < size; i++)
                             _list.Add(new PyObject(Py.PyTuple_GetItem(_pyReference, i)));
                 }
                 return _list;
@@ -86,9 +94,9 @@ namespace AphackInject
                 if (Type == Py.PyType.TupleType)
                 {
                     _tuple = new List<PyObject>();
-                    int size = Py.PyTuple_Size(_pyReference);
+                    var size = Py.PyTuple_Size(_pyReference);
                     if (size > 0)
-                        for (int i = 0; i < size; i++)
+                        for (var i = 0; i < size; i++)
                             _tuple.Add(new PyObject(Py.PyTuple_GetItem(_pyReference, i)));
                 }
                 return _tuple;
@@ -97,10 +105,7 @@ namespace AphackInject
 
         public string String
         {
-            get
-            {
-                return _string = Py.ToUnicodeString(_pyReference);
-            }
+            get { return _string = Py.ToUnicodeString(_pyReference); }
         }
 
         public int? Int

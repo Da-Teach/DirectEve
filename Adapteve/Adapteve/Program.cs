@@ -1,18 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using EasyHook;
-using QuestorDLL;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace Adapteve
 {
-    class Program
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Threading;
+    using EasyHook;
+
+    internal class Program
     {
         private static int pid = new int();
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             try
             {
@@ -34,18 +42,16 @@ namespace Adapteve
                 var qDll = args[2];
                 var qParam = args[3];
                 RemoteHooking.CreateAndInject(exefilePath,
-                    "", (int)InjectionOptions.Default,
+                    "", (int) InjectionOptions.Default,
                     dll,
-                    dll, 
+                    dll,
                     out pid,
                     "", iniFile, qDll, qParam);
 
-                System.Threading.Thread.Sleep(500);
+                Thread.Sleep(500);
                 RemoteHooking.Inject(pid, qDll, qDll, qParam);
-
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 Console.ReadLine();

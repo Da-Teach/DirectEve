@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using AdapteveDLL;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace Adapteve
 {
+    using System;
+    using System.IO;
+    using AdapteveDLL;
+
     public class Utility
     {
-        
         public static string GetExefilePath(string path)
         {
             if (path.ToLower().EndsWith("exefile.exe"))
@@ -29,9 +34,8 @@ namespace Adapteve
             if (!File.Exists(iniFile))
                 throw new ArgumentException("IniFile not found");
 
-            Settings verify = new Settings(iniFile);
+            var verify = new Settings(iniFile);
             return iniFile;
         }
-
     }
 }

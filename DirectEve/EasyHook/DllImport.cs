@@ -1,35 +1,22 @@
-﻿/*
-    EasyHook - The reinvention of Windows API hooking
- 
-    Copyright (C) 2009 Christoph Husse
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-    Please visit http://www.codeplex.com/easyhook for more information
-    about the project and latest updates.
-*/
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace EasyHook
 {
+    using System;
+    using System.GACManagedAccess;
+    using System.Runtime.InteropServices;
+
 #pragma warning disable 1591
 
-    static class NativeAPI_x86
+    internal static class NativeAPI_x86
     {
         private const String DllName = "EasyHook32.dll";
 
@@ -61,37 +48,34 @@ namespace EasyHook
             hook starts suspended. You will have to set a proper ACL to
             make it active!
         */
+
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhSetInclusiveACL(
-                    [MarshalAs(UnmanagedType.LPArray, SizeParamIndex=1)]
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount,
-                    IntPtr InHandle);
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Int32[] InThreadIdList,
+            Int32 InThreadCount,
+            IntPtr InHandle);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhSetExclusiveACL(
-                    [MarshalAs(UnmanagedType.LPArray, SizeParamIndex=1)]
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount,
-                    IntPtr InHandle);
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Int32[] InThreadIdList,
+            Int32 InThreadCount,
+            IntPtr InHandle);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhSetGlobalInclusiveACL(
-                    [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount);
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Int32[] InThreadIdList,
+            Int32 InThreadCount);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhSetGlobalExclusiveACL(
-                    [MarshalAs(UnmanagedType.LPArray, SizeParamIndex=1)]
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount);
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Int32[] InThreadIdList,
+            Int32 InThreadCount);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhIsThreadIntercepted(
-                    IntPtr InHandle,
-                    Int32 InThreadID,
-                    out Boolean OutResult);
+            IntPtr InHandle,
+            Int32 InThreadID,
+            out Boolean OutResult);
 
         /*
             The following barrier methods are meant to be used in hook handlers only!
@@ -99,6 +83,7 @@ namespace EasyHook
             They will all fail with STATUS_NOT_SUPPORTED if called outside a
             valid hook handler...
         */
+
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhBarrierGetCallback(out IntPtr OutValue);
 
@@ -120,6 +105,7 @@ namespace EasyHook
         /*
             Debug helper API.
         */
+
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 DbgAttachDebugger();
 
@@ -144,7 +130,8 @@ namespace EasyHook
         /*
             Injection support API.
         */
-        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet=CharSet.Unicode)]
+
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern Int32 RhInjectLibrary(
             Int32 InTargetPID,
             Int32 InWakeUpTID,
@@ -176,16 +163,16 @@ namespace EasyHook
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern Int32 RtlCreateSuspendedProcess(
-           String InEXEPath,
-           String InCommandLine,
+            String InEXEPath,
+            String InCommandLine,
             Int32 InProcessCreationFlags,
-           out Int32 OutProcessId,
-           out Int32 OutThreadId);
+            out Int32 OutProcessId,
+            out Int32 OutThreadId);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern Int32 RhInstallDriver(
-           String InDriverPath,
-           String InDriverName);
+            String InDriverPath,
+            String InDriverName);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 RhInstallSupportDriver();
@@ -214,11 +201,11 @@ namespace EasyHook
             String InUniqueID);
     }
 
-    static class NativeAPI_x64
+    internal static class NativeAPI_x64
     {
         private const String DllName = "EasyHook64.dll";
 
-        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet=CharSet.Unicode)]
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern String RtlGetLastErrorString();
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
@@ -246,37 +233,34 @@ namespace EasyHook
             hook starts suspended. You will have to set a proper ACL to
             make it active!
         */
+
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhSetInclusiveACL(
-                    [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount,
-                    IntPtr InHandle);
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Int32[] InThreadIdList,
+            Int32 InThreadCount,
+            IntPtr InHandle);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhSetExclusiveACL(
-                    [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount,
-                    IntPtr InHandle);
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Int32[] InThreadIdList,
+            Int32 InThreadCount,
+            IntPtr InHandle);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhSetGlobalInclusiveACL(
-                    [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount);
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Int32[] InThreadIdList,
+            Int32 InThreadCount);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhSetGlobalExclusiveACL(
-                    [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount);
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] Int32[] InThreadIdList,
+            Int32 InThreadCount);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhIsThreadIntercepted(
-                    IntPtr InHandle,
-                    Int32 InThreadID,
-                    out Boolean OutResult);
+            IntPtr InHandle,
+            Int32 InThreadID,
+            out Boolean OutResult);
 
         /*
             The following barrier methods are meant to be used in hook handlers only!
@@ -284,6 +268,7 @@ namespace EasyHook
             They will all fail with STATUS_NOT_SUPPORTED if called outside a
             valid hook handler...
         */
+
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 LhBarrierGetCallback(out IntPtr OutValue);
 
@@ -305,6 +290,7 @@ namespace EasyHook
         /*
             Debug helper API.
         */
+
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 DbgAttachDebugger();
 
@@ -329,6 +315,7 @@ namespace EasyHook
         /*
             Injection support API.
         */
+
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern Int32 RhInjectLibrary(
             Int32 InTargetPID,
@@ -358,26 +345,25 @@ namespace EasyHook
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern Int32 RtlCreateSuspendedProcess(
-           String InEXEPath,
-           String InCommandLine,
+            String InEXEPath,
+            String InCommandLine,
             Int32 InProcessCreationFlags,
-           out Int32 OutProcessId,
-           out Int32 OutThreadId);
+            out Int32 OutProcessId,
+            out Int32 OutThreadId);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 RhWakeUpProcess();
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern Int32 RhInstallDriver(
-           String InDriverPath,
-           String InDriverName);
+            String InDriverPath,
+            String InDriverName);
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 RhInstallSupportDriver();
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
         public static extern Boolean RhIsX64System();
-
 
 
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall)]
@@ -393,7 +379,7 @@ namespace EasyHook
             String InDescription,
             String InUniqueID);
 
-        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet=CharSet.Unicode)]
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern bool GacUninstallAssembly(
             IntPtr InContext,
             String InAssemblyName,
@@ -405,7 +391,7 @@ namespace EasyHook
     {
         public const Int32 MAX_HOOK_COUNT = 1024;
         public const Int32 MAX_ACE_COUNT = 128;
-        public readonly static Boolean Is64Bit = IntPtr.Size == 8;
+        public static readonly Boolean Is64Bit = IntPtr.Size == 8;
 
         [DllImport("kernel32.dll")]
         public static extern int GetCurrentThreadId();
@@ -416,7 +402,7 @@ namespace EasyHook
         [DllImport("kernel32.dll")]
         public static extern int GetCurrentProcessId();
 
-        [DllImport("kernel32.dll", CharSet=CharSet.Ansi)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
         public static extern IntPtr GetProcAddress(IntPtr InModule, String InProcName);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
@@ -432,20 +418,20 @@ namespace EasyHook
             IntPtr OutBackTrace,
             IntPtr OutBackTraceHash);
 
-        public const Int32 STATUS_SUCCESS = unchecked((Int32)0);
-        public const Int32 STATUS_INVALID_PARAMETER = unchecked((Int32)0xC000000DL);
-        public const Int32 STATUS_INVALID_PARAMETER_1= unchecked((Int32)0xC00000EFL);
-        public const Int32 STATUS_INVALID_PARAMETER_2= unchecked((Int32)0xC00000F0L);
-        public const Int32 STATUS_INVALID_PARAMETER_3= unchecked((Int32)0xC00000F1L);
-        public const Int32 STATUS_INVALID_PARAMETER_4= unchecked((Int32)0xC00000F2L);
-        public const Int32 STATUS_INVALID_PARAMETER_5= unchecked((Int32)0xC00000F3L);
-        public const Int32 STATUS_NOT_SUPPORTED= unchecked((Int32)0xC00000BBL);
-        public const Int32 STATUS_INTERNAL_ERROR= unchecked((Int32)0xC00000E5L);
-        public const Int32 STATUS_INSUFFICIENT_RESOURCES= unchecked((Int32)0xC000009AL);
-        public const Int32 STATUS_BUFFER_TOO_SMALL= unchecked((Int32)0xC0000023L);
-        public const Int32 STATUS_NO_MEMORY= unchecked((Int32)0xC0000017L);
-        public const Int32 STATUS_WOW_ASSERTION = unchecked((Int32)0xC0009898L);
-        public const Int32 STATUS_ACCESS_DENIED = unchecked((Int32)0xC0000022L);
+        public const Int32 STATUS_SUCCESS = unchecked((Int32) 0);
+        public const Int32 STATUS_INVALID_PARAMETER = unchecked((Int32) 0xC000000DL);
+        public const Int32 STATUS_INVALID_PARAMETER_1 = unchecked((Int32) 0xC00000EFL);
+        public const Int32 STATUS_INVALID_PARAMETER_2 = unchecked((Int32) 0xC00000F0L);
+        public const Int32 STATUS_INVALID_PARAMETER_3 = unchecked((Int32) 0xC00000F1L);
+        public const Int32 STATUS_INVALID_PARAMETER_4 = unchecked((Int32) 0xC00000F2L);
+        public const Int32 STATUS_INVALID_PARAMETER_5 = unchecked((Int32) 0xC00000F3L);
+        public const Int32 STATUS_NOT_SUPPORTED = unchecked((Int32) 0xC00000BBL);
+        public const Int32 STATUS_INTERNAL_ERROR = unchecked((Int32) 0xC00000E5L);
+        public const Int32 STATUS_INSUFFICIENT_RESOURCES = unchecked((Int32) 0xC000009AL);
+        public const Int32 STATUS_BUFFER_TOO_SMALL = unchecked((Int32) 0xC0000023L);
+        public const Int32 STATUS_NO_MEMORY = unchecked((Int32) 0xC0000017L);
+        public const Int32 STATUS_WOW_ASSERTION = unchecked((Int32) 0xC0009898L);
+        public const Int32 STATUS_ACCESS_DENIED = unchecked((Int32) 0xC0000022L);
 
         private static String ComposeString()
         {
@@ -456,22 +442,37 @@ namespace EasyHook
         {
             switch (InErrorCode)
             {
-                case STATUS_SUCCESS: return;
-                case STATUS_INVALID_PARAMETER: throw new ArgumentException("STATUS_INVALID_PARAMETER: " + ComposeString());
-                case STATUS_INVALID_PARAMETER_1: throw new ArgumentException("STATUS_INVALID_PARAMETER_1: " + ComposeString());
-                case STATUS_INVALID_PARAMETER_2: throw new ArgumentException("STATUS_INVALID_PARAMETER_2: " + ComposeString());
-                case STATUS_INVALID_PARAMETER_3: throw new ArgumentException("STATUS_INVALID_PARAMETER_3: " + ComposeString());
-                case STATUS_INVALID_PARAMETER_4: throw new ArgumentException("STATUS_INVALID_PARAMETER_4: " + ComposeString());
-                case STATUS_INVALID_PARAMETER_5: throw new ArgumentException("STATUS_INVALID_PARAMETER_5: " + ComposeString());
-                case STATUS_NOT_SUPPORTED: throw new NotSupportedException("STATUS_NOT_SUPPORTED: " + ComposeString());
-                case STATUS_INTERNAL_ERROR: throw new ApplicationException("STATUS_INTERNAL_ERROR: " + ComposeString());
-                case STATUS_INSUFFICIENT_RESOURCES: throw new InsufficientMemoryException("STATUS_INSUFFICIENT_RESOURCES: " + ComposeString());
-                case STATUS_BUFFER_TOO_SMALL: throw new ArgumentException("STATUS_BUFFER_TOO_SMALL: " + ComposeString());
-                case STATUS_NO_MEMORY: throw new OutOfMemoryException("STATUS_NO_MEMORY: " + ComposeString());
-                case STATUS_WOW_ASSERTION: throw new OutOfMemoryException("STATUS_WOW_ASSERTION: " + ComposeString());
-                case STATUS_ACCESS_DENIED: throw new AccessViolationException("STATUS_ACCESS_DENIED: " + ComposeString());
+                case STATUS_SUCCESS:
+                    return;
+                case STATUS_INVALID_PARAMETER:
+                    throw new ArgumentException("STATUS_INVALID_PARAMETER: " + ComposeString());
+                case STATUS_INVALID_PARAMETER_1:
+                    throw new ArgumentException("STATUS_INVALID_PARAMETER_1: " + ComposeString());
+                case STATUS_INVALID_PARAMETER_2:
+                    throw new ArgumentException("STATUS_INVALID_PARAMETER_2: " + ComposeString());
+                case STATUS_INVALID_PARAMETER_3:
+                    throw new ArgumentException("STATUS_INVALID_PARAMETER_3: " + ComposeString());
+                case STATUS_INVALID_PARAMETER_4:
+                    throw new ArgumentException("STATUS_INVALID_PARAMETER_4: " + ComposeString());
+                case STATUS_INVALID_PARAMETER_5:
+                    throw new ArgumentException("STATUS_INVALID_PARAMETER_5: " + ComposeString());
+                case STATUS_NOT_SUPPORTED:
+                    throw new NotSupportedException("STATUS_NOT_SUPPORTED: " + ComposeString());
+                case STATUS_INTERNAL_ERROR:
+                    throw new ApplicationException("STATUS_INTERNAL_ERROR: " + ComposeString());
+                case STATUS_INSUFFICIENT_RESOURCES:
+                    throw new InsufficientMemoryException("STATUS_INSUFFICIENT_RESOURCES: " + ComposeString());
+                case STATUS_BUFFER_TOO_SMALL:
+                    throw new ArgumentException("STATUS_BUFFER_TOO_SMALL: " + ComposeString());
+                case STATUS_NO_MEMORY:
+                    throw new OutOfMemoryException("STATUS_NO_MEMORY: " + ComposeString());
+                case STATUS_WOW_ASSERTION:
+                    throw new OutOfMemoryException("STATUS_WOW_ASSERTION: " + ComposeString());
+                case STATUS_ACCESS_DENIED:
+                    throw new AccessViolationException("STATUS_ACCESS_DENIED: " + ComposeString());
 
-                default: throw new ApplicationException("Unknown error code (" + InErrorCode + "): " + ComposeString());
+                default:
+                    throw new ApplicationException("Unknown error code (" + InErrorCode + "): " + ComposeString());
             }
         }
 
@@ -499,63 +500,63 @@ namespace EasyHook
             IntPtr InCallback,
             IntPtr OutHandle)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhInstallHook(InEntryPoint, InHookProc, InCallback, OutHandle));
-            else Force( NativeAPI_x86.LhInstallHook(InEntryPoint, InHookProc, InCallback, OutHandle));
+            if (Is64Bit) Force(NativeAPI_x64.LhInstallHook(InEntryPoint, InHookProc, InCallback, OutHandle));
+            else Force(NativeAPI_x86.LhInstallHook(InEntryPoint, InHookProc, InCallback, OutHandle));
         }
 
         public static void LhUninstallHook(IntPtr RefHandle)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhUninstallHook(RefHandle));
-            else Force( NativeAPI_x86.LhUninstallHook(RefHandle));
+            if (Is64Bit) Force(NativeAPI_x64.LhUninstallHook(RefHandle));
+            else Force(NativeAPI_x86.LhUninstallHook(RefHandle));
         }
 
         public static void LhWaitForPendingRemovals()
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhWaitForPendingRemovals());
-            else Force( NativeAPI_x86.LhWaitForPendingRemovals());
+            if (Is64Bit) Force(NativeAPI_x64.LhWaitForPendingRemovals());
+            else Force(NativeAPI_x86.LhWaitForPendingRemovals());
         }
 
         public static void LhIsThreadIntercepted(
-                    IntPtr InHandle,
-                    Int32 InThreadID,
-                    out Boolean OutResult)
+            IntPtr InHandle,
+            Int32 InThreadID,
+            out Boolean OutResult)
         {
             if (Is64Bit) Force(NativeAPI_x64.LhIsThreadIntercepted(InHandle, InThreadID, out OutResult));
             else Force(NativeAPI_x86.LhIsThreadIntercepted(InHandle, InThreadID, out OutResult));
         }
 
         public static void LhSetInclusiveACL(
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount,
-                    IntPtr InHandle)
+            Int32[] InThreadIdList,
+            Int32 InThreadCount,
+            IntPtr InHandle)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhSetInclusiveACL(InThreadIdList, InThreadCount, InHandle));
-            else Force( NativeAPI_x86.LhSetInclusiveACL(InThreadIdList, InThreadCount, InHandle));
+            if (Is64Bit) Force(NativeAPI_x64.LhSetInclusiveACL(InThreadIdList, InThreadCount, InHandle));
+            else Force(NativeAPI_x86.LhSetInclusiveACL(InThreadIdList, InThreadCount, InHandle));
         }
 
         public static void LhSetExclusiveACL(
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount,
-                    IntPtr InHandle)
+            Int32[] InThreadIdList,
+            Int32 InThreadCount,
+            IntPtr InHandle)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhSetExclusiveACL(InThreadIdList, InThreadCount, InHandle));
-            else Force( NativeAPI_x86.LhSetExclusiveACL(InThreadIdList, InThreadCount, InHandle));
+            if (Is64Bit) Force(NativeAPI_x64.LhSetExclusiveACL(InThreadIdList, InThreadCount, InHandle));
+            else Force(NativeAPI_x86.LhSetExclusiveACL(InThreadIdList, InThreadCount, InHandle));
         }
 
         public static void LhSetGlobalInclusiveACL(
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount)
+            Int32[] InThreadIdList,
+            Int32 InThreadCount)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhSetGlobalInclusiveACL(InThreadIdList, InThreadCount));
-            else Force( NativeAPI_x86.LhSetGlobalInclusiveACL(InThreadIdList, InThreadCount));
+            if (Is64Bit) Force(NativeAPI_x64.LhSetGlobalInclusiveACL(InThreadIdList, InThreadCount));
+            else Force(NativeAPI_x86.LhSetGlobalInclusiveACL(InThreadIdList, InThreadCount));
         }
 
         public static void LhSetGlobalExclusiveACL(
-                    Int32[] InThreadIdList,
-                    Int32 InThreadCount)
+            Int32[] InThreadIdList,
+            Int32 InThreadCount)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhSetGlobalExclusiveACL(InThreadIdList, InThreadCount));
-            else Force( NativeAPI_x86.LhSetGlobalExclusiveACL(InThreadIdList, InThreadCount));
+            if (Is64Bit) Force(NativeAPI_x64.LhSetGlobalExclusiveACL(InThreadIdList, InThreadCount));
+            else Force(NativeAPI_x86.LhSetGlobalExclusiveACL(InThreadIdList, InThreadCount));
         }
 
         public static void LhBarrierGetCallingModule(out IntPtr OutValue)
@@ -566,54 +567,54 @@ namespace EasyHook
 
         public static void LhBarrierGetCallback(out IntPtr OutValue)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhBarrierGetCallback(out OutValue));
-            else Force( NativeAPI_x86.LhBarrierGetCallback(out OutValue));
+            if (Is64Bit) Force(NativeAPI_x64.LhBarrierGetCallback(out OutValue));
+            else Force(NativeAPI_x86.LhBarrierGetCallback(out OutValue));
         }
 
         public static void LhBarrierGetReturnAddress(out IntPtr OutValue)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhBarrierGetReturnAddress(out OutValue));
-            else Force( NativeAPI_x86.LhBarrierGetReturnAddress(out OutValue));
+            if (Is64Bit) Force(NativeAPI_x64.LhBarrierGetReturnAddress(out OutValue));
+            else Force(NativeAPI_x86.LhBarrierGetReturnAddress(out OutValue));
         }
 
         public static void LhBarrierGetAddressOfReturnAddress(out IntPtr OutValue)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhBarrierGetAddressOfReturnAddress(out OutValue));
-            else Force( NativeAPI_x86.LhBarrierGetAddressOfReturnAddress(out OutValue));
+            if (Is64Bit) Force(NativeAPI_x64.LhBarrierGetAddressOfReturnAddress(out OutValue));
+            else Force(NativeAPI_x86.LhBarrierGetAddressOfReturnAddress(out OutValue));
         }
 
         public static void LhBarrierBeginStackTrace(out IntPtr OutBackup)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhBarrierBeginStackTrace(out OutBackup));
-            else Force( NativeAPI_x86.LhBarrierBeginStackTrace(out OutBackup));
+            if (Is64Bit) Force(NativeAPI_x64.LhBarrierBeginStackTrace(out OutBackup));
+            else Force(NativeAPI_x86.LhBarrierBeginStackTrace(out OutBackup));
         }
 
         public static void LhBarrierEndStackTrace(IntPtr OutBackup)
         {
-            if (Is64Bit) Force( NativeAPI_x64.LhBarrierEndStackTrace(OutBackup));
-            else Force( NativeAPI_x86.LhBarrierEndStackTrace(OutBackup));
+            if (Is64Bit) Force(NativeAPI_x64.LhBarrierEndStackTrace(OutBackup));
+            else Force(NativeAPI_x86.LhBarrierEndStackTrace(OutBackup));
         }
 
         public static void DbgAttachDebugger()
         {
-            if (Is64Bit) Force( NativeAPI_x64.DbgAttachDebugger());
-            else Force( NativeAPI_x86.DbgAttachDebugger());
+            if (Is64Bit) Force(NativeAPI_x64.DbgAttachDebugger());
+            else Force(NativeAPI_x86.DbgAttachDebugger());
         }
 
         public static void DbgGetThreadIdByHandle(
             IntPtr InThreadHandle,
             out Int32 OutThreadId)
         {
-            if (Is64Bit) Force( NativeAPI_x64.DbgGetThreadIdByHandle(InThreadHandle, out OutThreadId));
-            else Force( NativeAPI_x86.DbgGetThreadIdByHandle(InThreadHandle, out OutThreadId));
+            if (Is64Bit) Force(NativeAPI_x64.DbgGetThreadIdByHandle(InThreadHandle, out OutThreadId));
+            else Force(NativeAPI_x86.DbgGetThreadIdByHandle(InThreadHandle, out OutThreadId));
         }
 
         public static void DbgGetProcessIdByHandle(
             IntPtr InProcessHandle,
             out Int32 OutProcessId)
         {
-            if (Is64Bit) Force( NativeAPI_x64.DbgGetProcessIdByHandle(InProcessHandle, out OutProcessId));
-            else Force( NativeAPI_x86.DbgGetProcessIdByHandle(InProcessHandle, out OutProcessId));
+            if (Is64Bit) Force(NativeAPI_x64.DbgGetProcessIdByHandle(InProcessHandle, out OutProcessId));
+            else Force(NativeAPI_x86.DbgGetProcessIdByHandle(InProcessHandle, out OutProcessId));
         }
 
         public static void DbgHandleToObjectName(
@@ -622,11 +623,11 @@ namespace EasyHook
             Int32 InBufferSize,
             out Int32 OutRequiredSize)
         {
-            if (Is64Bit) Force( NativeAPI_x64.DbgHandleToObjectName(InNamedHandle, OutNameBuffer, InBufferSize, out OutRequiredSize));
-            else Force( NativeAPI_x86.DbgHandleToObjectName(InNamedHandle, OutNameBuffer, InBufferSize, out OutRequiredSize));
+            if (Is64Bit) Force(NativeAPI_x64.DbgHandleToObjectName(InNamedHandle, OutNameBuffer, InBufferSize, out OutRequiredSize));
+            else Force(NativeAPI_x86.DbgHandleToObjectName(InNamedHandle, OutNameBuffer, InBufferSize, out OutRequiredSize));
         }
 
-        public static Int32 EASYHOOK_INJECT_DEFAULT   =      0x00000000;
+        public static Int32 EASYHOOK_INJECT_DEFAULT = 0x00000000;
         public static Int32 EASYHOOK_INJECT_MANAGED = 0x00000001;
 
         public static Int32 RhInjectLibraryEx(
@@ -638,10 +639,12 @@ namespace EasyHook
             IntPtr InPassThruBuffer,
             Int32 InPassThruSize)
         {
-            if (Is64Bit) return NativeAPI_x64.RhInjectLibrary(InTargetPID, InWakeUpTID, InInjectionOptions,
-                InLibraryPath_x86, InLibraryPath_x64, InPassThruBuffer, InPassThruSize);
-            else return NativeAPI_x86.RhInjectLibrary(InTargetPID, InWakeUpTID, InInjectionOptions,
-                InLibraryPath_x86, InLibraryPath_x64, InPassThruBuffer, InPassThruSize);
+            if (Is64Bit)
+                return NativeAPI_x64.RhInjectLibrary(InTargetPID, InWakeUpTID, InInjectionOptions,
+                    InLibraryPath_x86, InLibraryPath_x64, InPassThruBuffer, InPassThruSize);
+            else
+                return NativeAPI_x86.RhInjectLibrary(InTargetPID, InWakeUpTID, InInjectionOptions,
+                    InLibraryPath_x86, InLibraryPath_x64, InPassThruBuffer, InPassThruSize);
         }
 
         public static void RhInjectLibrary(
@@ -653,23 +656,27 @@ namespace EasyHook
             IntPtr InPassThruBuffer,
             Int32 InPassThruSize)
         {
-            if (Is64Bit) Force( NativeAPI_x64.RhInjectLibrary(InTargetPID, InWakeUpTID, InInjectionOptions,
-                InLibraryPath_x86, InLibraryPath_x64, InPassThruBuffer, InPassThruSize));
-            else Force( NativeAPI_x86.RhInjectLibrary(InTargetPID, InWakeUpTID, InInjectionOptions,
-                InLibraryPath_x86, InLibraryPath_x64, InPassThruBuffer, InPassThruSize));
+            if (Is64Bit)
+                Force(NativeAPI_x64.RhInjectLibrary(InTargetPID, InWakeUpTID, InInjectionOptions,
+                    InLibraryPath_x86, InLibraryPath_x64, InPassThruBuffer, InPassThruSize));
+            else
+                Force(NativeAPI_x86.RhInjectLibrary(InTargetPID, InWakeUpTID, InInjectionOptions,
+                    InLibraryPath_x86, InLibraryPath_x64, InPassThruBuffer, InPassThruSize));
         }
 
         public static void RtlCreateSuspendedProcess(
-           String InEXEPath,
-           String InCommandLine,
+            String InEXEPath,
+            String InCommandLine,
             Int32 InProcessCreationFlags,
-           out Int32 OutProcessId,
-           out Int32 OutThreadId)
+            out Int32 OutProcessId,
+            out Int32 OutThreadId)
         {
-            if (Is64Bit) Force(NativeAPI_x64.RtlCreateSuspendedProcess(InEXEPath, InCommandLine, InProcessCreationFlags,
-                out OutProcessId, out OutThreadId));
-            else Force(NativeAPI_x86.RtlCreateSuspendedProcess(InEXEPath, InCommandLine, InProcessCreationFlags,
-                out OutProcessId, out OutThreadId));
+            if (Is64Bit)
+                Force(NativeAPI_x64.RtlCreateSuspendedProcess(InEXEPath, InCommandLine, InProcessCreationFlags,
+                    out OutProcessId, out OutThreadId));
+            else
+                Force(NativeAPI_x86.RtlCreateSuspendedProcess(InEXEPath, InCommandLine, InProcessCreationFlags,
+                    out OutProcessId, out OutThreadId));
         }
 
         public static void RhIsX64Process(
@@ -677,7 +684,7 @@ namespace EasyHook
             out Boolean OutResult)
         {
             if (Is64Bit) Force(NativeAPI_x64.RhIsX64Process(InProcessId, out OutResult));
-            else Force( NativeAPI_x86.RhIsX64Process(InProcessId, out OutResult));
+            else Force(NativeAPI_x86.RhIsX64Process(InProcessId, out OutResult));
         }
 
         public static Boolean RhIsAdministrator()
@@ -708,13 +715,13 @@ namespace EasyHook
         }
 
         public static void RhInstallDriver(
-           String InDriverPath,
-           String InDriverName)
+            String InDriverPath,
+            String InDriverName)
         {
             if (Is64Bit) Force(NativeAPI_x64.RhInstallDriver(InDriverPath, InDriverName));
             else Force(NativeAPI_x86.RhInstallDriver(InDriverPath, InDriverName));
         }
-        
+
         public static void RhInstallSupportDriver()
         {
             if (Is64Bit) Force(NativeAPI_x64.RhInstallSupportDriver());
@@ -734,10 +741,10 @@ namespace EasyHook
         {
             try
             {
-                System.GACManagedAccess.AssemblyCache.InstallAssemblies(
+                AssemblyCache.InstallAssemblies(
                     InAssemblyPaths,
-                    new System.GACManagedAccess.InstallReference(System.GACManagedAccess.InstallReferenceGuid.OpaqueGuid, InUniqueID, InDescription),
-                    System.GACManagedAccess.AssemblyCommitFlags.Force);
+                    new InstallReference(InstallReferenceGuid.OpaqueGuid, InUniqueID, InDescription),
+                    AssemblyCommitFlags.Force);
             }
             catch (Exception e)
             {
@@ -752,10 +759,10 @@ namespace EasyHook
         {
             try
             {
-                System.GACManagedAccess.AssemblyCacheUninstallDisposition[] results;
-                System.GACManagedAccess.AssemblyCache.UninstallAssemblies(
+                AssemblyCacheUninstallDisposition[] results;
+                AssemblyCache.UninstallAssemblies(
                     InAssemblyNames,
-                    new System.GACManagedAccess.InstallReference(System.GACManagedAccess.InstallReferenceGuid.OpaqueGuid, InUniqueID, InDescription),
+                    new InstallReference(InstallReferenceGuid.OpaqueGuid, InUniqueID, InDescription),
                     out results);
 
                 for (var i = 0; i < InAssemblyNames.Length; i++)

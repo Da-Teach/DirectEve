@@ -7,10 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectReprocessingWindow : DirectWindow
     {
@@ -22,12 +23,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Do we need a new quote?
+        ///     Do we need a new quote?
         /// </summary>
         public bool NeedsQuote { get; set; }
 
         /// <summary>
-        ///   The quote given by the game (note, if NeedQuote is true, this will return the previous loaded quotes)
+        ///     The quote given by the game (note, if NeedQuote is true, this will return the previous loaded quotes)
         /// </summary>
         public List<DirectReprocessingQuote> Quotes
         {
@@ -45,7 +46,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Update quote information
+        ///     Update quote information
         /// </summary>
         /// <returns></returns>
         public bool GetQuotes()
@@ -57,7 +58,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Perform the actual reprocessing
+        ///     Perform the actual reprocessing
         /// </summary>
         /// <returns></returns>
         public bool Reprocess()

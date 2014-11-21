@@ -1,28 +1,15 @@
-﻿/*
-    EasyHook - The reinvention of Windows API hooking
- 
-    Copyright (C) 2009-2010 EasyHook
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-    Please visit http://www.codeplex.com/easyhook for more information
-    about the project and latest updates.
-*/
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace EasyHook.IPC
 {
-  internal delegate void DuplexChannelReadyEventHandler<TEndPoint>(DuplexChannel<TEndPoint> sender)
-    where TEndPoint : DuplexChannelEndPointObject;
+    internal delegate void DuplexChannelReadyEventHandler<TEndPoint>(DuplexChannel<TEndPoint> sender)
+        where TEndPoint : DuplexChannelEndPointObject;
 }

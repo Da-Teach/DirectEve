@@ -7,11 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using System;
     using System.Collections.Generic;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectScannerWindow : DirectWindow
     {
@@ -23,19 +23,19 @@ namespace DirectEve
         {
             var charId = DirectEve.Session.CharacterId;
             var obj = PyWindow.Attribute("busy");
-            var analyseBtnEnabled = (bool)pyWindow.Attribute("sr").Attribute("analyzeBtn").Attribute("enabled");
+            var analyseBtnEnabled = (bool) pyWindow.Attribute("sr").Attribute("analyzeBtn").Attribute("enabled");
             //Log("obj type = " + obj.GetPyType().ToString());
             //Log("obj value = " + ((bool) obj).ToString());
             IsReady = charId != null && obj.IsValid && (bool) obj == false && analyseBtnEnabled;
         }
 
         /// <summary>
-        /// True if the scanner window is ready for new operations
+        ///     True if the scanner window is ready for new operations
         /// </summary>
         public bool IsReady { get; internal set; }
 
         /// <summary>
-        /// The directional scanner range limit
+        ///     The directional scanner range limit
         /// </summary>
         public int Range
         {
@@ -44,7 +44,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   List all the scan results
+        ///     List all the scan results
         /// </summary>
         /// <remarks>
         /// </remarks>
@@ -61,7 +61,7 @@ namespace DirectEve
                         // scan result is a list of tuples
                         var resultAsList = result.ToList();
                         _scanResults.Add(new DirectDirectionalScanResult(DirectEve, resultAsList[0],
-                                                                         resultAsList[1], resultAsList[2]));
+                            resultAsList[1], resultAsList[2]));
                     }
                 }
 
@@ -70,7 +70,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// List of all the system scanner results
+        ///     List of all the system scanner results
         /// </summary>
         public List<DirectSystemScanResult> SystemScanResults
         {
@@ -90,11 +90,11 @@ namespace DirectEve
             }
         }
 
-            // Old anomaly code
-            // I don't see any reason why we should read out the UI instead of the cached probeData.
-            // The X,Y,Z values are not available in the UI, but i need them for scan probing to work.
-            // If it's an issue using probeData instead of the current UI reading, let me know asap and we revert it ~ Ferox
-            /*
+        // Old anomaly code
+        // I don't see any reason why we should read out the UI instead of the cached probeData.
+        // The X,Y,Z values are not available in the UI, but i need them for scan probing to work.
+        // If it's an issue using probeData instead of the current UI reading, let me know asap and we revert it ~ Ferox
+        /*
             get
             {
                 if (DirectEve.HasSupportInstances())
@@ -120,10 +120,10 @@ namespace DirectEve
                 return _systemScanResults;
             }
              * */
-        
+
 
         /// <summary>
-        ///   Selects the next tab
+        ///     Selects the next tab
         /// </summary>
         /// <returns>true if successful, false otherwise</returns>
         public bool NextTab()
@@ -132,7 +132,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Selects the previous tab
+        ///     Selects the previous tab
         /// </summary>
         /// <returns>true if successful, false otherwise</returns>
         public bool PrevTab()
@@ -141,7 +141,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Selects a tab by index
+        ///     Selects a tab by index
         /// </summary>
         /// <returns>true if successful, false otherwise</returns>
         public bool SelectByIdx(int tab)
@@ -150,7 +150,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Returns the selected tab index
+        ///     Returns the selected tab index
         /// </summary>
         /// <returns>the tab index</returns>
         public int GetSelectedIdx()
@@ -159,7 +159,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Performs a directional scan
+        ///     Performs a directional scan
         /// </summary>
         /// <returns>true if successful, false otherwise</returns>
         public bool DirectionSearch()
@@ -167,14 +167,16 @@ namespace DirectEve
             _scanResults = null; // free old results
             return DirectEve.ThreadedCall(PyWindow.Attribute("DirectionSearch"));
         }
+
         /// <summary>
-        /// Start a system scan; i.e. click the Analyze button.
+        ///     Start a system scan; i.e. click the Analyze button.
         /// </summary>
         /// <returns>false if scan already running.  true if new scan was started</returns>
         public bool Analyze()
         {
             if (DirectEve.HasSupportInstances())
-            {   // only perform a scan for paid users
+            {
+                // only perform a scan for paid users
                 var scanningProbes = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("scanSvc").Attribute("scanHandler").Attribute("scanningProbes");
 
                 // Check for an active scan.  If we call Analyze while a scan is running Eve will throw an exception

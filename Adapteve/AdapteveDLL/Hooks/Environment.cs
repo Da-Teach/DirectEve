@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using EasyHook;
-using System.Text.RegularExpressions;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AdapteveDLL
 {
+    using System;
+    using System.Runtime.InteropServices;
+
     public class Environment
     {
         public static void SetEnvironment(Settings settings)
         {
-            IntPtr myUsernamePointer = getenv("USERNAME");
-            string myUsername = Marshal.PtrToStringAnsi(myUsernamePointer);
+            var myUsernamePointer = getenv("USERNAME");
+            var myUsername = Marshal.PtrToStringAnsi(myUsernamePointer);
 
             _putenv("COMPUTERNAME=" + settings.Computername.ToUpper());
             _putenv("USERDOMAIN=" + settings.Computername.ToUpper());
@@ -41,21 +45,20 @@ namespace AdapteveDLL
             var path = Marshal.PtrToStringAnsi(pathPointer);
             path = path.Replace(myUsername, settings.WindowsUserLogin, StringComparison.InvariantCultureIgnoreCase);
             _putenv("PATH=" + path);
-
         }
 
         [DllImport("msvcr100.dll", SetLastError = true)]
-        static extern IntPtr getenv(string lpName);
+        private static extern IntPtr getenv(string lpName);
 
         [DllImport("msvcr100.dll", SetLastError = true)]
-        static extern bool _putenv(string lpName);
+        private static extern bool _putenv(string lpName);
     }
 
     public static class StringExtensions
     {
         public static string Replace(this string originalString, string oldValue, string newValue, StringComparison comparisonType)
         {
-            int startIndex = 0;
+            var startIndex = 0;
             while (true)
             {
                 startIndex = originalString.IndexOf(oldValue, startIndex, comparisonType);
@@ -69,6 +72,5 @@ namespace AdapteveDLL
 
             return originalString;
         }
-
     }
 }

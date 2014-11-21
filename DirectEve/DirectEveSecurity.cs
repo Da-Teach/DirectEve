@@ -166,8 +166,8 @@ namespace DirectEve
         private void RetrieveAnonymousLicense(string licensePath)
         {
             var licenseRequest = new XElement("request",
-                                              new XElement("email", "anonymous"),
-                                              new XElement("licensekey", Guid.Empty));
+                new XElement("email", "anonymous"),
+                new XElement("licensekey", Guid.Empty));
 
             var license = PerformServerCall(_retrieveLicenseUrl, licenseRequest);
             if (license == null)

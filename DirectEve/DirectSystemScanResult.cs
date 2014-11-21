@@ -7,11 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using System.Collections.Generic;
-    using global::DirectEve.PySharp;
     using System;
+    using PySharp;
 
     public class DirectSystemScanResult : DirectObject
     {
@@ -21,26 +21,26 @@ namespace DirectEve
             : base(directEve)
         {
             PyResult = pyResult;
-            Id = (string)pyResult.Attribute("id");
-            ScanGroupName = (string)pyResult.Attribute("scanGroupName").ToUnicodeString();
-            GroupName = (string)pyResult.Attribute("groupName").ToUnicodeString();
-            TypeName = (string)pyResult.Attribute("typeName").ToUnicodeString();
-            SignalStrength = (double)pyResult.Attribute("certainty");
-            Deviation = (double)pyResult.Attribute("deviation");
-            IsPointResult = (string)PyResult.Attribute("data").Attribute("__class__").Attribute("__name__") == "Vector3";
-            IsSpereResult = (string)PyResult.Attribute("data").Attribute("__class__").Attribute("__name__") == "float";
+            Id = (string) pyResult.Attribute("id");
+            ScanGroupName = (string) pyResult.Attribute("scanGroupName").ToUnicodeString();
+            GroupName = (string) pyResult.Attribute("groupName").ToUnicodeString();
+            TypeName = (string) pyResult.Attribute("typeName").ToUnicodeString();
+            SignalStrength = (double) pyResult.Attribute("certainty");
+            Deviation = (double) pyResult.Attribute("deviation");
+            IsPointResult = (string) PyResult.Attribute("data").Attribute("__class__").Attribute("__name__") == "Vector3";
+            IsSpereResult = (string) PyResult.Attribute("data").Attribute("__class__").Attribute("__name__") == "float";
             IsCircleResult = (!IsPointResult && !IsSpereResult);
             if (IsPointResult)
             {
-                X = (double?)pyResult.Attribute("data").Attribute("x");
-                Y = (double?)pyResult.Attribute("data").Attribute("y");
-                Z = (double?)pyResult.Attribute("data").Attribute("z");
+                X = (double?) pyResult.Attribute("data").Attribute("x");
+                Y = (double?) pyResult.Attribute("data").Attribute("y");
+                Z = (double?) pyResult.Attribute("data").Attribute("z");
             }
             else if (IsCircleResult)
             {
-                X = (double?)pyResult.Attribute("data").Attribute("point").Attribute("x");
-                Y = (double?)pyResult.Attribute("data").Attribute("point").Attribute("y");
-                Z = (double?)pyResult.Attribute("data").Attribute("point").Attribute("z");
+                X = (double?) pyResult.Attribute("data").Attribute("point").Attribute("x");
+                Y = (double?) pyResult.Attribute("data").Attribute("point").Attribute("y");
+                Z = (double?) pyResult.Attribute("data").Attribute("point").Attribute("z");
             }
 
             // If SphereResult: X,Y,Z is probe location
@@ -48,7 +48,7 @@ namespace DirectEve
             if (X.HasValue && Y.HasValue && Z.HasValue)
             {
                 var myship = directEve.ActiveShip.Entity;
-                Distance = Math.Sqrt((X.Value - myship.X) * (X.Value - myship.X) + (Y.Value - myship.Y) * (Y.Value - myship.Y) + (Z.Value - myship.Z) * (Z.Value - myship.Z));
+                Distance = Math.Sqrt((X.Value - myship.X)*(X.Value - myship.X) + (Y.Value - myship.Y)*(Y.Value - myship.Y) + (Z.Value - myship.Z)*(Z.Value - myship.Z));
             }
         }
 

@@ -7,15 +7,16 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectLogin : DirectObject
     {
         /// <summary>
-        ///   Character slot cache
+        ///     Character slot cache
         /// </summary>
         private List<DirectLoginSlot> _slots;
 
@@ -34,16 +35,15 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The login screen is open
+        ///     The login screen is open
         /// </summary>
         public bool AtLogin
         {
-            
             get { return (bool) LoginLayer.Attribute("isopen") || (bool) LoginLayer.Attribute("isopening"); }
         }
 
         /// <summary>
-        ///   EVE is connecting/logging in
+        ///     EVE is connecting/logging in
         /// </summary>
         public bool IsConnecting
         {
@@ -51,7 +51,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Either the character selection screen or login screen is loading
+        ///     Either the character selection screen or login screen is loading
         /// </summary>
         public bool IsLoading
         {
@@ -59,7 +59,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The character selection screen is open
+        ///     The character selection screen is open
         /// </summary>
         public bool AtCharacterSelection
         {
@@ -67,7 +67,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Is the character selection screen ready
+        ///     Is the character selection screen ready
         /// </summary>
         public bool IsCharacterSelectionReady
         {
@@ -75,16 +75,15 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The server status string
+        ///     The server status string
         /// </summary>
         public string ServerStatus
         {
-
-            get { return (string)LoginLayer.Attribute("serverStatusTextControl").Attribute("text"); }
+            get { return (string) LoginLayer.Attribute("serverStatusTextControl").Attribute("text"); }
         }
 
         /// <summary>
-        ///   Return the 3 character slots
+        ///     Return the 3 character slots
         /// </summary>
         public List<DirectLoginSlot> CharacterSlots
         {
@@ -102,10 +101,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Login
+        ///     Login
         /// </summary>
-        /// <param name = "username"></param>
-        /// <param name = "password"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         /// <returns></returns>
         public bool Login(string username, string password)
         {
@@ -114,7 +113,7 @@ namespace DirectEve
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            
+
             LoginLayer.Attribute("usernameEditCtrl").Call("SetValue", username);
             LoginLayer.Attribute("passwordEditCtrl").Call("SetValue", password);
             return DirectEve.ThreadedCall(LoginLayer.Attribute("_Connect"));

@@ -1,20 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EasyHook;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AdapteveDLL
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using EasyHook;
+
     public class Main : IEntryPoint
     {
-        public Main(EasyHook.RemoteHooking.IContext InContext, string channelname, string iniFile, string qDll, string qParam)
+        public Main(RemoteHooking.IContext InContext, string channelname, string iniFile, string qDll, string qParam)
         {
         }
 
         private Settings settings;
-        public void Run(EasyHook.RemoteHooking.IContext InContext, string channelname, string iniFile, string qDll, string qParam)
+
+        public void Run(RemoteHooking.IContext InContext, string channelname, string iniFile, string qDll, string qParam)
         {
             settings = new Settings(iniFile);
             InitializeHooks();
@@ -23,11 +32,12 @@ namespace AdapteveDLL
 
             while (true)
             {
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
             }
         }
 
         public static List<IDisposable> _hooks = new List<IDisposable>();
+
         public void InitializeHooks()
         {
             //Load unloaded DLL's so we can have them hooked before the eve process loads them
@@ -49,7 +59,7 @@ namespace AdapteveDLL
             _hooks.Add(new HideProcessHook(LocalHook.GetProcAddress("kernel32.dll", "K32EnumProcesses")));
             _hooks.Add(new GraphicsCardHook(LocalHook.GetProcAddress("d3d11.dll", "D3D11CreateDevice"), settings));
             _hooks.Add(new CryptHashDataHook(LocalHook.GetProcAddress("advapi32.dll", "CryptHashData")));
-            
+
             //HookImports("_ctypes.pyd");
             HookImports("blue.dll");
             HookImports("exefile.exe");
@@ -65,7 +75,6 @@ namespace AdapteveDLL
             address = Utility.GetImportAddress(module, "advapi32.dll", "RegQueryValueExA");
             if (address != null && address != IntPtr.Zero)
                 _hooks.Add(new RegistryHook(address, settings.WindowsKey));
-
         }
     }
 }

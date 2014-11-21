@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using EasyHook;
-using System.IO;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AdapteveDLL
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using EasyHook;
+
     public class AppdataHook : IDisposable
     {
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate int SHGetFolderPathDelegate(IntPtr hwndOwner, int nFolder, IntPtr hToken, uint dwFlags, [In][Out] IntPtr pszPath);
+        private delegate int SHGetFolderPathDelegate(IntPtr hwndOwner, int nFolder, IntPtr hToken, uint dwFlags, [In] [Out] IntPtr pszPath);
 
         private string _name;
         private LocalHook _hook;
@@ -21,16 +26,17 @@ namespace AdapteveDLL
         public static extern int SHGetFolderPathW(IntPtr hwndOwner, int nFolder, IntPtr hToken, uint dwFlags, IntPtr pszPath);
 
         private string _userLogin;
+
         public AppdataHook(IntPtr address, string userLogin)
         {
-            this._userLogin = userLogin;            
+            _userLogin = userLogin;
 
             _name = string.Format("AppDataHook_{0:X}", address.ToInt32());
             _hook = LocalHook.Create(address, new SHGetFolderPathDelegate(SHGetFolderPathDetour), this);
-            _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
         }
 
-        private int SHGetFolderPathDetour(IntPtr hwndOwner, int nFolder, IntPtr hToken, uint dwFlags, [In][Out] IntPtr pszPath)
+        private int SHGetFolderPathDetour(IntPtr hwndOwner, int nFolder, IntPtr hToken, uint dwFlags, [In] [Out] IntPtr pszPath)
         {
             var result = SHGetFolderPathW(hwndOwner, nFolder, hToken, dwFlags, pszPath);
 
@@ -49,7 +55,7 @@ namespace AdapteveDLL
             else
                 path = "C:\\Users\\" + _userLogin + "\\AppData\\Local";
 
-            IntPtr newString = IntPtr.Zero;
+            var newString = IntPtr.Zero;
             try
             {
                 newString = Marshal.StringToHGlobalUni(path);

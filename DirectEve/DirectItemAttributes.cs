@@ -7,18 +7,19 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
     using System.Collections.Generic;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectItemAttributes : DirectObject
     {
         private Dictionary<string, PyObject> _attributes;
 
         /// <summary>
-        ///   Attribute cache
+        ///     Attribute cache
         /// </summary>
         private Dictionary<string, PyObject> _chargedAttributes;
 
@@ -55,11 +56,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Returns a list of all the attributes associated with the item
+        ///     Returns a list of all the attributes associated with the item
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   object-types are unknown types
+        ///     object-types are unknown types
         /// </remarks>
         public Dictionary<string, Type> GetAttributes()
         {
@@ -95,10 +96,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get an attribute
+        ///     Get an attribute
         /// </summary>
-        /// <typeparam name = "T"></typeparam>
-        /// <param name = "key"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
         /// <returns></returns>
         public T TryGet<T>(string key)
         {

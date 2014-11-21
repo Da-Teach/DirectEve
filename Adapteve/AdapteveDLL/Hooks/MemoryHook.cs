@@ -1,13 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using EasyHook;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AdapteveDLL
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using EasyHook;
+
     public class MemoryHook : IDisposable
     {
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -17,28 +23,29 @@ namespace AdapteveDLL
         private LocalHook _hook;
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAsAttribute(UnmanagedType.Bool)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GlobalMemoryStatusEx(IntPtr memStruct);
 
         public MemoryHook(IntPtr address, ulong totalPhys)
         {
-            this._totalPhys = totalPhys;
+            _totalPhys = totalPhys;
 
             _name = string.Format("MemoryHook{0:X}", address.ToInt32());
             _hook = LocalHook.Create(address, new GlobalMemoryStatusDelegate(GlobalMemoryStatusDetour), this);
-            _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
         }
 
         private ulong _totalPhys;
         private MEMORYSTATUSEX _struct;
+
         private bool GlobalMemoryStatusDetour(IntPtr memStruct)
         {
-			////Prevents eve crashes
+            ////Prevents eve crashes
             if (_struct == null)
             {
                 var result = GlobalMemoryStatusEx(memStruct);
-                _struct = (MEMORYSTATUSEX)Marshal.PtrToStructure(memStruct, typeof(MEMORYSTATUSEX));
-                _struct.ullTotalPhys = _totalPhys * 1024 * 1024;
+                _struct = (MEMORYSTATUSEX) Marshal.PtrToStructure(memStruct, typeof (MEMORYSTATUSEX));
+                _struct.ullTotalPhys = _totalPhys*1024*1024;
             }
 
             Marshal.StructureToPtr(_struct, memStruct, true);

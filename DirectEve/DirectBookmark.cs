@@ -7,17 +7,18 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectBookmark : DirectInvType
     {
         /// <summary>
-        ///   Entity cache
+        ///     Entity cache
         /// </summary>
         private DirectEntity _entity;
 
@@ -50,14 +51,15 @@ namespace DirectEve
         public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
-        /// If this is a bookmark of a station, this is the StationId
+        ///     If this is a bookmark of a station, this is the StationId
         /// </summary>
         public long? ItemId { get; internal set; }
 
         /// <summary>
-        /// Matches SolarSystemId
+        ///     Matches SolarSystemId
         /// </summary>
         public long? LocationId { get; internal set; }
+
         public long? FolderId { get; internal set; }
         public string Title { get; internal set; }
         public string Memo { get; internal set; }
@@ -68,10 +70,10 @@ namespace DirectEve
         public double? Z { get; internal set; }
 
         /// <summary>
-        ///   The entity associated with this bookmark
+        ///     The entity associated with this bookmark
         /// </summary>
         /// <remarks>
-        ///   This property will be null if no entity can be found
+        ///     This property will be null if no entity can be found
         /// </remarks>
         public DirectEntity Entity
         {
@@ -122,12 +124,12 @@ namespace DirectEve
 
         internal static bool RefreshPnPWindow(DirectEve directEve)
         {
-            return directEve.ThreadedLocalSvcCall("bookmarkSvc", "RefreshWindow"); ;
+            return directEve.ThreadedLocalSvcCall("bookmarkSvc", "RefreshWindow");
+            ;
         }
 
         public bool CopyBookmarksToCorpFolder()
         {
-
             if ((!BookmarkId.HasValue) || (DirectEve.Session.CorporationId == null))
                 return false;
 
@@ -149,13 +151,13 @@ namespace DirectEve
 
         public bool WarpTo(double distance)
         {
-            PyObject warpToBookmark = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("WarpToBookmark");
+            var warpToBookmark = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("WarpToBookmark");
             return DirectEve.ThreadedCall(warpToBookmark, PyBookmark, distance);
         }
 
         public bool Approach()
         {
-            PyObject approachLocation = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("ApproachLocation");
+            var approachLocation = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("ApproachLocation");
             return DirectEve.ThreadedCall(approachLocation, PyBookmark);
         }
 

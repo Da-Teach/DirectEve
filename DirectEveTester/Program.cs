@@ -7,10 +7,10 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEveTester
 {
     using System;
-    using System.Linq;
     using System.Threading;
     using DirectEve;
     using InnerSpaceAPI;
@@ -23,7 +23,7 @@ namespace DirectEveTester
         private static long _frameCount = 0;
 
         /// <summary>
-        ///   The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
         private static void Main()
@@ -58,12 +58,11 @@ namespace DirectEveTester
                 if (_frameCount > 300)
                     _done = true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log("Caught exception!! {0}", e);
                 _done = true;
             }
         }
-
     }
 }

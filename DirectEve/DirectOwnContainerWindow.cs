@@ -7,10 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectOwnContainerWindow : DirectContainerWindow
     {
@@ -19,9 +20,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Add bookmarks to this container window
+        ///     Add bookmarks to this container window
         /// </summary>
-        /// <param name = "bookmarkIds"></param>
+        /// <param name="bookmarkIds"></param>
         /// <returns></returns>
         public bool AddBookmarks(IEnumerable<long> bookmarkIds)
         {

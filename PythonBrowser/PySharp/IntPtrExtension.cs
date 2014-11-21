@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace PythonBrowser.PySharp
 {
     using System;
@@ -14,13 +15,13 @@ namespace PythonBrowser.PySharp
     internal static class IntPtrExtension
     {
         /// <summary>
-        ///   Add an offset to a IntPtr
+        ///     Add an offset to a IntPtr
         /// </summary>
-        /// <param name = "basePtr">Base IntPtr</param>
-        /// <param name = "offset">Offset</param>
+        /// <param name="basePtr">Base IntPtr</param>
+        /// <param name="offset">Offset</param>
         /// <returns>New IntPtr</returns>
         /// <remarks>
-        ///   This is unsafe because there are no managed checks preventing this to read invalid memory
+        ///     This is unsafe because there are no managed checks preventing this to read invalid memory
         /// </remarks>
         public static IntPtr Add(this IntPtr basePtr, int offset)
         {

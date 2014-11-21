@@ -7,11 +7,12 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using System.Collections.Generic;
-    using global::DirectEve.PySharp;
     using System;
+    using System.Collections.Generic;
+    using PySharp;
 
     public class DirectModule : DirectItem
     {
@@ -129,15 +130,15 @@ namespace DirectEve
                 module.IsOnline = (bool) pyModule.Value.Attribute("online");
                 module.IsGoingOnline = (bool) pyModule.Value.Attribute("goingOnline");
                 module.IsReloadingAmmo = (bool) pyModule.Value.Attribute("reloadingAmmo");
-                module.IsChangingAmmo = (bool)pyModule.Value.Attribute("changingAmmo");
+                module.IsChangingAmmo = (bool) pyModule.Value.Attribute("changingAmmo");
 
-                module.Damage = (double)pyModule.Value.Attribute("sr").Attribute("damage");
-                module.Hp = (double)pyModule.Value.Attribute("sr").Attribute("hp");
-                module.IsOverloaded = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 1;
-                module.IsPendingOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 2;
-                module.IsPendingStopOverloading = (int)directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 3;
-                module.IsBeingRepaired = (bool)pyModule.Value.Attribute("isBeingRepaired");
-                module.AutoReload = (bool)pyModule.Value.Attribute("autoreload");
+                module.Damage = (double) pyModule.Value.Attribute("sr").Attribute("damage");
+                module.Hp = (double) pyModule.Value.Attribute("sr").Attribute("hp");
+                module.IsOverloaded = (int) directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 1;
+                module.IsPendingOverloading = (int) directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 2;
+                module.IsPendingStopOverloading = (int) directEve.GetLocalSvc("godma").Call("GetOverloadState", module.ItemId) == 3;
+                module.IsBeingRepaired = (bool) pyModule.Value.Attribute("isBeingRepaired");
+                module.AutoReload = (bool) pyModule.Value.Attribute("autoreload");
 
                 var effect = pyModule.Value.Attribute("def_effect");
                 module.IsActivatable = effect.IsValid;
@@ -164,7 +165,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Toggles overload of the DirectModule. If it's not allowed it will fail silently.
+        ///     Toggles overload of the DirectModule. If it's not allowed it will fail silently.
         /// </summary>
         /// <returns></returns>
         public bool ToggleOverload()
@@ -173,7 +174,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Repairs a DirectModule in space with nanite paste
+        ///     Repairs a DirectModule in space with nanite paste
         /// </summary>
         /// <returns></returns>
         public bool Repair()
@@ -182,7 +183,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Cancels the repairing of DirectModule in space
+        ///     Cancels the repairing of DirectModule in space
         /// </summary>
         /// <returns></returns>
         public bool CancelRepair()
@@ -202,7 +203,7 @@ namespace DirectEve
                 return false;
 
             var realoadInfo = _pyModule.Call("GetChargeReloadInfo").ToList();
-            if (charge.TypeId == (int)realoadInfo[0])
+            if (charge.TypeId == (int) realoadInfo[0])
                 return ReloadAmmo(charge);
             else
             {

@@ -1,17 +1,18 @@
 ﻿// ------------------------------------------------------------------------------
 //   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
 //     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
-//
-//     Please look in the accompanying license.htm file for the license that
-//     applies to this source code. (a copy can also be found at:
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
     using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectSolarSystem : DirectObject
     {
@@ -22,11 +23,11 @@ namespace DirectEve
             : base(directEve)
         {
             Id = (int) pyo.Attribute("solarSystemID");
-            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id).Attribute("name");
+            Name = (string) DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id).Attribute("name");
             ConstellationId = (long) pyo.Attribute("constellationID");
             FactionId = (long?) pyo.Attribute("factionID");
             Security = (double) pyo.Attribute("securityStatus");
-            IsWormholeSystem = ((long)directEve.Const.MapWormholeSystemMin < Id && Id < (long)directEve.Const.MapWormholeSystemMax);
+            IsWormholeSystem = ((long) directEve.Const.MapWormholeSystemMin < Id && Id < (long) directEve.Const.MapWormholeSystemMax);
         }
 
         public int Id { get; private set; }
@@ -46,7 +47,7 @@ namespace DirectEve
         public int GetClassOfWormhole()
         {
             var regionId = DirectEve.Constellations[ConstellationId].RegionId;
-            return (int)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Call("GetLocationWormholeClass", Id);
+            return (int) DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Call("GetLocationWormholeClass", Id);
         }
 
         public long? FactionId { get; private set; }
@@ -55,7 +56,7 @@ namespace DirectEve
         public int WormholeClass { get; private set; }
 
         /// <summary>
-        ///   List all stations within this solar system
+        ///     List all stations within this solar system
         /// </summary>
         public List<DirectStation> Stations
         {
@@ -75,7 +76,7 @@ namespace DirectEve
 
         internal static int GetDistanceBetweenSolarsystems(int solarsystem1, int solarsystem2, DirectEve directEve)
         {
-            return (int)directEve.GetLocalSvc("clientPathfinderService").Call("GetAutopilotJumpCount", solarsystem1, solarsystem2);
+            return (int) directEve.GetLocalSvc("clientPathfinderService").Call("GetAutopilotJumpCount", solarsystem1, solarsystem2);
         }
     }
 }

@@ -7,50 +7,51 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectWindow : DirectObject
     {
         private static WindowType[] _windowTypes = new[]
-                                                   {
-                                                       new WindowType("name", "marketsellaction", (directEve, pyWindow) => new DirectMarketActionWindow(directEve, pyWindow)),
-                                                       new WindowType("name", "marketbuyaction", (directEve, pyWindow) => new DirectMarketActionWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.AgentDialogueWindow", (directEve, pyWindow) => new DirectAgentWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.VirtualInvWindow", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.PVPOfferView", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.PVPTrade", (directEve, pyWindow) => new DirectTradeWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.SpyHangar", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "invCont.StationItems", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "invCont.StationShips", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.Inventory", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.InventoryPrimary", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.InventorySecondary", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.StationItems", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.StationShips", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.StationCorpHangars", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),                                                       
-                                                       new WindowType("__guid__", "form.CorpHangarArray", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.CorpMemberHangar", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.CorpMarketHangar", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.ShipCargoView", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.ActiveShipCargo", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.DockedCargoView", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.InflightCargoView", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.LootCargoView", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.DroneBay", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.RegionalMarket", (directEve, pyWindow) => new DirectMarketWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.LSCChannel", (directEve, pyWindow) => new DirectChatWindow(directEve, pyWindow)),
-                                                       new WindowType("name", "telecom", (directEve, pyWindow) => new DirectTelecomWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.FittingMgmt", (directEve, pyWindow) => new DirectFittingManagerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.Scanner", (directEve, pyWindow) => new DirectScannerWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.ReprocessingDialog", (directEve, pyWindow) => new DirectReprocessingWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.LPStore", (directEve, pyWindow) => new DirectLoyaltyPointStoreWindow(directEve, pyWindow)),
-                                                       new WindowType("__guid__", "form.RepairShopWindow", (directEve, pyWindow) => new DirectRepairShopWindow(directEve, pyWindow))
-                                                   };
+        {
+            new WindowType("name", "marketsellaction", (directEve, pyWindow) => new DirectMarketActionWindow(directEve, pyWindow)),
+            new WindowType("name", "marketbuyaction", (directEve, pyWindow) => new DirectMarketActionWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.AgentDialogueWindow", (directEve, pyWindow) => new DirectAgentWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.VirtualInvWindow", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.PVPOfferView", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.PVPTrade", (directEve, pyWindow) => new DirectTradeWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.SpyHangar", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "invCont.StationItems", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "invCont.StationShips", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.Inventory", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.InventoryPrimary", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.InventorySecondary", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.StationItems", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.StationShips", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.StationCorpHangars", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.CorpHangarArray", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.CorpMemberHangar", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.CorpMarketHangar", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.ShipCargoView", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.ActiveShipCargo", (directEve, pyWindow) => new DirectOwnContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.DockedCargoView", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.InflightCargoView", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.LootCargoView", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.DroneBay", (directEve, pyWindow) => new DirectContainerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.RegionalMarket", (directEve, pyWindow) => new DirectMarketWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.LSCChannel", (directEve, pyWindow) => new DirectChatWindow(directEve, pyWindow)),
+            new WindowType("name", "telecom", (directEve, pyWindow) => new DirectTelecomWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.FittingMgmt", (directEve, pyWindow) => new DirectFittingManagerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.Scanner", (directEve, pyWindow) => new DirectScannerWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.ReprocessingDialog", (directEve, pyWindow) => new DirectReprocessingWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.LPStore", (directEve, pyWindow) => new DirectLoyaltyPointStoreWindow(directEve, pyWindow)),
+            new WindowType("__guid__", "form.RepairShopWindow", (directEve, pyWindow) => new DirectRepairShopWindow(directEve, pyWindow))
+        };
 
         internal PyObject PyWindow;
 
@@ -129,10 +130,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Find a child object (usually button)
+        ///     Find a child object (usually button)
         /// </summary>
-        /// <param name = "container"></param>
-        /// <param name = "name"></param>
+        /// <param name="container"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         internal static PyObject FindChild(PyObject container, string name)
         {
@@ -141,10 +142,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Find a child object (using the supplied path)
+        ///     Find a child object (using the supplied path)
         /// </summary>
-        /// <param name = "container"></param>
-        /// <param name = "path"></param>
+        /// <param name="container"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
         internal static PyObject FindChildWithPath(PyObject container, IEnumerable<string> path)
         {
@@ -152,20 +153,18 @@ namespace DirectEve
         }
 
 
-
         /// <summary>
-        ///   Answers a modal window
+        ///     Answers a modal window
         /// </summary>
-        /// <param name = "button">a string indicating which button to press. Possible values are: Yes, No, Ok, Cancel, Suppress</param>        
+        /// <param name="button">a string indicating which button to press. Possible values are: Yes, No, Ok, Cancel, Suppress</param>
         /// <returns>true if successfull</returns>
         public bool AnswerModal(string button)
         {
-
-            string[] buttonPath  = { "__maincontainer", "bottom", "btnsmainparent", "btns", "Yes_Btn" };
+            string[] buttonPath = {"__maincontainer", "bottom", "btnsmainparent", "btns", "Yes_Btn"};
 
             switch (button)
             {
-                case "Yes":                    
+                case "Yes":
                     break;
                 case "No":
                     buttonPath[4] = "No_Btn";
@@ -178,13 +177,13 @@ namespace DirectEve
                     buttonPath[4] = "Cancel_Btn";
                     break;
                 case "Suppress":
-                    string[] suppress = { "__maincontainer", "main", "suppressContainer", "suppress" };
+                    string[] suppress = {"__maincontainer", "main", "suppressContainer", "suppress"};
                     buttonPath = suppress;
                     break;
                 default:
                     return false;
-            }                        
-            PyObject btn = FindChildWithPath(PyWindow, buttonPath);
+            }
+            var btn = FindChildWithPath(PyWindow, buttonPath);
             if (btn != null)
                 return DirectEve.ThreadedCall(btn.Attribute("OnClick"));
             return false;

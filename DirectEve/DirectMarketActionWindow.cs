@@ -7,10 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectMarketActionWindow : DirectWindow
     {
@@ -60,7 +61,7 @@ namespace DirectEve
         public int? Jumps { get; private set; }
 
         /// <summary>
-        ///   Accept the action
+        ///     Accept the action
         /// </summary>
         /// <returns></returns>
         public bool Accept()
@@ -70,7 +71,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Cancel the action
+        ///     Cancel the action
         /// </summary>
         /// <returns></returns>
         public bool Cancel()

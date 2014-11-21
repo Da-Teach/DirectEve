@@ -7,24 +7,23 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectTradeWindow : DirectWindow
     {
-
         internal DirectTradeWindow(DirectEve directEve, PyObject pyWindow)
             : base(directEve, pyWindow)
         {
-            MyAccepted = (int)PyWindow.Attribute("sr").Attribute("myAccept").Attribute("state") == 1;
-            HerAccepted = (int)PyWindow.Attribute("sr").Attribute("herAccept").Attribute("state") == 1;
-            HerCharacterId = (int)PyWindow.Attribute("sr").Attribute("herinfo").Attribute("ownerID");
-            HerName = (string)PyWindow.Attribute("sr").Attribute("herinfo").Attribute("ownerName").ToUnicodeString();
-            MyOfferedIsk = (string)PyWindow.Attribute("sr").Attribute("myMoney").Attribute("text").ToUnicodeString();
-            HerOfferedIsk = (string)PyWindow.Attribute("sr").Attribute("herMoney").Attribute("text").ToUnicodeString();
+            MyAccepted = (int) PyWindow.Attribute("sr").Attribute("myAccept").Attribute("state") == 1;
+            HerAccepted = (int) PyWindow.Attribute("sr").Attribute("herAccept").Attribute("state") == 1;
+            HerCharacterId = (int) PyWindow.Attribute("sr").Attribute("herinfo").Attribute("ownerID");
+            HerName = (string) PyWindow.Attribute("sr").Attribute("herinfo").Attribute("ownerName").ToUnicodeString();
+            MyOfferedIsk = (string) PyWindow.Attribute("sr").Attribute("myMoney").Attribute("text").ToUnicodeString();
+            HerOfferedIsk = (string) PyWindow.Attribute("sr").Attribute("herMoney").Attribute("text").ToUnicodeString();
         }
 
         public bool MyAccepted { get; internal set; }
@@ -38,7 +37,7 @@ namespace DirectEve
         {
             get
             {
-                List<DirectItem> items = new List<DirectItem>();
+                var items = new List<DirectItem>();
                 var pyItems = PyWindow.Attribute("sr").Attribute("my").Attribute("items").ToList();
                 foreach (var pyItem in pyItems)
                 {
@@ -57,7 +56,7 @@ namespace DirectEve
         {
             get
             {
-                List<DirectItem> items = new List<DirectItem>();
+                var items = new List<DirectItem>();
                 var pyItems = PyWindow.Attribute("sr").Attribute("her").Attribute("items").ToList();
                 foreach (var pyItem in pyItems)
                 {
@@ -90,6 +89,5 @@ namespace DirectEve
         {
             return DirectEve.ThreadedCall(PyWindow.Attribute("OnClickAccept"));
         }
-
     }
 }

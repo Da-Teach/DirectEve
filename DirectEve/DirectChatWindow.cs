@@ -7,11 +7,12 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
     using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectChatWindow : DirectWindow
     {
@@ -28,13 +29,11 @@ namespace DirectEve
             if (id.GetPyType() == PyType.IntType)
                 ChannelId = ((long) id).ToString();
 
-            MemberCount = (int) pyWindow.Attribute("memberCount");      // deprecated by CCP
-            Usermode = (int)pyWindow.Attribute("usermode");             // deprecated by CCP
-            EveMemberCount = (int)pyWindow.Attribute("eveMemberCount");
-            DustMemberCount = (int)pyWindow.Attribute("dustMemberCount");
-            ShowUserList = (bool)pyWindow.Attribute("showUserList");
-
-            
+            MemberCount = (int) pyWindow.Attribute("memberCount"); // deprecated by CCP
+            Usermode = (int) pyWindow.Attribute("usermode"); // deprecated by CCP
+            EveMemberCount = (int) pyWindow.Attribute("eveMemberCount");
+            DustMemberCount = (int) pyWindow.Attribute("dustMemberCount");
+            ShowUserList = (bool) pyWindow.Attribute("showUserList");
         }
 
         public string ChannelId { get; private set; }
@@ -87,7 +86,7 @@ namespace DirectEve
         public bool Speak(string message)
         {
             PyWindow.Attribute("input").Call(("SetValue"), message);
-            return DirectEve.ThreadedCall(PyWindow.Attribute("InputKeyUp"));           
+            return DirectEve.ThreadedCall(PyWindow.Attribute("InputKeyUp"));
         }
     }
 }

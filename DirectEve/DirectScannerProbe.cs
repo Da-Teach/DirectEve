@@ -7,30 +7,30 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
     using System.Collections.Generic;
-    using global::DirectEve.PySharp;
     using System.Linq;
+    using PySharp;
 
     public class DirectScannerProbe : DirectObject
     {
-
         internal PyObject PyProbe;
 
         internal DirectScannerProbe(DirectEve directEve, PyObject pyProbe)
             : base(directEve)
         {
             PyProbe = pyProbe;
-            TypeId = (int)pyProbe.Attribute("typeID");
-            ProbeId = (long)pyProbe.Attribute("probeID");
-            X = (double)pyProbe.Attribute("pos").Attribute("x");
-            Y = (double)pyProbe.Attribute("pos").Attribute("y");
-            Z = (double)pyProbe.Attribute("pos").Attribute("z");
-            Expiry = new TimeSpan((long)pyProbe.Attribute("expire"));
-            RangeAu = (double)pyProbe.Attribute("scanRange") / (double)directEve.Const.AU;
-            AllRangesAu = DirectEve.GetLocalSvc("scanSvc").Call("GetScanRangeStepsByTypeID", TypeId).ToList<double>().Select(i => i / (double)directEve.Const.AU).ToList();
+            TypeId = (int) pyProbe.Attribute("typeID");
+            ProbeId = (long) pyProbe.Attribute("probeID");
+            X = (double) pyProbe.Attribute("pos").Attribute("x");
+            Y = (double) pyProbe.Attribute("pos").Attribute("y");
+            Z = (double) pyProbe.Attribute("pos").Attribute("z");
+            Expiry = new TimeSpan((long) pyProbe.Attribute("expire"));
+            RangeAu = (double) pyProbe.Attribute("scanRange")/(double) directEve.Const.AU;
+            AllRangesAu = DirectEve.GetLocalSvc("scanSvc").Call("GetScanRangeStepsByTypeID", TypeId).ToList<double>().Select(i => i/(double) directEve.Const.AU).ToList();
         }
 
         public int TypeId { get; internal set; }
@@ -41,7 +41,7 @@ namespace DirectEve
         public TimeSpan Expiry { get; internal set; }
         public double RangeAu { get; internal set; }
         public List<double> AllRangesAu { get; internal set; }
-        
+
         public void SetLocation(double x, double y, double z)
         {
             PyProbe.Attribute("destination").SetAttribute("x", x);
@@ -55,7 +55,7 @@ namespace DirectEve
                 return false;
             var stepNumber = AllRangesAu.FindIndex(i => i == range) + 1;
 
-            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("scanSvc").Attribute("probeTracker").Attribute("SetProbeRangeStep"), ProbeId, stepNumber);            
+            return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("scanSvc").Attribute("probeTracker").Attribute("SetProbeRangeStep"), ProbeId, stepNumber);
         }
 
         public bool RecoverProbe()
@@ -67,6 +67,5 @@ namespace DirectEve
         {
             return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("scanSvc").Attribute("probeTracker").Attribute("DestroyProbe"), ProbeId);
         }
-       
     }
 }

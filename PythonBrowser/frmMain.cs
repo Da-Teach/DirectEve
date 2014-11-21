@@ -7,17 +7,17 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace PythonBrowser
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Windows.Forms;
     using InnerSpaceAPI;
     using LavishScriptAPI;
-    using PythonBrowser.PySharp;
+    using PySharp;
 
     public partial class frmMain : Form
     {

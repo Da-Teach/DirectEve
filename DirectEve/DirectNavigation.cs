@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
@@ -18,9 +19,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Returns location name based on locationId
+        ///     Returns location name based on locationId
         /// </summary>
-        /// <param name = "locationId"></param>
+        /// <param name="locationId"></param>
         /// <returns></returns>
         public string GetLocationName(long locationId)
         {
@@ -28,9 +29,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Returns a location based on locationId
+        ///     Returns a location based on locationId
         /// </summary>
-        /// <param name = "locationId"></param>
+        /// <param name="locationId"></param>
         /// <returns></returns>
         public DirectLocation GetLocation(long locationId)
         {
@@ -38,12 +39,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Set destination to locationId
+        ///     Set destination to locationId
         /// </summary>
-        /// <param name = "locationId"></param>
+        /// <param name="locationId"></param>
         /// <returns></returns>
         /// <remarks>
-        ///   GetLocation is used to find the actual solar system
+        ///     GetLocation is used to find the actual solar system
         /// </remarks>
         public bool SetDestination(long locationId)
         {
@@ -51,7 +52,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Set destination to locationId without actually retrieving the directLocation ~ CPU Intensive
+        ///     Set destination to locationId without actually retrieving the directLocation ~ CPU Intensive
         /// </summary>
         /// <param name="locationId2"></param>
         /// <param name="directEve"></param>
@@ -62,7 +63,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return destination path (locationId's only)
+        ///     Return destination path (locationId's only)
         /// </summary>
         /// <returns></returns>
         public List<int> GetDestinationPath()

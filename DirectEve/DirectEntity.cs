@@ -7,12 +7,13 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using global::DirectEve.PySharp;
-    using System;
+    using PySharp;
 
     public class DirectEntity : DirectInvType
     {
@@ -228,7 +229,7 @@ namespace DirectEve
             get
             {
                 if (!_x.HasValue)
-                    _x = (double)_ball.Attribute("x");
+                    _x = (double) _ball.Attribute("x");
 
                 return _x.Value;
             }
@@ -239,7 +240,7 @@ namespace DirectEve
             get
             {
                 if (!_y.HasValue)
-                    _y = (double)_ball.Attribute("y");
+                    _y = (double) _ball.Attribute("y");
 
                 return _y.Value;
             }
@@ -250,7 +251,7 @@ namespace DirectEve
             get
             {
                 if (!_z.HasValue)
-                    _z = (double)_ball.Attribute("z");
+                    _z = (double) _ball.Attribute("z");
 
                 return _z.Value;
             }
@@ -261,7 +262,7 @@ namespace DirectEve
             get
             {
                 if (!_vx.HasValue)
-                    _vx = (double)_ball.Attribute("vx");
+                    _vx = (double) _ball.Attribute("vx");
 
                 return _vx.Value;
             }
@@ -272,7 +273,7 @@ namespace DirectEve
             get
             {
                 if (!_vy.HasValue)
-                    _vy = (double)_ball.Attribute("vy");
+                    _vy = (double) _ball.Attribute("vy");
 
                 return _vy.Value;
             }
@@ -283,7 +284,7 @@ namespace DirectEve
             get
             {
                 if (!_vz.HasValue)
-                    _vz = (double)_ball.Attribute("vz");
+                    _vz = (double) _ball.Attribute("vz");
 
                 return _vz.Value;
             }
@@ -294,7 +295,7 @@ namespace DirectEve
             get
             {
                 if (_velocity == null)
-                    _velocity = (double)_ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetSimTime")).Call("Length");
+                    _velocity = (double) _ball.Call("GetVectorDotAt", PySharp.Import("blue").Attribute("os").Call("GetSimTime")).Call("Length");
 
                 return _velocity.Value;
             }
@@ -307,12 +308,15 @@ namespace DirectEve
                 if (_transversalVelocity == null)
                 {
                     var myBall = DirectEve.ActiveShip.Entity;
-                    var CombinedVelocity = new List<double>() { Vx - myBall.Vx, Vy - myBall.Vy, Vz - myBall.Vz };
-                    var Radius = new List<double>() { X - myBall.X, Y - myBall.Y, Z - myBall.Z };
-                    var RadiusVectorNormalized = Radius.Select(i => i / (Math.Sqrt(Radius[0] * Radius[0] + Radius[1] * Radius[1] + Radius[2] * Radius[2]))).ToList();
-                    var RadialVelocity = CombinedVelocity[0] * RadiusVectorNormalized[0] + CombinedVelocity[1] * RadiusVectorNormalized[1] + CombinedVelocity[2] * RadiusVectorNormalized[2];
-                    var ScaledRadiusVector = RadiusVectorNormalized.Select(i => i * RadialVelocity).ToList();
-                    _transversalVelocity = (double)Math.Sqrt((CombinedVelocity[0] - ScaledRadiusVector[0]) * (CombinedVelocity[0] - ScaledRadiusVector[0]) + (CombinedVelocity[1] - ScaledRadiusVector[1]) * (CombinedVelocity[1] - ScaledRadiusVector[1]) + (CombinedVelocity[2] - ScaledRadiusVector[2]) * (CombinedVelocity[2] - ScaledRadiusVector[2]));
+                    var CombinedVelocity = new List<double>() {Vx - myBall.Vx, Vy - myBall.Vy, Vz - myBall.Vz};
+                    var Radius = new List<double>() {X - myBall.X, Y - myBall.Y, Z - myBall.Z};
+                    var RadiusVectorNormalized = Radius.Select(i => i/(Math.Sqrt(Radius[0]*Radius[0] + Radius[1]*Radius[1] + Radius[2]*Radius[2]))).ToList();
+                    var RadialVelocity = CombinedVelocity[0]*RadiusVectorNormalized[0] + CombinedVelocity[1]*RadiusVectorNormalized[1] + CombinedVelocity[2]*RadiusVectorNormalized[2];
+                    var ScaledRadiusVector = RadiusVectorNormalized.Select(i => i*RadialVelocity).ToList();
+                    _transversalVelocity =
+                        (double)
+                            Math.Sqrt((CombinedVelocity[0] - ScaledRadiusVector[0])*(CombinedVelocity[0] - ScaledRadiusVector[0]) + (CombinedVelocity[1] - ScaledRadiusVector[1])*(CombinedVelocity[1] - ScaledRadiusVector[1]) +
+                                      (CombinedVelocity[2] - ScaledRadiusVector[2])*(CombinedVelocity[2] - ScaledRadiusVector[2]));
                 }
 
                 return _transversalVelocity.Value;
@@ -324,7 +328,7 @@ namespace DirectEve
             get
             {
                 if (_angularVelocity == null)
-                    _angularVelocity = (double)TransversalVelocity / Math.Max(1, Distance);
+                    _angularVelocity = (double) TransversalVelocity/Math.Max(1, Distance);
 
                 return _angularVelocity.Value;
             }
@@ -385,7 +389,7 @@ namespace DirectEve
             get
             {
                 if (_wormholeAge == null)
-                    _wormholeAge = (double)_slimItem.Attribute("wormholeAge");
+                    _wormholeAge = (double) _slimItem.Attribute("wormholeAge");
 
                 return _wormholeAge.Value;
             }
@@ -396,14 +400,14 @@ namespace DirectEve
             get
             {
                 if (_wormholeSize == null)
-                    _wormholeSize = (double)_slimItem.Attribute("wormholeSize");
+                    _wormholeSize = (double) _slimItem.Attribute("wormholeSize");
 
                 return _wormholeSize.Value;
             }
         }
-        
+
         /// <summary>
-        ///   Is it a valid entity?
+        ///     Is it a valid entity?
         /// </summary>
         public bool IsValid
         {
@@ -462,7 +466,7 @@ namespace DirectEve
             var targets = target.Attribute("targetsByID").ToDictionary().Keys;
             foreach (var targetId in targets)
             {
-                if (!entitiesById.TryGetValue((long)targetId, out entity))
+                if (!entitiesById.TryGetValue((long) targetId, out entity))
                     continue;
 
                 entity.IsTarget = true;
@@ -525,7 +529,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Lock target
+        ///     Lock target
         /// </summary>
         /// <returns></returns>
         public bool LockTarget()
@@ -545,7 +549,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Unlock target
+        ///     Unlock target
         /// </summary>
         /// <returns></returns>
         public bool UnlockTarget()
@@ -561,7 +565,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Approach target
+        ///     Approach target
         /// </summary>
         /// <returns></returns>
         public bool Approach()
@@ -573,7 +577,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   KeepAtRange target
+        ///     KeepAtRange target
         /// </summary>
         /// <param name="range"></param>
         /// <returns></returns>
@@ -583,12 +587,12 @@ namespace DirectEve
                 return false;
             lastKeepAtRange = DateTime.Now;
 
-			PyObject KeepAtRange = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("KeepAtRange");
-			return DirectEve.ThreadedCall(KeepAtRange, Id, range);
+            var KeepAtRange = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("KeepAtRange");
+            return DirectEve.ThreadedCall(KeepAtRange, Id, range);
         }
 
         /// <summary>
-        ///   Orbit target at 5000m
+        ///     Orbit target at 5000m
         /// </summary>
         /// <returns></returns>
         public bool Orbit()
@@ -597,49 +601,49 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Orbit target
+        ///     Orbit target
         /// </summary>
-        /// <param name = "range"></param>
+        /// <param name="range"></param>
         /// <returns></returns>
         public bool Orbit(int range)
         {
-			PyObject Orbit = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("Orbit");
-			return DirectEve.ThreadedCall(Orbit, Id, range);
+            var Orbit = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("Orbit");
+            return DirectEve.ThreadedCall(Orbit, Id, range);
         }
 
         /// <summary>
-        ///   Warp to target
+        ///     Warp to target
         /// </summary>
         /// <returns></returns>
         public bool WarpTo()
         {
-			PyObject WarpToItem = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("WarpToItem");
-			return DirectEve.ThreadedCall(WarpToItem, Id);
+            var WarpToItem = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("WarpToItem");
+            return DirectEve.ThreadedCall(WarpToItem, Id);
         }
 
         /// <summary>
-        ///   Warp to target at range
+        ///     Warp to target at range
         /// </summary>
         /// <returns></returns>
         public bool WarpTo(double range)
         {
-			PyObject WarpToItem = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("WarpToItem");
-			return DirectEve.ThreadedCall(WarpToItem, Id, range);
+            var WarpToItem = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("WarpToItem");
+            return DirectEve.ThreadedCall(WarpToItem, Id, range);
         }
 
 
         /// <summary>
-        ///   Warp to target and dock
+        ///     Warp to target and dock
         /// </summary>
         /// <returns></returns>
         public bool WarpToAndDock()
         {
-			PyObject DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
-			return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
+            var DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
+            return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
         }
 
         /// <summary>
-        ///   Warp fleet to target, make sure you have the fleetposition to warp the fleet
+        ///     Warp fleet to target, make sure you have the fleetposition to warp the fleet
         /// </summary>
         /// <returns></returns>
         public bool WarpFleetTo()
@@ -655,7 +659,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Warp fleet to target at range, make sure you have the fleetposition to warp the fleet
+        ///     Warp fleet to target at range, make sure you have the fleetposition to warp the fleet
         /// </summary>
         /// <returns></returns>
         public bool WarpFleetTo(double range)
@@ -671,18 +675,18 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Warp to target and dock
+        ///     Warp to target and dock
         /// </summary>
         /// <returns></returns>
         public bool Dock()
         {
-			PyObject DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
-			return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
-		}
+            var DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
+            return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
+        }
 
 
         /// <summary>
-        ///   Warp to target
+        ///     Warp to target
         /// </summary>
         /// <returns></returns>
         public bool AlignTo()
@@ -691,7 +695,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Open cargo window (only valid on containers in space, or own ship)
+        ///     Open cargo window (only valid on containers in space, or own ship)
         /// </summary>
         /// <returns></returns>
         public bool OpenCargo()
@@ -700,17 +704,17 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Jump (Stargates only)
+        ///     Jump (Stargates only)
         /// </summary>
         /// <returns></returns>
         public bool Jump()
         {
-			PyObject DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
-			return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
-		}
+            var DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
+            return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
+        }
 
         /// <summary>
-        ///   Jump Wormhole (Wormholes only)
+        ///     Jump Wormhole (Wormholes only)
         /// </summary>
         /// <returns></returns>
         public bool JumpWormhole()
@@ -719,17 +723,17 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Activate (Acceleration Gates only)
+        ///     Activate (Acceleration Gates only)
         /// </summary>
         /// <returns></returns>
         public bool Activate()
         {
-			PyObject DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
-			return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
-		}
+            var DockOrJumpOrActivateGate = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.movementFunctions").Attribute("DockOrJumpOrActivateGate");
+            return DirectEve.ThreadedCall(DockOrJumpOrActivateGate, Id);
+        }
 
         /// <summary>
-        ///   Make this your active target
+        ///     Make this your active target
         /// </summary>
         /// <returns></returns>
         public bool MakeActiveTarget()
@@ -751,20 +755,20 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Abandons all wrecks. Make sure to only call this on a wreck.
+        ///     Abandons all wrecks. Make sure to only call this on a wreck.
         /// </summary>
         /// <returns>false if entity is not a wreck</returns>
         public bool AbandonAllWrecks()
         {
-            if (GroupId != (int)DirectEve.Const.GroupWreck)
+            if (GroupId != (int) DirectEve.Const.GroupWreck)
                 return false;
 
-			PyObject AbandonAllLoot = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("AbandonAllLoot");
-			return DirectEve.ThreadedCall(AbandonAllLoot, Id);
+            var AbandonAllLoot = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("AbandonAllLoot");
+            return DirectEve.ThreadedCall(AbandonAllLoot, Id);
         }
 
         /// <summary>
-        /// Board this ship
+        ///     Board this ship
         /// </summary>
         /// <returns>false if entity is player or out of range</returns>
         public bool BoardShip()
@@ -775,17 +779,17 @@ namespace DirectEve
             if (Distance > 6500)
                 return false;
 
-			PyObject Board = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("Board");
-			return DirectEve.ThreadedCall(Board, Id);
+            var Board = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("Board");
+            return DirectEve.ThreadedCall(Board, Id);
         }
 
         public double GetBounty()
         {
-            var bountyRow = DirectEve.GetLocalSvc("godma").Call("GetType", this.TypeId).Attribute("displayAttributes").ToList().FirstOrDefault(i => i.Attribute("attributeID").ToInt() == (int)DirectEve.Const.AttributeEntityKillBounty);
+            var bountyRow = DirectEve.GetLocalSvc("godma").Call("GetType", TypeId).Attribute("displayAttributes").ToList().FirstOrDefault(i => i.Attribute("attributeID").ToInt() == (int) DirectEve.Const.AttributeEntityKillBounty);
             if (bountyRow == null)
                 return 0;
 
-            return (double)bountyRow.Attribute("value");
+            return (double) bountyRow.Attribute("value");
         }
     }
 }

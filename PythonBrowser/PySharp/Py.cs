@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace PythonBrowser.PySharp
 {
     using System;

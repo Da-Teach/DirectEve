@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve.PySharp
 {
     using System;
@@ -153,7 +154,7 @@ namespace DirectEve.PySharp
             if (derived)
             {
                 var s = type.ToString();
-                type = (PyType)Enum.Parse(typeof(PyType), "Derived" + s);
+                type = (PyType) Enum.Parse(typeof (PyType), "Derived" + s);
             }
 
             return type;
@@ -283,7 +284,7 @@ namespace DirectEve.PySharp
         internal static extern IntPtr PyUnicodeUCS2_AsUnicode(IntPtr op);
 
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr PyUnicodeUCS2_FromUnicode([MarshalAs(UnmanagedType.LPWStr)]string op, int size);
+        internal static extern IntPtr PyUnicodeUCS2_FromUnicode([MarshalAs(UnmanagedType.LPWStr)] string op, int size);
 
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr PyBool_FromLong(int op);
@@ -346,13 +347,15 @@ namespace DirectEve.PySharp
         internal static extern IntPtr PyObject_Repr(IntPtr v);
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct PyMethodDef 
+        internal struct PyMethodDef
         {
-            public IntPtr ml_name;	/* The name of the built-in function/method */
-            public IntPtr ml_meth;	/* The C function that implements it */
-            public int    ml_flags;	/* Combination of METH_xxx flags, which mostly
+            public IntPtr ml_name; /* The name of the built-in function/method */
+            public IntPtr ml_meth; /* The C function that implements it */
+
+            public int ml_flags; /* Combination of METH_xxx flags, which mostly
 				                       describe the args expected by the C func */
-            public IntPtr ml_doc;	/* The __doc__ attribute, or NULL */
+
+            public IntPtr ml_doc; /* The __doc__ attribute, or NULL */
         };
     }
 }

@@ -7,17 +7,15 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Security;
-    using System.Runtime.InteropServices;
-    using Hooking;
-    using global::DirectEve.PySharp;
     using System.Diagnostics;
+    using System.Linq;
+    using Hooking;
+    using PySharp;
 
     public delegate void LoggingDelegate(string msg);
 
@@ -27,146 +25,146 @@ namespace DirectEve
         private bool _securityCheckFailed;
 
         /// <summary>
-        ///   ActiveShip cache
+        ///     ActiveShip cache
         /// </summary>
         private DirectActiveShip _activeShip;
 
         /// <summary>
-        ///   Cache the Agent Missions
+        ///     Cache the Agent Missions
         /// </summary>
         private List<DirectAgentMission> _agentMissions;
 
         /// <summary>
-        ///   Cache the Bookmark Folders
+        ///     Cache the Bookmark Folders
         /// </summary>
         private List<DirectBookmarkFolder> _bookmarkFolders;
 
         /// <summary>
-        ///   Cache the Bookmarks
+        ///     Cache the Bookmarks
         /// </summary>
         private List<DirectBookmark> _bookmarks;
 
         /// <summary>
-        ///   Const cache
+        ///     Const cache
         /// </summary>
         private DirectConst _const;
 
         /// <summary>
-        ///   Cache the GetConstellations call
+        ///     Cache the GetConstellations call
         /// </summary>
         private Dictionary<long, DirectConstellation> _constellations;
 
         /// <summary>
-        ///   Item container cache
+        ///     Item container cache
         /// </summary>
         private Dictionary<long, DirectContainer> _containers;
 
         /// <summary>
-        ///   Cache the Entities
+        ///     Cache the Entities
         /// </summary>
         private Dictionary<long, DirectEntity> _entitiesById;
 
         /// <summary>
-        ///   Item Hangar container cache
+        ///     Item Hangar container cache
         /// </summary>
         private DirectContainer _itemHangar;
 
         /// <summary>
-        ///   Info on when a certain target was last targeted
+        ///     Info on when a certain target was last targeted
         /// </summary>
         private Dictionary<long, DateTime> _lastKnownTargets;
 
         /// <summary>
-        ///   Cache the LocalSvc objects
+        ///     Cache the LocalSvc objects
         /// </summary>
         private Dictionary<string, PyObject> _localSvcCache;
 
         /// <summary>
-        ///   Login cache
+        ///     Login cache
         /// </summary>
         private DirectLogin _login;
 
         /// <summary>
-        ///   Me cache
+        ///     Me cache
         /// </summary>
         private DirectMe _me;
 
         /// <summary>
-        ///   Cache the Windows
+        ///     Cache the Windows
         /// </summary>
         private List<DirectModule> _modules;
 
         /// <summary>
-        ///   Navigation cache
+        ///     Navigation cache
         /// </summary>
         private DirectNavigation _navigation;
 
         /// <summary>
-        ///   Cache the GetRegions call
+        ///     Cache the GetRegions call
         /// </summary>
         private Dictionary<long, DirectRegion> _regions;
 
         /// <summary>
-        ///   Session cache
+        ///     Session cache
         /// </summary>
         private DirectSession _session;
 
         /// <summary>
-        ///   Ship Hangar container cache
+        ///     Ship Hangar container cache
         /// </summary>
         private DirectContainer _shipHangar;
 
         /// <summary>
-        ///   Ship's cargo container cache
+        ///     Ship's cargo container cache
         /// </summary>
         private DirectContainer _shipsCargo;
 
         /// <summary>
-        ///   Ship's ore hold container cache
+        ///     Ship's ore hold container cache
         /// </summary>
         private DirectContainer _shipsOreHold;
 
         /// <summary>
-        ///   Global Assets cache
+        ///     Global Assets cache
         /// </summary>
         private List<DirectItem> _listGlobalAssets;
 
         /// <summary>
-        ///   Ship's drone bay cache
+        ///     Ship's drone bay cache
         /// </summary>
         private DirectContainer _shipsDroneBay;
 
         /// <summary>
-        ///   Ship's modules container cache
+        ///     Ship's modules container cache
         /// </summary>
         private DirectContainer _shipsModules;
 
         private DirectSkills _skills;
 
         /// <summary>
-        ///   Cache the GetRegions call
+        ///     Cache the GetRegions call
         /// </summary>
         private Dictionary<int, DirectSolarSystem> _solarSystems;
 
         /// <summary>
-        ///   Standings cache
+        ///     Standings cache
         /// </summary>
         private DirectStandings _standings;
 
         /// <summary>
-        ///   Cache the GetStations call
+        ///     Cache the GetStations call
         /// </summary>
         private Dictionary<int, DirectStation> _stations;
 
         /// <summary>
-        ///   Cache the GetWindows call
+        ///     Cache the GetWindows call
         /// </summary>
         private List<DirectWindow> _windows;
 
         private bool _enableStatisticsModifying;
 
         /// <summary>
-        /// The framework object that wraps OnFrame and Log
+        ///     The framework object that wraps OnFrame and Log
         /// </summary>
         private IFramework _framework;
 
@@ -185,7 +183,7 @@ namespace DirectEve
         private double _prevFrameTimeAbove500ms;
 
         /// <summary>
-        /// Create a DirectEve object
+        ///     Create a DirectEve object
         /// </summary>
         public DirectEve(IFramework framework = null, bool enableStealth = true, bool enableStatisticModifying = false)
         {
@@ -202,7 +200,7 @@ namespace DirectEve
             }
 #if !NO_DIRECTEVE_SECURITY
             try
-            {                
+            {
                 _security = new DirectEveSecurity(this);
 
                 Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
@@ -221,7 +219,7 @@ namespace DirectEve
             }
             catch (Exception ex)
             {
-                Log("DirectEve: Exception during license check: "+ex.Message);
+                Log("DirectEve: Exception during license check: " + ex.Message);
                 throw ex;
             }
 #endif
@@ -257,7 +255,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a DirectConst object
+        ///     Return a DirectConst object
         /// </summary>
         internal DirectConst Const
         {
@@ -265,7 +263,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a DirectNavigation object
+        ///     Return a DirectNavigation object
         /// </summary>
         public DirectLogin Login
         {
@@ -273,7 +271,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a DirectNavigation object
+        ///     Return a DirectNavigation object
         /// </summary>
         public DirectNavigation Navigation
         {
@@ -281,7 +279,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a DirectMe object
+        ///     Return a DirectMe object
         /// </summary>
         public DirectMe Me
         {
@@ -289,7 +287,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a DirectStandings object
+        ///     Return a DirectStandings object
         /// </summary>
         public DirectStandings Standings
         {
@@ -297,7 +295,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a DirectActiveShip object
+        ///     Return a DirectActiveShip object
         /// </summary>
         public DirectActiveShip ActiveShip
         {
@@ -305,7 +303,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a DirectSession object
+        ///     Return a DirectSession object
         /// </summary>
         public DirectSession Session
         {
@@ -313,7 +311,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a DirectSkills object
+        ///     Return a DirectSkills object
         /// </summary>
         public DirectSkills Skills
         {
@@ -321,19 +319,19 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Internal reference to the PySharp object that is used for the frame
+        ///     Internal reference to the PySharp object that is used for the frame
         /// </summary>
         /// <remarks>
-        ///   This reference is only valid while in an OnFrame event
+        ///     This reference is only valid while in an OnFrame event
         /// </remarks>
         public PySharp.PySharp PySharp { get; private set; }
 
         /// <summary>
-        ///   Return a list of entities
+        ///     Return a list of entities
         /// </summary>
         /// <value></value>
         /// <remarks>
-        ///   Only works in space
+        ///     Only works in space
         /// </remarks>
         public List<DirectEntity> Entities
         {
@@ -341,11 +339,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a dictionary of entities by id
+        ///     Return a dictionary of entities by id
         /// </summary>
         /// <value></value>
         /// <remarks>
-        ///   Only works in space
+        ///     Only works in space
         /// </remarks>
         public Dictionary<long, DirectEntity> EntitiesById
         {
@@ -353,7 +351,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The last bookmark update
+        ///     The last bookmark update
         /// </summary>
         public DateTime LastBookmarksUpdate
         {
@@ -361,7 +359,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a list of bookmarks
+        ///     Return a list of bookmarks
         /// </summary>
         /// <value></value>
         public List<DirectBookmark> Bookmarks
@@ -370,7 +368,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a list of bookmark folders
+        ///     Return a list of bookmark folders
         /// </summary>
         /// <value></value>
         public List<DirectBookmarkFolder> BookmarkFolders
@@ -379,7 +377,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a list of agent missions
+        ///     Return a list of agent missions
         /// </summary>
         /// <value></value>
         public List<DirectAgentMission> AgentMissions
@@ -388,7 +386,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a list of all open windows
+        ///     Return a list of all open windows
         /// </summary>
         /// <value></value>
         public List<DirectWindow> Windows
@@ -397,11 +395,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a list of all modules
+        ///     Return a list of all modules
         /// </summary>
         /// <value></value>
         /// <remarks>
-        ///   Only works inspace and does not return hidden modules
+        ///     Only works inspace and does not return hidden modules
         /// </remarks>
         public List<DirectModule> Modules
         {
@@ -409,7 +407,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return active drone id's
+        ///     Return active drone id's
         /// </summary>
         /// <value></value>
         public List<DirectEntity> ActiveDrones
@@ -422,10 +420,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a dictionary of stations
+        ///     Return a dictionary of stations
         /// </summary>
         /// <remarks>
-        ///   This is cached throughout the existance of this DirectEve Instance
+        ///     This is cached throughout the existance of this DirectEve Instance
         /// </remarks>
         public Dictionary<int, DirectStation> Stations
         {
@@ -433,10 +431,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a dictionary of solar systems
+        ///     Return a dictionary of solar systems
         /// </summary>
         /// <remarks>
-        ///   This is cached throughout the existance of this DirectEve Instance
+        ///     This is cached throughout the existance of this DirectEve Instance
         /// </remarks>
         public Dictionary<int, DirectSolarSystem> SolarSystems
         {
@@ -444,7 +442,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Set destination without fetching DirectLocation ~ CPU Intensive
+        ///     Set destination without fetching DirectLocation ~ CPU Intensive
         /// </summary>
         /// <param name="locationId"></param>
         /// <returns></returns>
@@ -461,10 +459,10 @@ namespace DirectEve
         private Dictionary<int, DirectInvType> _invtypes;
 
         /// <summary>
-        ///   Return a dictionary of solar systems
+        ///     Return a dictionary of solar systems
         /// </summary>
         /// <remarks>
-        ///   This is cached throughout the existance of this DirectEve Instance
+        ///     This is cached throughout the existance of this DirectEve Instance
         /// </remarks>
         public Dictionary<long, DirectConstellation> Constellations
         {
@@ -472,10 +470,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a dictionary of solar systems
+        ///     Return a dictionary of solar systems
         /// </summary>
         /// <remarks>
-        ///   This is cached throughout the existance of this DirectEve Instance
+        ///     This is cached throughout the existance of this DirectEve Instance
         /// </remarks>
         public Dictionary<long, DirectRegion> Regions
         {
@@ -488,10 +486,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Is EVE rendering 3D, you can enable/disable rendering by setting this value to true or false
+        ///     Is EVE rendering 3D, you can enable/disable rendering by setting this value to true or false
         /// </summary>
         /// <remarks>
-        ///   Only works in space!
+        ///     Only works in space!
         /// </remarks>
         public bool Rendering3D
         {
@@ -500,25 +498,22 @@ namespace DirectEve
                 var rendering1 = (bool) GetLocalSvc("sceneManager").Attribute("registeredScenes").DictionaryItem("default").Attribute("display");
                 return rendering1;
             }
-            set
-            {
-                GetLocalSvc("sceneManager").Attribute("registeredScenes").DictionaryItem("default").SetAttribute("display", value);
-            }
+            set { GetLocalSvc("sceneManager").Attribute("registeredScenes").DictionaryItem("default").SetAttribute("display", value); }
         }
 
         /// <summary>
-        ///   Is EVE loading textures, you can enable/disable texture loading by setting this value to true or false
+        ///     Is EVE loading textures, you can enable/disable texture loading by setting this value to true or false
         /// </summary>
         /// <remarks>
-        ///   Use at own risk!
+        ///     Use at own risk!
         /// </remarks>
         public bool ResourceLoad
         {
             get
             {
-                bool disableGeometryLoad = (bool)PySharp.Import("trinity").Attribute("device").Attribute("disableGeometryLoad");
-                bool disableEffectLoad = (bool)PySharp.Import("trinity").Attribute("device").Attribute("disableEffectLoad");
-                bool disableTextureLoad = (bool)PySharp.Import("trinity").Attribute("device").Attribute("disableTextureLoad");
+                var disableGeometryLoad = (bool) PySharp.Import("trinity").Attribute("device").Attribute("disableGeometryLoad");
+                var disableEffectLoad = (bool) PySharp.Import("trinity").Attribute("device").Attribute("disableEffectLoad");
+                var disableTextureLoad = (bool) PySharp.Import("trinity").Attribute("device").Attribute("disableTextureLoad");
                 return (disableGeometryLoad || disableEffectLoad || disableTextureLoad);
             }
             set
@@ -532,7 +527,7 @@ namespace DirectEve
         #region IDisposable Members
 
         /// <summary>
-        ///   Dispose of DirectEve
+        ///     Dispose of DirectEve
         /// </summary>
         public void Dispose()
         {
@@ -551,7 +546,7 @@ namespace DirectEve
         #endregion
 
         /// <summary>
-        ///   Refresh the bookmark cache (if needed)
+        ///     Refresh the bookmark cache (if needed)
         /// </summary>
         /// <returns></returns>
         public bool RefreshBookmarks()
@@ -560,7 +555,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Refresh the PnPWindow
+        ///     Refresh the PnPWindow
         /// </summary>
         /// <returns></returns>
         public bool RefreshPnPWindow()
@@ -569,18 +564,18 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   OnFrame event, use this to do your eve-stuff
+        ///     OnFrame event, use this to do your eve-stuff
         /// </summary>
         public event EventHandler OnFrame;
 
         /// <summary>
-        ///   Internal "OnFrame" handler
+        ///     Internal "OnFrame" handler
         /// </summary>
-        /// <param name = "sender"></param>
-        /// <param name = "e"></param>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FrameworkOnFrame(object sender, EventArgs e)
         {
-            Stopwatch st = new Stopwatch();
+            var st = new Stopwatch();
             st.Start();
             using (var pySharp = new PySharp.PySharp(true))
             {
@@ -666,13 +661,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Open the corporation hangar
+        ///     Open the corporation hangar
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   Only works in a station!
+        ///     Only works in a station!
         /// </remarks>
-        ///         
         private bool OpenCorporationHangar()
         {
             return ExecuteCommand(DirectCmd.OpenCorpHangar);
@@ -680,7 +674,7 @@ namespace DirectEve
 
         public bool OpenInventory()
         {
-            return ExecuteCommand(DirectCmd.OpenInventory);  
+            return ExecuteCommand(DirectCmd.OpenInventory);
         }
 
         public int GetCorpHangarId(string divisionName)
@@ -701,8 +695,8 @@ namespace DirectEve
 
         public bool OpenShipMaintenanceBay(long itemID)
         {
-			PyObject OpenShipMaintenanceBayShip = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.openFunctions").Attribute("OpenShipMaintenanceBayShip");
-			return ThreadedCall(OpenShipMaintenanceBayShip, itemID, global::DirectEve.PySharp.PySharp.PyNone);
+            var OpenShipMaintenanceBayShip = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.openFunctions").Attribute("OpenShipMaintenanceBayShip");
+            return ThreadedCall(OpenShipMaintenanceBayShip, itemID, global::DirectEve.PySharp.PySharp.PyNone);
         }
 
         public bool OpenStructure(long itemID)
@@ -724,10 +718,11 @@ namespace DirectEve
         {
             return ThreadedLocalSvcCall("menu", "OpenStrontiumBay", itemID, global::DirectEve.PySharp.PySharp.PyNone);
         }
+
         /// <summary>
-        ///   Execute a command
+        ///     Execute a command
         /// </summary>
-        /// <param name = "cmd"></param>
+        /// <param name="cmd"></param>
         /// <returns></returns>
         public bool ExecuteCommand(DirectCmd cmd)
         {
@@ -735,7 +730,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a list of locked items
+        ///     Return a list of locked items
         /// </summary>
         /// <returns></returns>
         public List<long> GetLockedItems()
@@ -745,11 +740,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Remove all item locks
+        ///     Remove all item locks
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   Do not abuse this, the client probably placed them for a reason!
+        ///     Do not abuse this, the client probably placed them for a reason!
         /// </remarks>
         public bool UnlockItems()
         {
@@ -757,7 +752,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Item hangar container
+        ///     Item hangar container
         /// </summary>
         /// <returns></returns>
         public DirectContainer GetItemHangar()
@@ -766,7 +761,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Ship hangar container
+        ///     Ship hangar container
         /// </summary>
         /// <returns></returns>
         public DirectContainer GetShipHangar()
@@ -775,7 +770,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Ship's cargo container
+        ///     Ship's cargo container
         /// </summary>
         /// <returns></returns>
         public DirectContainer GetShipsCargo()
@@ -784,7 +779,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Ship's ore hold container
+        ///     Ship's ore hold container
         /// </summary>
         /// <returns></returns>
         public DirectContainer GetShipsOreHold()
@@ -794,7 +789,7 @@ namespace DirectEve
 
         // If this is not the right place to do the calls themself, let me know. I thought placing them in DirectContainer was not neat ~ Ferox
         /// <summary>
-        ///   Assets list
+        ///     Assets list
         /// </summary>
         /// <returns></returns>
         public List<DirectItem> GetAssets()
@@ -815,7 +810,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Refresh global assets list (note: 5min delay in assets)
+        ///     Refresh global assets list (note: 5min delay in assets)
         /// </summary>
         /// <returns></returns>
         public bool RefreshAssets()
@@ -824,7 +819,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Ship's modules container
+        ///     Ship's modules container
         /// </summary>
         /// <returns></returns>
         public DirectContainer GetShipsModules()
@@ -834,7 +829,7 @@ namespace DirectEve
 
 
         /// <summary>
-        ///   Ship's drone bay
+        ///     Ship's drone bay
         /// </summary>
         /// <returns></returns>
         public DirectContainer GetShipsDroneBay()
@@ -843,9 +838,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Item container
+        ///     Item container
         /// </summary>
-        /// <param name = "itemId"></param>
+        /// <param name="itemId"></param>
         /// <returns></returns>
         public DirectContainer GetContainer(long itemId)
         {
@@ -856,9 +851,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the corporation hangar container based on division name
+        ///     Get the corporation hangar container based on division name
         /// </summary>
-        /// <param name = "divisionName"></param>
+        /// <param name="divisionName"></param>
         /// <returns></returns>
         public DirectContainer GetCorporationHangar(string divisionName)
         {
@@ -866,9 +861,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the corporation hangar container based on division id (1-7)
+        ///     Get the corporation hangar container based on division id (1-7)
         /// </summary>
-        /// <param name = "divisionId"></param>
+        /// <param name="divisionId"></param>
         /// <returns></returns>
         public DirectContainer GetCorporationHangar(int divisionId)
         {
@@ -886,9 +881,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return the entity by it's id
+        ///     Return the entity by it's id
         /// </summary>
-        /// <param name = "entityId"></param>
+        /// <param name="entityId"></param>
         /// <returns></returns>
         public DirectEntity GetEntityById(long entityId)
         {
@@ -900,11 +895,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Bookmark the current location
+        ///     Bookmark the current location
         /// </summary>
-        /// <param name = "name"></param>
-        /// <param name = "comment"></param>
-        /// <param name = "folderId"></param>
+        /// <param name="name"></param>
+        /// <param name="comment"></param>
+        /// <param name="folderId"></param>
         /// <returns></returns>
         public bool BookmarkCurrentLocation(string name, string comment, long? folderId)
         {
@@ -916,11 +911,11 @@ namespace DirectEve
 
 
         /// <summary>
-        ///   Bookmark the current location
+        ///     Bookmark the current location
         /// </summary>
-        /// <param name = "name"></param>
-        /// <param name = "comment"></param>
-        /// <param name = "folderId"></param>
+        /// <param name="name"></param>
+        /// <param name="comment"></param>
+        /// <param name="folderId"></param>
         /// <returns></returns>
         public bool CorpBookmarkCurrentLocation(string name, string comment, long? folderId)
         {
@@ -931,12 +926,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Bookmark the current location
+        ///     Bookmark the current location
         /// </summary>
-        /// <param name = "ownerId"></param>
-        /// <param name = "name"></param>
-        /// <param name = "comment"></param>
-        /// <param name = "folderId"></param>
+        /// <param name="ownerId"></param>
+        /// <param name="name"></param>
+        /// <param name="comment"></param>
+        /// <param name="folderId"></param>
         /// <returns></returns>
         internal bool BookmarkCurrentLocation(long ownerId, string name, string comment, long? folderId)
         {
@@ -956,13 +951,13 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Bookmark an entity
+        ///     Bookmark an entity
         /// </summary>
-        /// <param name = "entity"></param>
-        /// <param name = "name"></param>
-        /// <param name = "comment"></param>
-        /// <param name = "folderId"></param>
-        /// <param name = "corp"></param>
+        /// <param name="entity"></param>
+        /// <param name="name"></param>
+        /// <param name="comment"></param>
+        /// <param name="folderId"></param>
+        /// <param name="corp"></param>
         /// <returns></returns>
         public bool BookmarkEntity(DirectEntity entity, string name, string comment, long? folderId, bool corp = false)
         {
@@ -979,17 +974,16 @@ namespace DirectEve
                 return DirectBookmark.BookmarkLocation(this, Session.CharacterId.Value, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId, folderId);
             else
                 return DirectBookmark.BookmarkLocation(this, Session.CorporationId.Value, entity.Id, name, comment, entity.TypeId, Session.SolarSystemId, folderId);
-
         }
 
 
         /// <summary>
-        ///   Bookmark an entity
+        ///     Bookmark an entity
         /// </summary>
-        /// <param name = "entity"></param>
-        /// <param name = "name"></param>
-        /// <param name = "comment"></param>
-        /// <param name = "folderId"></param>
+        /// <param name="entity"></param>
+        /// <param name="name"></param>
+        /// <param name="comment"></param>
+        /// <param name="folderId"></param>
         /// <returns></returns>
         public bool CorpBookmarkEntity(DirectEntity entity, string name, string comment, long? folderId)
         {
@@ -1003,9 +997,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Create a bookmark folder
+        ///     Create a bookmark folder
         /// </summary>
-        /// <param name = "name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public bool CreateBookmarkFolder(string name)
         {
@@ -1016,9 +1010,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Create a bookmark folder
+        ///     Create a bookmark folder
         /// </summary>
-        /// <param name = "name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public bool CreateCorpBookmarkFolder(string name)
         {
@@ -1029,9 +1023,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Drop bookmarks into people &amp; places
+        ///     Drop bookmarks into people &amp; places
         /// </summary>
-        /// <param name = "bookmarks"></param>
+        /// <param name="bookmarks"></param>
         /// <returns></returns>
         public bool DropInPeopleAndPlaces(IEnumerable<DirectItem> bookmarks)
         {
@@ -1039,9 +1033,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Refine items from the hangar floor
+        ///     Refine items from the hangar floor
         /// </summary>
-        /// <param name = "items"></param>
+        /// <param name="items"></param>
         /// <returns></returns>
         public bool ReprocessStationItems(IEnumerable<DirectItem> items)
         {
@@ -1057,14 +1051,14 @@ namespace DirectEve
             if (items.Any(i => i.LocationId != Session.StationId))
                 return false;
 
-			PyObject Refine = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.invItemFunctions").Attribute("Refine");
-			return ThreadedCall(Refine, items.Select(i => i.PyItem));
+            var Refine = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.invItemFunctions").Attribute("Refine");
+            return ThreadedCall(Refine, items.Select(i => i.PyItem));
         }
 
         /// <summary>
-        ///   Return an owner
+        ///     Return an owner
         /// </summary>
-        /// <param name = "ownerId"></param>
+        /// <param name="ownerId"></param>
         /// <returns></returns>
         public DirectOwner GetOwner(long ownerId)
         {
@@ -1072,9 +1066,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return a location
+        ///     Return a location
         /// </summary>
-        /// <param name = "locationId"></param>
+        /// <param name="locationId"></param>
         /// <returns></returns>
         public DirectLocation GetLocation(int locationId)
         {
@@ -1082,9 +1076,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return the name of a location
+        ///     Return the name of a location
         /// </summary>
-        /// <param name = "locationId"></param>
+        /// <param name="locationId"></param>
         /// <returns></returns>
         public string GetLocationName(long locationId)
         {
@@ -1092,9 +1086,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return the agent by id
+        ///     Return the agent by id
         /// </summary>
-        /// <param name = "agentId"></param>
+        /// <param name="agentId"></param>
         /// <returns></returns>
         public DirectAgent GetAgentById(long agentId)
         {
@@ -1102,9 +1096,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return the agent by name
+        ///     Return the agent by name
         /// </summary>
-        /// <param name = "agentName"></param>
+        /// <param name="agentName"></param>
         /// <returns></returns>
         public DirectAgent GetAgentByName(string agentName)
         {
@@ -1112,9 +1106,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return what "eve.LocalSvc" would return, unless the service wasn't started yet
+        ///     Return what "eve.LocalSvc" would return, unless the service wasn't started yet
         /// </summary>
-        /// <param name = "svc"></param>
+        /// <param name="svc"></param>
         /// <returns></returns>
         /// <remarks>Use at your own risk!</remarks>
         public PyObject GetLocalSvc(string svc)
@@ -1143,23 +1137,23 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Perform a uthread.new(pyCall, parms) call
+        ///     Perform a uthread.new(pyCall, parms) call
         /// </summary>
-        /// <param name = "pyCall"></param>
-        /// <param name = "parms"></param>
+        /// <param name="pyCall"></param>
+        /// <param name="parms"></param>
         /// <returns></returns>
         /// <remarks>Use at your own risk!</remarks>
         public bool ThreadedCall(PyObject pyCall, params object[] parms)
         {
             return ThreadedCallWithKeywords(pyCall, null, parms);
         }
-		
+
         /// <summary>
-        ///   Perform a uthread.new(pyCall, parms) call
+        ///     Perform a uthread.new(pyCall, parms) call
         /// </summary>
-        /// <param name = "pyCall"></param>
-        /// <param name = "keywords"></param>
-        /// <param name = "parms"></param>
+        /// <param name="pyCall"></param>
+        /// <param name="keywords"></param>
+        /// <param name="parms"></param>
         /// <returns></returns>
         /// <remarks>Use at your own risk!</remarks>
         public bool ThreadedCallWithKeywords(PyObject pyCall, Dictionary<string, object> keywords, params object[] parms)
@@ -1173,11 +1167,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Perform a uthread.new(svc.call, parms) call
+        ///     Perform a uthread.new(svc.call, parms) call
         /// </summary>
-        /// <param name = "svc"></param>
-        /// <param name = "call"></param>
-        /// <param name = "parms"></param>
+        /// <param name="svc"></param>
+        /// <param name="call"></param>
+        /// <param name="parms"></param>
         /// <returns></returns>
         /// <remarks>Use at your own risk!</remarks>
         public bool ThreadedLocalSvcCall(string svc, string call, params object[] parms)
@@ -1187,9 +1181,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return's true if the entity has not been a target in the last 3 seconds
+        ///     Return's true if the entity has not been a target in the last 3 seconds
         /// </summary>
-        /// <param name = "id"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         internal bool CanTarget(long id)
         {
@@ -1197,25 +1191,25 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Remove's the target from the last known targets
+        ///     Remove's the target from the last known targets
         /// </summary>
-        /// <param name = "id"></param>
+        /// <param name="id"></param>
         internal void ClearTargetTimer(long id)
         {
             _lastKnownTargets.Remove(id);
         }
 
         /// <summary>
-        ///   Set the target's last target time
+        ///     Set the target's last target time
         /// </summary>
-        /// <param name = "id"></param>
+        /// <param name="id"></param>
         internal void SetTargetTimer(long id)
         {
             _lastKnownTargets[id] = DateTime.Now;
         }
 
         /// <summary>
-        ///   Register app event time
+        ///     Register app event time
         /// </summary>
         private void RegisterAppEventTime()
         {
@@ -1223,7 +1217,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Open the fitting management window
+        ///     Open the fitting management window
         /// </summary>
         public void OpenFitingManager()
         {
@@ -1232,35 +1226,35 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Open the repairshop window
+        ///     Open the repairshop window
         /// </summary>
         public void OpenRepairShop()
         {
             if (!Session.IsInStation)
                 return;
             var form = PySharp.Import("form");
-            ThreadedCall(form.Attribute("RepairShopWindow").Attribute("Open"));            
+            ThreadedCall(form.Attribute("RepairShopWindow").Attribute("Open"));
         }
 
         internal long getServiceMask()
         {
             if (!Session.IsInStation)
                 return 0;
-            return (long)PySharp.Import("__builtin__").Attribute("eve").Attribute("stationItem").Attribute("serviceMask");
+            return (long) PySharp.Import("__builtin__").Attribute("eve").Attribute("stationItem").Attribute("serviceMask");
         }
 
         public bool hasRepairFacility()
         {
             if (!Session.IsInStation || !Session.IsReady)
-            {                
+            {
                 return false;
             }
-            long serviceMask = getServiceMask();
-            return (serviceMask & (long)Const["stationServiceRepairFacilities"]) != 0;
+            var serviceMask = getServiceMask();
+            return (serviceMask & (long) Const["stationServiceRepairFacilities"]) != 0;
         }
 
         /// <summary>
-        /// Broadcast scatter events.  Use with caution.
+        ///     Broadcast scatter events.  Use with caution.
         /// </summary>
         /// <param name="evt">The event name.</param>
         /// <returns></returns>
@@ -1271,7 +1265,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Log a message.
+        ///     Log a message.
         /// </summary>
         /// <param name="msg">A string to output to the loggers.</param>
         public void Log(string msg)
@@ -1280,11 +1274,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Does this user have available support instances?
-        /// 
-        /// NOTE: Do not use this function to gate mission critical features
-        /// which may cause loss of assets in the event of a license server
-        /// error!
+        ///     Does this user have available support instances?
+        ///     NOTE: Do not use this function to gate mission critical features
+        ///     which may cause loss of assets in the event of a license server
+        ///     error!
         /// </summary>
         /// <returns>True if the user has support instances.</returns>
         public bool HasSupportInstances()
@@ -1296,7 +1289,7 @@ namespace DirectEve
         }
 
         public bool Sell(DirectItem item, int StationId, int quantity, double price, int duration, bool useCorp)
-        {            
+        {
             if (!item.PyItem.IsValid)
                 return false;
             if (!HasSupportInstances())
@@ -1306,7 +1299,7 @@ namespace DirectEve
             }
             //var pyRange = GetRange(range);
             //def SellStuff(self, stationID, typeID, itemID, price, quantity, duration = 0, useCorp = False, located = None):
-            return ThreadedLocalSvcCall("marketQuote", "SellStuff", StationId, item.TypeId, item.ItemId, price, quantity, duration, useCorp);//pyRange);
+            return ThreadedLocalSvcCall("marketQuote", "SellStuff", StationId, item.TypeId, item.ItemId, price, quantity, duration, useCorp); //pyRange);
         }
 
         internal PyObject GetRange(DirectOrderRange range)
@@ -1324,7 +1317,7 @@ namespace DirectEve
             }
         }
 
-        public bool Buy(int StationId, int TypeId, double Price, int quantity, DirectOrderRange range, int minVolume, int duration)//, bool useCorp)
+        public bool Buy(int StationId, int TypeId, double Price, int quantity, DirectOrderRange range, int minVolume, int duration) //, bool useCorp)
         {
             if (!HasSupportInstances())
             {
@@ -1333,7 +1326,7 @@ namespace DirectEve
             }
             var pyRange = GetRange(range);
             //def BuyStuff(self, stationID, typeID, price, quantity, orderRange = None, minVolume = 1, duration = 0, useCorp = False):
-            return ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange, minVolume, duration);//, useCorp);
+            return ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange, minVolume, duration); //, useCorp);
         }
 
         public bool InviteToFleet(long charId)
@@ -1360,7 +1353,7 @@ namespace DirectEve
         {
             get
             {
-                List<DirectFleetMember> fleetMembers = new List<DirectFleetMember>();
+                var fleetMembers = new List<DirectFleetMember>();
                 var pyMembers = GetLocalSvc("fleet").Attribute("members").ToDictionary<long>();
                 foreach (var pyMember in pyMembers)
                 {
@@ -1371,7 +1364,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Initiates trade window
+        ///     Initiates trade window
         /// </summary>
         /// <param name="charId"></param>
         /// <returns>Fails if char is not in station, if charId is not in station and if the service is not active yet</returns>
@@ -1386,7 +1379,7 @@ namespace DirectEve
             var tradeService = GetLocalSvc("pvptrade");
             if (!tradeService.IsValid)
                 return false;
-            
+
             return ThreadedCall(tradeService.Attribute("StartTradeSession"), charId);
         }
 
@@ -1394,37 +1387,37 @@ namespace DirectEve
         {
             get
             {
-            List<long> charIds = new List<long>();
-            var pyCharIds = GetLocalSvc("station").Attribute("guests").ToDictionary();
-            foreach(var pyChar in pyCharIds)
-                charIds.Add((long)pyChar.Key);
-            return charIds;
+                var charIds = new List<long>();
+                var pyCharIds = GetLocalSvc("station").Attribute("guests").ToDictionary();
+                foreach (var pyChar in pyCharIds)
+                    charIds.Add((long) pyChar.Key);
+                return charIds;
             }
         }
 
         public bool AddToAddressbook(int charid)
         {
-            return ThreadedLocalSvcCall("addressbook", "AddToPersonalMulti", new List<int> { charid });
+            return ThreadedLocalSvcCall("addressbook", "AddToPersonalMulti", new List<int> {charid});
         }
 
         /// <summary>
-        /// Reset DE caused freezes ~ Will be expanded later
+        ///     Reset DE caused freezes ~ Will be expanded later
         /// </summary>
         private void CheckStatistics()
         {
-            _frameTimeAbove100ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove100msStat").Attribute("value");
-            _frameTimeAbove200ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove200msStat").Attribute("value");
-            _frameTimeAbove300ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove300msStat").Attribute("value");
-            _frameTimeAbove400ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove400msStat").Attribute("value");
-            _frameTimeAbove500ms = (double)this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove500msStat").Attribute("value");
+            _frameTimeAbove100ms = (double) GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove100msStat").Attribute("value");
+            _frameTimeAbove200ms = (double) GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove200msStat").Attribute("value");
+            _frameTimeAbove300ms = (double) GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove300msStat").Attribute("value");
+            _frameTimeAbove400ms = (double) GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove400msStat").Attribute("value");
+            _frameTimeAbove500ms = (double) GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove500msStat").Attribute("value");
 
             if (_lastOnframeTook > 80)
             {
-                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove100msStat").Call("Set", _prevFrameTimeAbove100ms);
-                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove200msStat").Call("Set", _prevFrameTimeAbove200ms);
-                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove300msStat").Call("Set", _prevFrameTimeAbove300ms);
-                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove400msStat").Call("Set", _prevFrameTimeAbove400ms);
-                this.GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove500msStat").Call("Set", _prevFrameTimeAbove500ms);
+                GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove100msStat").Call("Set", _prevFrameTimeAbove100ms);
+                GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove200msStat").Call("Set", _prevFrameTimeAbove200ms);
+                GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove300msStat").Call("Set", _prevFrameTimeAbove300ms);
+                GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove400msStat").Call("Set", _prevFrameTimeAbove400ms);
+                GetLocalSvc("clientStatsSvc").Attribute("frameTimeAbove500msStat").Call("Set", _prevFrameTimeAbove500ms);
             }
 
             _prevFrameTimeAbove100ms = _frameTimeAbove100ms;

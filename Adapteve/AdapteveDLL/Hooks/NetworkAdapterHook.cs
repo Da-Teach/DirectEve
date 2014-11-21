@@ -1,13 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using EasyHook;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AdapteveDLL
 {
+    using System;
+    using System.Globalization;
+    using System.Runtime.InteropServices;
+    using EasyHook;
+
     public class NetworkAdapterHook : IDisposable
     {
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
@@ -22,6 +29,7 @@ namespace AdapteveDLL
         private string _guid;
         private string _mac;
         private string _address;
+
         public NetworkAdapterHook(IntPtr address, string guid, string mac, string ipaddress)
         {
             _guid = guid;
@@ -30,7 +38,7 @@ namespace AdapteveDLL
 
             _name = string.Format("GetAdaptersInfoHook_{0:X}", address.ToInt32());
             _hook = LocalHook.Create(address, new GetAdaptersInfoDelegate(GetAdaptersInfoDetour), this);
-            _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
         }
 
         private int GetAdaptersInfoDetour(IntPtr AdaptersInfo, IntPtr OutputBuffLen)
@@ -38,11 +46,11 @@ namespace AdapteveDLL
             var result = GetAdaptersInfo(AdaptersInfo, OutputBuffLen);
             if (AdaptersInfo != IntPtr.Zero)
             {
-                IP_ADAPTER_INFO structure = (IP_ADAPTER_INFO)Marshal.PtrToStructure(AdaptersInfo, typeof(IP_ADAPTER_INFO));
+                var structure = (IP_ADAPTER_INFO) Marshal.PtrToStructure(AdaptersInfo, typeof (IP_ADAPTER_INFO));
                 structure.AdapterName = _guid;
-                for (int i = 0; i < structure.Address.Length - 1; i = i + 2)
+                for (var i = 0; i < structure.Address.Length - 1; i = i + 2)
                 {
-                    var tekst = structure.Address[i].ToString("X2", System.Globalization.CultureInfo.InvariantCulture);
+                    var tekst = structure.Address[i].ToString("X2", CultureInfo.InvariantCulture);
                     if (tekst == "00")
                         tekst = "0";
 
@@ -60,13 +68,10 @@ namespace AdapteveDLL
         {
             public IntPtr Next;
             public Int32 ComboIndex;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256 + 4)]
-            public string AdapterName;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128 + 4)]
-            public string AdapterDescription;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256 + 4)] public string AdapterName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128 + 4)] public string AdapterDescription;
             public UInt32 AddressLength;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-            public byte[] Address;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)] public byte[] Address;
             public Int32 Index;
             public UInt32 Type;
             public UInt32 DhcpEnabled;
@@ -93,8 +98,7 @@ namespace AdapteveDLL
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         public struct IP_ADDRESS_STRING
         {
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-            public string Address;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)] public string Address;
         }
 
 

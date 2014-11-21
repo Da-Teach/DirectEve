@@ -7,9 +7,10 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using PyS = global::DirectEve.PySharp.PySharp;
+    using PyS = PySharp.PySharp;
 
     public class DirectCharacter : DirectObject
     {

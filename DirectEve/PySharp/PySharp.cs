@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve.PySharp
 {
     using System;
@@ -20,62 +21,62 @@ namespace DirectEve.PySharp
         public static PyObject PyNone = new PyObject(null, Py.PyNoneStruct, false);
 
         /// <summary>
-        ///   Dummy code
+        ///     Dummy code
         /// </summary>
         private PyObject _dummyCode;
 
         /// <summary>
-        ///   Dummy frame
+        ///     Dummy frame
         /// </summary>
         private PyObject _frame;
 
         /// <summary>
-        ///   Import cache
+        ///     Import cache
         /// </summary>
         private Dictionary<string, PyObject> _importCache;
 
         /// <summary>
-        ///   Int cache
+        ///     Int cache
         /// </summary>
         private Dictionary<int, PyObject> _intCache;
 
         /// <summary>
-        ///   Long cache
+        ///     Long cache
         /// </summary>
         private Dictionary<long, PyObject> _longCache;
 
         /// <summary>
-        ///   Old frame
+        ///     Old frame
         /// </summary>
         private PyObject _oldFrame;
 
         /// <summary>
-        ///   PyFalse cache
+        ///     PyFalse cache
         /// </summary>
         private PyObject _pyFalse;
 
         /// <summary>
-        ///   List of python objects, these will be released when disposing of PySharp
+        ///     List of python objects, these will be released when disposing of PySharp
         /// </summary>
         private List<PyObject> _pyReferences;
 
         /// <summary>
-        ///   PyTrue cache
+        ///     PyTrue cache
         /// </summary>
         private PyObject _pyTrue;
 
         /// <summary>
-        ///   String cache
+        ///     String cache
         /// </summary>
         private Dictionary<string, PyObject> _stringCache;
 
         /// <summary>
-        ///   Unicode cache
+        ///     Unicode cache
         /// </summary>
         private Dictionary<string, PyObject> _unicodeCache;
 
         /// <summary>
-        ///   Create a new PySharp object
+        ///     Create a new PySharp object
         /// </summary>
         internal PySharp()
         {
@@ -107,7 +108,7 @@ namespace DirectEve.PySharp
         #region IDisposable Members
 
         /// <summary>
-        ///   Dispose of all PyReferences
+        ///     Dispose of all PyReferences
         /// </summary>
         public void Dispose()
         {
@@ -131,9 +132,9 @@ namespace DirectEve.PySharp
         #endregion
 
         /// <summary>
-        ///   Import a PyModule
+        ///     Import a PyModule
         /// </summary>
-        /// <param name = "module"></param>
+        /// <param name="module"></param>
         /// <returns></returns>
         public PyObject Import(string module)
         {
@@ -147,9 +148,9 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from an object
+        ///     Get a PyObject from an object
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(object value)
         {
@@ -180,16 +181,16 @@ namespace DirectEve.PySharp
             if (value is IEnumerable<object>)
                 return From((IEnumerable<object>) value);
             if (value is Delegate)
-                return From((Delegate)value);
+                return From((Delegate) value);
             if (value is PyObject)
                 return (PyObject) value;
             return null;
         }
 
         /// <summary>
-        ///   Get a PyObject from an integer
+        ///     Get a PyObject from an integer
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(bool value)
         {
@@ -203,9 +204,9 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from an integer
+        ///     Get a PyObject from an integer
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(int value)
         {
@@ -219,9 +220,9 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a long
+        ///     Get a PyObject from a long
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(long value)
         {
@@ -235,9 +236,9 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a double
+        ///     Get a PyObject from a double
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(float value)
         {
@@ -246,9 +247,9 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a double
+        ///     Get a PyObject from a double
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(double value)
         {
@@ -257,9 +258,9 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a string
+        ///     Get a PyObject from a string
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(string value)
         {
@@ -273,9 +274,9 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a string
+        ///     Get a PyObject from a string
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject UnicodeFrom(string value)
         {
@@ -289,10 +290,10 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a list
+        ///     Get a PyObject from a list
         /// </summary>
-        /// <typeparam name = "TItem"></typeparam>
-        /// <param name = "value"></param>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From<TItem>(IEnumerable<TItem> value)
         {
@@ -316,34 +317,34 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Get a PyObject from a delegate
+        ///     Get a PyObject from a delegate
         /// </summary>
-        /// <param name = "value"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public PyObject From(Delegate value)
         {
             PyObject result, name;
             Py.PyMethodDef md;
 
-            md.ml_doc = (IntPtr)0;
-            md.ml_name = Marshal.StringToHGlobalAnsi( "testmethod" );
+            md.ml_doc = (IntPtr) 0;
+            md.ml_name = Marshal.StringToHGlobalAnsi("testmethod");
             md.ml_meth = Marshal.GetFunctionPointerForDelegate(value);
             md.ml_flags = 1; // METH_VARARGS
-            name = From((string)"testmethod");
+            name = From((string) "testmethod");
 
-            IntPtr mdPtr = Marshal.AllocHGlobal(Marshal.SizeOf(md));
+            var mdPtr = Marshal.AllocHGlobal(Marshal.SizeOf(md));
             Marshal.StructureToPtr(md, mdPtr, false);
 
-            result = new PyObject(this, Py.PyCFunction_NewEx(mdPtr, (IntPtr)0, name), true);
+            result = new PyObject(this, Py.PyCFunction_NewEx(mdPtr, (IntPtr) 0, name), true);
 
             return result;
         }
 
 
         /// <summary>
-        ///   Add a reference to the reference stack
+        ///     Add a reference to the reference stack
         /// </summary>
-        /// <param name = "reference">The reference to add to the stack</param>
+        /// <param name="reference">The reference to add to the stack</param>
         /// <returns>The reference that was added to the reference stack</returns>
         internal PyObject AddReference(PyObject reference)
         {
@@ -354,9 +355,9 @@ namespace DirectEve.PySharp
         }
 
         /// <summary>
-        ///   Remove a reference from the reference stack
+        ///     Remove a reference from the reference stack
         /// </summary>
-        /// <param name = "reference">The reference to remove from the stack</param>
+        /// <param name="reference">The reference to remove from the stack</param>
         /// <returns>The reference that was removed from the reference stack</returns>
         internal PyObject RemoveReference(PyObject reference)
         {

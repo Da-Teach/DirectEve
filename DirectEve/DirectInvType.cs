@@ -7,10 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using global::DirectEve.PySharp;
     using System.Collections.Generic;
+    using PySharp;
 
     public class DirectInvType : DirectObject
     {
@@ -313,9 +314,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldCapacity)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeShieldCapacity)
                             {
-                                _shield = (double)row.Attribute("value");
+                                _shield = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -336,9 +337,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorHP)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeArmorHP)
                             {
-                                _armor = (double)row.Attribute("value");
+                                _armor = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -359,9 +360,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeHullHP)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeHullHP)
                             {
-                                _structure = (double)row.Attribute("value");
+                                _structure = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -382,9 +383,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldEmDamageResonance)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeShieldEmDamageResonance)
                             {
-                                _shieldResistanceEM = (double)row.Attribute("value");
+                                _shieldResistanceEM = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -405,9 +406,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldKineticDamageResonance)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeShieldKineticDamageResonance)
                             {
-                                _shieldResistanceKinetic = (double)row.Attribute("value");
+                                _shieldResistanceKinetic = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -428,9 +429,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldExplosiveDamageResonance)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeShieldExplosiveDamageResonance)
                             {
-                                _shieldResistanceExplosion = (double)row.Attribute("value");
+                                _shieldResistanceExplosion = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -451,9 +452,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeShieldThermalDamageResonance)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeShieldThermalDamageResonance)
                             {
-                                _shieldResistanceThermal = (double)row.Attribute("value");
+                                _shieldResistanceThermal = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -474,9 +475,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorEmDamageResonance)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeArmorEmDamageResonance)
                             {
-                                _armorResistanceEM = (double)row.Attribute("value");
+                                _armorResistanceEM = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -497,9 +498,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorKineticDamageResonance)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeArmorKineticDamageResonance)
                             {
-                                _armorResistanceKinetic = (double)row.Attribute("value");
+                                _armorResistanceKinetic = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -520,9 +521,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorExplosiveDamageResonance)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeArmorExplosiveDamageResonance)
                             {
-                                _armorResistanceExplosion = (double)row.Attribute("value");
+                                _armorResistanceExplosion = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -543,9 +544,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeArmorThermalDamageResonance)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeArmorThermalDamageResonance)
                             {
-                                _armorResistanceThermal = (double)row.Attribute("value");
+                                _armorResistanceThermal = (double) row.Attribute("value");
                                 break;
                             }
                         }
@@ -566,9 +567,9 @@ namespace DirectEve
                     {
                         foreach (var row in dmgAttributes.ToList())
                         {
-                            if ((int)row.Attribute("attributeID") == (int)DirectEve.Const.AttributeSignatureRadius)
+                            if ((int) row.Attribute("attributeID") == (int) DirectEve.Const.AttributeSignatureRadius)
                             {
-                                _signatureRadius = (double)row.Attribute("value");
+                                _signatureRadius = (double) row.Attribute("value");
                                 break;
                             }
                         }

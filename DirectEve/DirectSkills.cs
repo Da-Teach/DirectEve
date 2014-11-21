@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
@@ -26,7 +27,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return the skill queue length
+        ///     Return the skill queue length
         /// </summary>
         public TimeSpan SkillQueueLength
         {
@@ -34,7 +35,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return all skills in the game
+        ///     Return all skills in the game
         /// </summary>
         public List<DirectInvType> AllSkills
         {
@@ -57,7 +58,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Returns if MySkills is valid
+        ///     Returns if MySkills is valid
         /// </summary>
         public bool AreMySkillsReady
         {
@@ -65,7 +66,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return my skills
+        ///     Return my skills
         /// </summary>
         public List<DirectSkill> MySkills
         {
@@ -79,7 +80,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return the current skill queue
+        ///     Return the current skill queue
         /// </summary>
         public List<DirectSkill> MySkillQueue
         {
@@ -104,7 +105,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Is the skill data ready?
+        ///     Is the skill data ready?
         /// </summary>
         public bool IsReady
         {
@@ -112,7 +113,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Refresh MySkills
+        ///     Refresh MySkills
         /// </summary>
         /// <returns></returns>
         public bool RefreshMySkills()
@@ -122,7 +123,7 @@ namespace DirectEve
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            
+
             var mySkills = DirectEve.GetLocalSvc("skills").Attribute("MySkills");
 
             var keywords = new Dictionary<string, object>();
@@ -131,9 +132,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Add a skill to the end of the queue
+        ///     Add a skill to the end of the queue
         /// </summary>
-        /// <param name = "skill"></param>
+        /// <param name="skill"></param>
         /// <returns></returns>
         public bool AddSkillToEndOfQueue(DirectInvType skill)
         {
@@ -142,7 +143,7 @@ namespace DirectEve
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            
+
             if (!AreMySkillsReady)
                 return false;
 
@@ -168,9 +169,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Add a skill to the start of the queue
+        ///     Add a skill to the start of the queue
         /// </summary>
-        /// <param name = "skill"></param>
+        /// <param name="skill"></param>
         /// <returns></returns>
         public bool TrainSkillNow(DirectInvType skill)
         {
@@ -179,7 +180,7 @@ namespace DirectEve
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            
+
             if (!AreMySkillsReady)
                 return false;
 
@@ -211,7 +212,7 @@ namespace DirectEve
 
         //    return DirectEve.ThreadedLocalSvcCall("skillqueue", "CommitTransaction");
         //}
-        
+
         // This only pauses
         ///// <summary>
         /////   Abort the current skill in training

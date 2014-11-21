@@ -7,11 +7,12 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
     using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectRegion : DirectObject
     {
@@ -21,7 +22,7 @@ namespace DirectEve
             : base(directEve)
         {
             Id = (long) pyo.regionID;
-            Name = (string)DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id).Attribute("name");
+            Name = (string) DirectEve.PySharp.Import("__builtin__").Attribute("cfg").Attribute("evelocations").Call("Get", Id).Attribute("name");
             FactionId = (long?) pyo.factionID;
         }
 
@@ -31,7 +32,7 @@ namespace DirectEve
         public long? FactionId { get; private set; }
 
         /// <summary>
-        ///   List all constellations within this region
+        ///     List all constellations within this region
         /// </summary>
         public List<DirectConstellation> Constellations
         {
@@ -43,7 +44,7 @@ namespace DirectEve
             var result = new Dictionary<long, DirectRegion>();
 
             dynamic ps = directEve.PySharp;
-            Dictionary<long,PyObject> pyDict = ps.__builtin__.cfg.mapRegionCache.ToDictionary<long>();
+            Dictionary<long, PyObject> pyDict = ps.__builtin__.cfg.mapRegionCache.ToDictionary<long>();
             foreach (var pair in pyDict)
                 result[pair.Key] = new DirectRegion(directEve, pair.Value);
 

@@ -7,12 +7,13 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     public class DirectMe : DirectObject
     {
         /// <summary>
-        ///   Attribute cache
+        ///     Attribute cache
         /// </summary>
         private DirectItemAttributes _attributes;
 
@@ -43,24 +44,21 @@ namespace DirectEve
 
         public bool IsTrialAccount
         {
-            get
-            {
-                return DirectEve.Session.UserType == 23;
-            }
+            get { return DirectEve.Session.UserType == 23; }
         }
 
         /// <summary>
-        /// Retrieves days left on account after login
+        ///     Retrieves days left on account after login
         /// </summary>
         public int DaysLeftOnAccount
         {
             get
             {
-                long? charid = DirectEve.Session.CharacterId;
+                var charid = DirectEve.Session.CharacterId;
                 if (!charid.HasValue)
                     return -1;
 
-                var daysLeft = (int?)PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("charsel").Attribute("details").ToDictionary<long>()[charid.Value].Attribute("daysLeft");
+                var daysLeft = (int?) PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("charsel").Attribute("details").ToDictionary<long>()[charid.Value].Attribute("daysLeft");
 
                 if (daysLeft.HasValue)
                     return daysLeft.Value;
@@ -70,18 +68,18 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Are we in an active war?
+        ///     Are we in an active war?
         /// </summary>
         /// <returns></returns>
         public bool IsAtWar
         {
             get
             {
-                long? id = DirectEve.Session.AllianceId;
+                var id = DirectEve.Session.AllianceId;
                 if (id == null)
                     id = DirectEve.Session.CorporationId;
 
-                var atWar = (int)DirectEve.GetLocalSvc("war").Attribute("wars").Call("AreInAnyHostileWarStates", id);
+                var atWar = (int) DirectEve.GetLocalSvc("war").Attribute("wars").Call("AreInAnyHostileWarStates", id);
                 if (atWar == 1)
                     return true;
                 else

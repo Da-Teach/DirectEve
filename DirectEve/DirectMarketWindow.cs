@@ -7,11 +7,12 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
     using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectMarketWindow : DirectWindow
     {
@@ -74,9 +75,11 @@ namespace DirectEve
                 return null;
             //IEnumerable<DirectOrder> orders = mq.Call("GetMyOrders").ToList().Select(o => new DirectOrder(this, o));
             if (!bid)
-                return PyWindow.Attribute("sr").Attribute("market").Attribute("sr").Attribute("myorders").Attribute("sr").Attribute("sellScroll").Attribute("sr").Attribute("entries").ToList().Select(o => new DirectOrder(DirectEve, o.Attribute("order")));
+                return
+                    PyWindow.Attribute("sr").Attribute("market").Attribute("sr").Attribute("myorders").Attribute("sr").Attribute("sellScroll").Attribute("sr").Attribute("entries").ToList().Select(o => new DirectOrder(DirectEve, o.Attribute("order")));
             else
-                return PyWindow.Attribute("sr").Attribute("market").Attribute("sr").Attribute("myorders").Attribute("sr").Attribute("buyScroll").Attribute("sr").Attribute("entries").ToList().Select(o => new DirectOrder(DirectEve, o.Attribute("order")));
+                return
+                    PyWindow.Attribute("sr").Attribute("market").Attribute("sr").Attribute("myorders").Attribute("sr").Attribute("buyScroll").Attribute("sr").Attribute("entries").ToList().Select(o => new DirectOrder(DirectEve, o.Attribute("order")));
         }
 
         public bool LoadOrders()

@@ -284,7 +284,7 @@ namespace DirectEve.Hooking
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern void SetLastError(int errorCode);
-        
+
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr GetModuleHandleW(IntPtr lpModuleName);
 
@@ -308,10 +308,10 @@ namespace DirectEve.Hooking
             while (iid.Name != 0)
             {
                 var iidName = Marshal.PtrToStringAnsi(IntPtr.Add(moduleHandle, (int) iid.Name));
-                if (string.Compare(iidName, intermodName, System.StringComparison.OrdinalIgnoreCase) != 0)
+                if (string.Compare(iidName, intermodName, StringComparison.OrdinalIgnoreCase) != 0)
                 {
-                    iidPtr = IntPtr.Add(iidPtr, Marshal.SizeOf(typeof(IMAGE_IMPORT_DESCRIPTOR)));
-                    iid = (IMAGE_IMPORT_DESCRIPTOR)Marshal.PtrToStructure(iidPtr, typeof(IMAGE_IMPORT_DESCRIPTOR));
+                    iidPtr = IntPtr.Add(iidPtr, Marshal.SizeOf(typeof (IMAGE_IMPORT_DESCRIPTOR)));
+                    iid = (IMAGE_IMPORT_DESCRIPTOR) Marshal.PtrToStructure(iidPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
 
                     continue;
                 }
@@ -329,11 +329,11 @@ namespace DirectEve.Hooking
                     if (itd.Function == 0)
                         return IntPtr.Zero;
 
-                    if (string.Compare(iibnName, funcName, System.StringComparison.OrdinalIgnoreCase) == 0)
+                    if (string.Compare(iibnName, funcName, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         return new IntPtr(itd.Function);
                     }
-                    
+
                     itdPtr = IntPtr.Add(itdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
                     oitdPtr = IntPtr.Add(oitdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
                 }
@@ -363,7 +363,7 @@ namespace DirectEve.Hooking
 
                 _hook = LocalHook.Create(address, new LibraryCallDelegate(GetModuleHandleADetour), this);
 
-                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
             }
 
             private IntPtr GetModuleHandleADetour(IntPtr lpFileName)
@@ -390,7 +390,7 @@ namespace DirectEve.Hooking
 
             public void Dispose()
             {
-                if (_hook == null) 
+                if (_hook == null)
                     return;
 
                 _hook.Dispose();
@@ -417,7 +417,7 @@ namespace DirectEve.Hooking
 
                 _hook = LocalHook.Create(address, new LibraryCallDelegate(GetModuleHandleWDetour), this);
 
-                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
             }
 
             private IntPtr GetModuleHandleWDetour(IntPtr lpFileName)
@@ -451,7 +451,7 @@ namespace DirectEve.Hooking
                 _hook = null;
             }
         }
-        
+
         private class LoadLibraryAHook : IDisposable
         {
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -471,7 +471,7 @@ namespace DirectEve.Hooking
 
                 _hook = LocalHook.Create(address, new LibraryCallDelegate(LoadLibraryADetour), this);
 
-                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
             }
 
             private IntPtr LoadLibraryADetour(IntPtr lpFileName)
@@ -525,7 +525,7 @@ namespace DirectEve.Hooking
 
                 _hook = LocalHook.Create(address, new LibraryCallDelegate(LoadLibraryWDetour), this);
 
-                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
             }
 
             private IntPtr LoadLibraryWDetour(IntPtr lpFileName)
@@ -575,7 +575,7 @@ namespace DirectEve.Hooking
 
                 _hook = LocalHook.Create(address, new MiniDumpWriteDumpDelegate(MiniDumpWriteDumpDetour), this);
 
-                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
             }
 
             private bool MiniDumpWriteDumpDetour(IntPtr lpModuleName, IntPtr processId, IntPtr hFile, IntPtr dumpType, IntPtr exceptionParam, IntPtr userStreamParam, IntPtr callbackParam)
@@ -586,14 +586,14 @@ namespace DirectEve.Hooking
 
             public void Dispose()
             {
-                if (_hook == null) 
+                if (_hook == null)
                     return;
 
                 _hook.Dispose();
                 _hook = null;
             }
         }
-        
+
         private class EnumProcessesHook : IDisposable
         {
             [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
@@ -609,7 +609,7 @@ namespace DirectEve.Hooking
 
                 _hook = LocalHook.Create(address, new EnumProcessesDelegate(EnumProcessDetour), this);
 
-                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
             }
 
             private bool EnumProcessDetour([In] [Out] IntPtr processIds, UInt32 arraySizeBytes, [In] [Out] IntPtr bytesCopied)
@@ -648,7 +648,7 @@ namespace DirectEve.Hooking
 
                 _hook = LocalHook.Create(address, new IsDebuggerPresentDelegate(IsDebuggerPresentDetour), this);
 
-                _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
             }
 
             private bool IsDebuggerPresentDetour()
@@ -665,7 +665,7 @@ namespace DirectEve.Hooking
                 _hook = null;
             }
         }
-        
+
         private static IntPtr GetProcAddresFunc(string module, string function)
         {
             return GetProcAddress(GetModuleHandle(module), function);
@@ -744,7 +744,7 @@ namespace DirectEve.Hooking
             HookImports("_ctypes.pyd");
             HookImports("exefile.exe");
 
-            
+
             var handle = GetModuleHandle("psapi.dll");
             if (handle == IntPtr.Zero)
                 return;
@@ -760,8 +760,9 @@ namespace DirectEve.Hooking
             {
                 _hooks.Add(new EnumProcessesHook(address));
             }
-            catch { }
-      
+            catch
+            {
+            }
         }
 
         internal static void RemoveHooks()
@@ -778,7 +779,8 @@ namespace DirectEve.Hooking
                     hook.Dispose();
             }
             catch
-            { }
+            {
+            }
         }
     }
 }

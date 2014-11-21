@@ -7,10 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectItem : DirectInvType
     {
@@ -188,28 +189,28 @@ namespace DirectEve
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return -1;
             }
-            
-            return (double)PySharp.Import("util").Call("GetAveragePrice", PyItem);
+
+            return (double) PySharp.Import("util").Call("GetAveragePrice", PyItem);
         }
 
         internal static bool RefreshItems(DirectEve directEve, PyObject inventory, PyObject flag)
-        {            
+        {
             return directEve.ThreadedCall(inventory.Attribute("InvalidateCache"));
         }
 
         internal static List<DirectItem> GetItems(DirectEve directEve, PyObject inventory, PyObject flag)
-        {            
+        {
             var items = new List<DirectItem>();
             var cachedItems = inventory.Attribute("cachedItems").ToDictionary();
             var pyItems = cachedItems.Values;
-            
+
             foreach (var pyItem in pyItems)
             {
                 var item = new DirectItem(directEve);
                 item.PyItem = pyItem;
 
                 // Do not add the item if the flags do not coincide
-                if (flag.IsValid && (int)flag != item.FlagId)
+                if (flag.IsValid && (int) flag != item.FlagId)
                     continue;
 
                 items.Add(item);
@@ -219,10 +220,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Drop items into People and Places
+        ///     Drop items into People and Places
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "bookmarks"></param>
+        /// <param name="directEve"></param>
+        /// <param name="bookmarks"></param>
         /// <returns></returns>
         internal static bool DropInPlaces(DirectEve directEve, IEnumerable<DirectItem> bookmarks)
         {
@@ -234,7 +235,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Open up the quick-sell window to sell this item
+        ///     Open up the quick-sell window to sell this item
         /// </summary>
         /// <returns></returns>
         public bool QuickSell()
@@ -248,7 +249,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Open up the quick-buy window to buy more of this item
+        ///     Open up the quick-buy window to buy more of this item
         /// </summary>
         /// <returns></returns>
         public bool QuickBuy()
@@ -262,11 +263,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Activate this ship
+        ///     Activate this ship
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   Fails if the current location is not the same as the current station and if its not a CategoryShip
+        ///     Fails if the current location is not the same as the current station and if its not a CategoryShip
         /// </remarks>
         public bool ActivateShip()
         {
@@ -280,11 +281,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Leave this ship
+        ///     Leave this ship
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   Fails if the current location is not the same as the current station and if its not a CategoryShip
+        ///     Fails if the current location is not the same as the current station and if its not a CategoryShip
         /// </remarks>
         public bool LeaveShip()
         {
@@ -304,50 +305,50 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Assembles this ship
+        ///     Assembles this ship
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   Fails if the current location is not the same as the current station and if its not a CategoryShip and is not allready assembled
+        ///     Fails if the current location is not the same as the current station and if its not a CategoryShip and is not
+        ///     allready assembled
         /// </remarks>
-        /// 
         public bool AssembleShip()
         {
             if (LocationId != DirectEve.Session.StationId)
                 return false;
 
-            if (CategoryId != (int)DirectEve.Const.CategoryShip)
+            if (CategoryId != (int) DirectEve.Const.CategoryShip)
                 return false;
 
             if (IsSingleton)
                 return false;
 
-			PyObject AssembleShip = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.invItemFunctions").Attribute("AssembleShip");
-            return DirectEve.ThreadedCall(AssembleShip, new List<PyObject>() { this.PyItem });
+            var AssembleShip = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.invItemFunctions").Attribute("AssembleShip");
+            return DirectEve.ThreadedCall(AssembleShip, new List<PyObject>() {PyItem});
         }
 
         /// <summary>
-        /// Board this ship from a ship maintanance bay!
+        ///     Board this ship from a ship maintanance bay!
         /// </summary>
         /// <returns>false if entity is player or out of range</returns>
         public bool BoardShipFromShipMaintBay()
         {
-            if (CategoryId != (int)DirectEve.Const.CategoryShip)
+            if (CategoryId != (int) DirectEve.Const.CategoryShip)
                 return false;
 
             if (IsSingleton)
                 return false;
 
-			PyObject Board = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("Board");
-			return DirectEve.ThreadedCall(Board, ItemId);
+            var Board = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("Board");
+            return DirectEve.ThreadedCall(Board, ItemId);
         }
 
         /// <summary>
-        ///   Fit this item to your ship
+        ///     Fit this item to your ship
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   Fails if the selected item is not of CategoryModule
+        ///     Fails if the selected item is not of CategoryModule
         /// </remarks>
         public bool FitToActiveShip()
         {
@@ -361,7 +362,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Inject the skill into your brain
+        ///     Inject the skill into your brain
         /// </summary>
         /// <returns></returns>
         public bool InjectSkill()
@@ -375,12 +376,13 @@ namespace DirectEve
             if (ItemId == 0 || !PyItem.IsValid)
                 return false;
 
-			PyObject InjectSkillIntoBrain = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.invItemFunctions").Attribute("InjectSkillIntoBrain");
-			return DirectEve.ThreadedCall(InjectSkillIntoBrain, new List<PyObject> { PyItem });
+            var InjectSkillIntoBrain = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.invItemFunctions").Attribute("InjectSkillIntoBrain");
+            return DirectEve.ThreadedCall(InjectSkillIntoBrain, new List<PyObject> {PyItem});
         }
 
         /// <summary>
-        /// Set the name of an item.  Be sure to call DirectEve.ScatterEvent("OnItemNameChange") shortly after calling this function.  Do not call ScatterEvent from the same frame!!
+        ///     Set the name of an item.  Be sure to call DirectEve.ScatterEvent("OnItemNameChange") shortly after calling this
+        ///     function.  Do not call ScatterEvent from the same frame!!
         /// </summary>
         /// <remarks>See menuSvc.SetName</remarks>
         /// <param name="name">The new name for this item.</param>
@@ -392,12 +394,12 @@ namespace DirectEve
                 return false;
             }
 
-            if (CategoryId != (int)DirectEve.Const.CategoryShip && name.Length > 20)
+            if (CategoryId != (int) DirectEve.Const.CategoryShip && name.Length > 20)
             {
                 return false;
             }
 
-            if (CategoryId != (int)DirectEve.Const.CategoryStructure && name.Length > 32)
+            if (CategoryId != (int) DirectEve.Const.CategoryStructure && name.Length > 32)
             {
                 return false;
             }
@@ -416,11 +418,11 @@ namespace DirectEve
 
         public bool ActivatePLEX()
         {
-            if (this.TypeId != 29668)
+            if (TypeId != 29668)
                 return false;
 
-            PyObject ApplyPilotLicence = PySharp.Import("__builtin__").Attribute("sm").Call("RemoteSvc", "userSvc").Attribute("ApplyPilotLicence");
-			return DirectEve.ThreadedCall(ApplyPilotLicence, ItemId);
+            var ApplyPilotLicence = PySharp.Import("__builtin__").Attribute("sm").Call("RemoteSvc", "userSvc").Attribute("ApplyPilotLicence");
+            return DirectEve.ThreadedCall(ApplyPilotLicence, ItemId);
         }
     }
 }

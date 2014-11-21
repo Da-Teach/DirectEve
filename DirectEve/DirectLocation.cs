@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     public class DirectLocation : DirectObject
@@ -26,10 +27,10 @@ namespace DirectEve
         public bool IsValid { get; private set; }
 
         /// <summary>
-        ///   Get a location name
+        ///     Get a location name
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "locationId"></param>
+        /// <param name="directEve"></param>
+        /// <param name="locationId"></param>
         /// <returns></returns>
         internal static string GetLocationName(DirectEve directEve, long locationId)
         {
@@ -37,10 +38,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get a location based on locationId
+        ///     Get a location based on locationId
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "locationId"></param>
+        /// <param name="directEve"></param>
+        /// <param name="locationId"></param>
         /// <returns></returns>
         public static DirectLocation GetLocation(DirectEve directEve, long locationId)
         {
@@ -63,7 +64,7 @@ namespace DirectEve
 
                 region = constellation.Region;
             }
-            else if (directEve.SolarSystems.TryGetValue((int)locationId, out solarSystem))
+            else if (directEve.SolarSystems.TryGetValue((int) locationId, out solarSystem))
             {
                 isValid = true;
                 name = solarSystem.Name;
@@ -71,7 +72,7 @@ namespace DirectEve
                 constellation = solarSystem.Constellation;
                 region = constellation.Region;
             }
-            else if (directEve.Stations.TryGetValue((int)locationId, out station))
+            else if (directEve.Stations.TryGetValue((int) locationId, out station))
             {
                 isValid = true;
                 name = station.Name;
@@ -93,7 +94,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Set location as destination
+        ///     Set location as destination
         /// </summary>
         /// <returns></returns>
         public bool SetDestination()
@@ -102,7 +103,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Add a waypoint
+        ///     Add a waypoint
         /// </summary>
         /// <returns></returns>
         public bool AddWaypoint()
@@ -111,10 +112,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Add a waypoint
+        ///     Add a waypoint
         /// </summary>
-        /// <param name = "clearOtherWaypoints"></param>
-        /// <param name = "firstWaypoint"></param>
+        /// <param name="clearOtherWaypoints"></param>
+        /// <param name="firstWaypoint"></param>
         /// <returns></returns>
         public bool AddWaypoint(bool clearOtherWaypoints, bool firstWaypoint)
         {

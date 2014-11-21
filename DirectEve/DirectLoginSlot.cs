@@ -7,10 +7,10 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using System.Text.RegularExpressions;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectLoginSlot : DirectObject
     {
@@ -22,26 +22,23 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return the character id associated with this slot
+        ///     Return the character id associated with this slot
         /// </summary>
         public long CharId
         {
-            get { return (long)_pySlot.Attribute("characterDetails").Attribute("charDetails").Attribute("characterID"); }
+            get { return (long) _pySlot.Attribute("characterDetails").Attribute("charDetails").Attribute("characterID"); }
         }
 
         /// <summary>
-        ///   Return the character name associated with this slot
+        ///     Return the character name associated with this slot
         /// </summary>
         public string CharName
         {
-            get
-            {
-                return (string)_pySlot.Attribute("characterDetails").Attribute("charDetails").Attribute("characterName");              
-            }
+            get { return (string) _pySlot.Attribute("characterDetails").Attribute("charDetails").Attribute("characterName"); }
         }
 
         /// <summary>
-        ///   Activate this slot, this could make it main slot (if its slot 1 or 2) or login the character (slot 0)
+        ///     Activate this slot, this could make it main slot (if its slot 1 or 2) or login the character (slot 0)
         /// </summary>
         /// <returns></returns>
         public bool Activate()

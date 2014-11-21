@@ -7,12 +7,13 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     /// <summary>
-    ///   Skill in the game
+    ///     Skill in the game
     /// </summary>
     public class DirectSkill : DirectItem
     {
@@ -38,7 +39,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Are we currently training this skill?
+        ///     Are we currently training this skill?
         /// </summary>
         public bool InTraining
         {
@@ -46,7 +47,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Level of skill
+        ///     Level of skill
         /// </summary>
         public int Level
         {
@@ -55,7 +56,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Number of points in this skill
+        ///     Number of points in this skill
         /// </summary>
         public int SkillPoints
         {
@@ -63,7 +64,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Time multiplier to indicate relative training time
+        ///     Time multiplier to indicate relative training time
         /// </summary>
         public int SkillTimeConstant
         {
@@ -71,7 +72,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Enqueue this skill at the end of the queue
+        ///     Enqueue this skill at the end of the queue
         /// </summary>
         /// <returns></returns>
         public bool AddToEndOfQueue()
@@ -81,12 +82,12 @@ namespace DirectEve
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            
+
             return DirectEve.Skills.AddSkillToEndOfQueue(this);
         }
 
         /// <summary>
-        ///   Train this skill right now (add it at the start of the queue)
+        ///     Train this skill right now (add it at the start of the queue)
         /// </summary>
         /// <returns></returns>
         public bool TrainNow()
@@ -96,7 +97,7 @@ namespace DirectEve
                 DirectEve.Log("DirectEve: Error: This method requires a support instance.");
                 return false;
             }
-            
+
             return DirectEve.Skills.TrainSkillNow(this);
         }
 

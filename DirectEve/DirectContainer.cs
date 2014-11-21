@@ -7,47 +7,48 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectContainer : DirectInvType
     {
         /// <summary>
-        ///   Item Id
+        ///     Item Id
         /// </summary>
         private long _itemId;
 
         /// <summary>
-        ///   Items cache
+        ///     Items cache
         /// </summary>
         private List<DirectItem> _items;
 
         /// <summary>
-        ///   Flag reference
+        ///     Flag reference
         /// </summary>
         private PyObject _pyFlag;
 
         /// <summary>
-        ///   Inventory reference
+        ///     Inventory reference
         /// </summary>
         private PyObject _pyInventory;
 
         /// <summary>
-        ///   Is this the ship's modules 'container'
+        ///     Is this the ship's modules 'container'
         /// </summary>
         private bool _shipModules;
 
         /// <summary>
-        ///   Associated window cache
+        ///     Associated window cache
         /// </summary>
         private DirectContainerWindow _window;
 
         /// <summary>
-        ///   Window name
+        ///     Window name
         /// </summary>
         private string _windowName;
 
@@ -64,12 +65,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   DirectContainer
+        ///     DirectContainer
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "pyInventory"></param>
-        /// <param name = "pyFlag"></param>
-        /// <param name = "windowName"></param>
+        /// <param name="directEve"></param>
+        /// <param name="pyInventory"></param>
+        /// <param name="pyFlag"></param>
+        /// <param name="windowName"></param>
         internal DirectContainer(DirectEve directEve, PyObject pyInventory, PyObject pyFlag, string windowName)
             : this(directEve, pyInventory, pyFlag)
         {
@@ -77,12 +78,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   DirectContainer
+        ///     DirectContainer
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "pyInventory"></param>
-        /// <param name = "pyFlag"></param>
-        /// <param name = "itemId"></param>
+        /// <param name="directEve"></param>
+        /// <param name="pyInventory"></param>
+        /// <param name="pyFlag"></param>
+        /// <param name="itemId"></param>
         internal DirectContainer(DirectEve directEve, PyObject pyInventory, PyObject pyFlag, long itemId)
             : this(directEve, pyInventory, pyFlag)
         {
@@ -91,11 +92,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   DirectContainer
+        ///     DirectContainer
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "pyInventory"></param>
-        /// <param name = "shipModules"></param>
+        /// <param name="directEve"></param>
+        /// <param name="pyInventory"></param>
+        /// <param name="shipModules"></param>
         internal DirectContainer(DirectEve directEve, PyObject pyInventory, bool shipModules) : base(directEve)
         {
             // You can't build a DirectContainer with these parameters if its not shipModules
@@ -110,7 +111,7 @@ namespace DirectEve
 
 
         /// <summary>
-        ///   Get the items from the container
+        ///     Get the items from the container
         /// </summary>
         public List<DirectItem> Items
         {
@@ -121,11 +122,11 @@ namespace DirectEve
                     _items = DirectItem.GetItems(DirectEve, _pyInventory, _pyFlag);
 
                     // Special case
-                    var categoryShip = (int)DirectEve.Const.CategoryShip;
+                    var categoryShip = (int) DirectEve.Const.CategoryShip;
 
-                    if (_windowName.Contains("StationItems"))                        
+                    if (_windowName.Contains("StationItems"))
                         _items.RemoveAll(i => i.CategoryId == categoryShip);
-                    if (_windowName.Contains("StationShips"))                        
+                    if (_windowName.Contains("StationShips"))
                         _items.RemoveAll(i => i.CategoryId != categoryShip);
 
                     // Special case #2 (filter out hi/med/low slots)
@@ -148,7 +149,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the associated window for this container
+        ///     Get the associated window for this container
         /// </summary>
         public DirectContainerWindow Window
         {
@@ -159,16 +160,14 @@ namespace DirectEve
 
                 if (_window == null && !string.IsNullOrEmpty(_windowName))
                 {
-                    _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name.Contains(_windowName));                    
+                    _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name.Contains(_windowName));
                 }
 
                 if (_window == null && _itemId != 0)
                 {
-
                     _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.Name.Contains("Secondary") && w.currInvIdItem == _itemId);
                     if (_window == null)
                         _window = DirectEve.Windows.OfType<DirectContainerWindow>().FirstOrDefault(w => w.currInvIdItem == _itemId);
-
                 }
 
                 return _window;
@@ -176,10 +175,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Is the container valid?
+        ///     Is the container valid?
         /// </summary>
         /// <remarks>
-        ///   Valid is not the same as ready!
+        ///     Valid is not the same as ready!
         /// </remarks>
         public bool IsValid
         {
@@ -187,10 +186,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Is the container ready?
+        ///     Is the container ready?
         /// </summary>
         /// <remarks>
-        ///   For the container to be ready, you need the container window to exist and for that window to be "ready"
+        ///     For the container to be ready, you need the container window to exist and for that window to be "ready"
         /// </remarks>
         public bool IsReady
         {
@@ -207,7 +206,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return the container's capacity
+        ///     Return the container's capacity
         /// </summary>
         /// <returns></returns>
         public new double Capacity
@@ -222,7 +221,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Return the container's capacity
+        ///     Return the container's capacity
         /// </summary>
         /// <returns></returns>
         public double UsedCapacity
@@ -237,11 +236,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the inventory object using the specified method (GetInventory or GetInventoryFromId) and an Id (e.g. ship-id, etc)
+        ///     Get the inventory object using the specified method (GetInventory or GetInventoryFromId) and an Id (e.g. ship-id,
+        ///     etc)
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "method"></param>
-        /// <param name = "id"></param>
+        /// <param name="directEve"></param>
+        /// <param name="method"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         private static PyObject GetInventory(DirectEve directEve, string method, long id)
         {
@@ -262,10 +262,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the corporation hangar container based on division name
+        ///     Get the corporation hangar container based on division name
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "divisionName"></param>
+        /// <param name="directEve"></param>
+        /// <param name="divisionName"></param>
         /// <returns></returns>
         internal static DirectContainer GetCorporationHangar(DirectEve directEve, string divisionName)
         {
@@ -280,10 +280,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the corporation hangar container based on division id (1-7)
+        ///     Get the corporation hangar container based on division id (1-7)
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "divisionId"></param>
+        /// <param name="directEve"></param>
+        /// <param name="divisionId"></param>
         /// <returns></returns>
         internal static DirectContainer GetCorporationHangar(DirectEve directEve, int divisionId)
         {
@@ -326,7 +326,7 @@ namespace DirectEve
             var divisions = directEve.GetLocalSvc("corp").Call("GetDivisionNames");
             for (var i = 1; i <= 7; i++)
             {
-                if (string.Compare(divisionName, (string)divisions.DictionaryItem(i), true) == 0)
+                if (string.Compare(divisionName, (string) divisions.DictionaryItem(i), true) == 0)
                     return GetCorporationHangarArray(directEve, itemId, i);
             }
 
@@ -369,31 +369,31 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the item hangar container
+        ///     Get the item hangar container
         /// </summary>
-        /// <param name = "directEve"></param>
+        /// <param name="directEve"></param>
         /// <returns></returns>
         internal static DirectContainer GetItemHangar(DirectEve directEve)
         {
-            var inventory = GetInventory(directEve, "GetInventory", (long)directEve.Const.ContainerHangar);
-            return new DirectContainer(directEve, inventory, directEve.Const.FlagHangar, "('StationItems");            
+            var inventory = GetInventory(directEve, "GetInventory", (long) directEve.Const.ContainerHangar);
+            return new DirectContainer(directEve, inventory, directEve.Const.FlagHangar, "('StationItems");
         }
 
         /// <summary>
-        ///   Get the ship hangar container
+        ///     Get the ship hangar container
         /// </summary>
-        /// <param name = "directEve"></param>
+        /// <param name="directEve"></param>
         /// <returns></returns>
         internal static DirectContainer GetShipHangar(DirectEve directEve)
         {
-            var inventory = GetInventory(directEve, "GetInventory", (long)directEve.Const.ContainerHangar);
+            var inventory = GetInventory(directEve, "GetInventory", (long) directEve.Const.ContainerHangar);
             return new DirectContainer(directEve, inventory, directEve.Const.FlagHangar, "('StationShips', ");
         }
 
         /// <summary>
-        ///   Get the ship's cargo container
+        ///     Get the ship's cargo container
         /// </summary>
-        /// <param name = "directEve"></param>
+        /// <param name="directEve"></param>
         /// <returns></returns>
         internal static DirectContainer GetShipsCargo(DirectEve directEve)
         {
@@ -405,9 +405,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the ship's ore hold
+        ///     Get the ship's ore hold
         /// </summary>
-        /// <param name = "directEve"></param>
+        /// <param name="directEve"></param>
         /// <returns></returns>
         internal static DirectContainer GetShipsOreHold(DirectEve directEve)
         {
@@ -419,9 +419,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the ship's modules 'container'
+        ///     Get the ship's modules 'container'
         /// </summary>
-        /// <param name = "directEve"></param>
+        /// <param name="directEve"></param>
         /// <returns></returns>
         internal static DirectContainer GetShipsModules(DirectEve directEve)
         {
@@ -433,9 +433,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get the ship's drone container
+        ///     Get the ship's drone container
         /// </summary>
-        /// <param name = "directEve"></param>
+        /// <param name="directEve"></param>
         /// <returns></returns>
         internal static DirectContainer GetShipsDroneBay(DirectEve directEve)
         {
@@ -447,10 +447,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Get a item container
+        ///     Get a item container
         /// </summary>
-        /// <param name = "directEve"></param>
-        /// <param name = "itemId"></param>
+        /// <param name="directEve"></param>
+        /// <param name="itemId"></param>
         /// <returns></returns>
         internal static DirectContainer GetContainer(DirectEve directEve, long itemId)
         {
@@ -459,7 +459,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Stack all the items in the container
+        ///     Stack all the items in the container
         /// </summary>
         /// <returns></returns>
         public bool StackAll()
@@ -472,9 +472,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Add an item to this container
+        ///     Add an item to this container
         /// </summary>
-        /// <param name = "item"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
         public bool Add(DirectItem item)
         {
@@ -482,10 +482,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Add an item to this container
+        ///     Add an item to this container
         /// </summary>
-        /// <param name = "item"></param>
-        /// <param name = "quantity"></param>
+        /// <param name="item"></param>
+        /// <param name="quantity"></param>
         /// <returns></returns>
         public bool Add(DirectItem item, int quantity)
         {
@@ -506,9 +506,9 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Add multiple items to this container
+        ///     Add multiple items to this container
         /// </summary>
-        /// <param name = "items"></param>
+        /// <param name="items"></param>
         /// <returns></returns>
         public bool Add(IEnumerable<DirectItem> items)
         {
@@ -528,12 +528,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Add multiple bookmarks to this container
+        ///     Add multiple bookmarks to this container
         /// </summary>
-        /// <param name = "bookmarkIds"></param>
+        /// <param name="bookmarkIds"></param>
         /// <returns></returns>
         /// <remarks>
-        ///   This only works on shipCargo &amp; hangarFloor containers and only 5 bookmarks per AddBookmarks call
+        ///     This only works on shipCargo &amp; hangarFloor containers and only 5 bookmarks per AddBookmarks call
         /// </remarks>
         public bool AddBookmarks(IEnumerable<long> bookmarkIds)
         {
@@ -544,12 +544,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Jettison item
+        ///     Jettison item
         /// </summary>
-        /// <param name = "itemId"></param>
+        /// <param name="itemId"></param>
         /// <returns></returns>
         /// <remarks>
-        ///   This will fail on items not located in the ship's cargo hold
+        ///     This will fail on items not located in the ship's cargo hold
         /// </remarks>
         public bool Jettison(long itemId)
         {
@@ -557,12 +557,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Jettison items
+        ///     Jettison items
         /// </summary>
-        /// <param name = "itemIds"></param>
+        /// <param name="itemIds"></param>
         /// <returns></returns>
         /// <remarks>
-        ///   This will fail on items not located in the ship's cargo hold
+        ///     This will fail on items not located in the ship's cargo hold
         /// </remarks>
         public bool Jettison(IEnumerable<long> itemIds)
         {

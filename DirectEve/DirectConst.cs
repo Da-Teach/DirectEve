@@ -7,9 +7,10 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     internal class DirectConst : DirectObject
     {
@@ -181,6 +182,7 @@ namespace DirectEve
         {
             get { return Const.Attribute("mapWormholeSystemMin"); }
         }
+
         public PyObject MapWormholeSystemMax
         {
             get { return Const.Attribute("mapWormholeSystemMax"); }
@@ -190,7 +192,6 @@ namespace DirectEve
         {
             get { return Const.Attribute("attributeEntityKillBounty"); }
         }
-
 
 
         public PyObject AttributeShieldCapacity

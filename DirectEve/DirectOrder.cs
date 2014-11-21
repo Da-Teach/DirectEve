@@ -7,10 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectOrder : DirectObject
     {
@@ -23,16 +24,16 @@ namespace DirectEve
             Price = (double) pyOrder.Attribute("price");
             VolumeRemaining = (int) pyOrder.Attribute("volRemaining");
             TypeId = (int) pyOrder.Attribute("typeID");
-            if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeSolarSystem)
+            if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeSolarSystem)
                 Range = DirectOrderRange.SolarSystem;
-            else if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeConstellation)
+            else if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeConstellation)
                 Range = DirectOrderRange.Constellation;
-            else if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeRegion)
+            else if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeRegion)
                 Range = DirectOrderRange.Region;
-            else if ((int)pyOrder.Attribute("range") == (int)DirectEve.Const.RangeStation)
+            else if ((int) pyOrder.Attribute("range") == (int) DirectEve.Const.RangeStation)
                 Range = DirectOrderRange.Station;
             else
-                RangeAbsolute = (int)pyOrder.Attribute("range");
+                RangeAbsolute = (int) pyOrder.Attribute("range");
 
             OrderId = (long) pyOrder.Attribute("orderID");
             VolumeEntered = (int) pyOrder.Attribute("volEntered");
@@ -68,8 +69,8 @@ namespace DirectEve
             var pyRange = DirectEve.GetRange(range);
             return DirectEve.ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange);
         }
-        
-        
+
+
         // def CancelOrder(self, orderID, regionID):
         public bool CancelOrder()
         {
@@ -100,7 +101,7 @@ namespace DirectEve
                 DirectEve.Log("Trying to modify a invalid order");
                 return false;
             }
-            
+
             return DirectEve.ThreadedLocalSvcCall("marketQuote", "ModifyOrder", PyOrder, newPrice);
         }
     }

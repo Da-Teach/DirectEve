@@ -1,58 +1,43 @@
-﻿/*
-    EasyHook - The reinvention of Windows API hooking
- 
-    Copyright (C) 2009 Christoph Husse
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-    Please visit http://www.codeplex.com/easyhook for more information
-    about the project and latest updates.
-*/
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Reflection;
-using System.Threading;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace EasyHook
 {
-    #pragma warning disable 1591
-    
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Threading;
+
+#pragma warning disable 1591
+
     public class HelperServiceInterface : MarshalByRefObject
     {
         public void InjectEx(
-                Int32 InHostPID,
-                Int32 InTargetPID,
-                Int32 InWakeUpTID,
-                Int32 InNativeOptions,
-                String InLibraryPath_x86,
-                String InLibraryPath_x64,
-                Boolean InCanBypassWOW64,
-                Boolean InCanCreateService,
-                Boolean InRequireStrongName,
-                params Object[] InPassThruArgs)
+            Int32 InHostPID,
+            Int32 InTargetPID,
+            Int32 InWakeUpTID,
+            Int32 InNativeOptions,
+            String InLibraryPath_x86,
+            String InLibraryPath_x64,
+            Boolean InCanBypassWOW64,
+            Boolean InCanCreateService,
+            Boolean InRequireStrongName,
+            params Object[] InPassThruArgs)
         {
             RemoteHooking.InjectEx(
                 InHostPID,
                 InTargetPID,
                 InWakeUpTID,
                 InNativeOptions,
-                InLibraryPath_x86, 
-                InLibraryPath_x64, 
+                InLibraryPath_x86,
+                InLibraryPath_x64,
                 InCanBypassWOW64,
                 InCanCreateService,
                 InRequireStrongName,
@@ -60,11 +45,11 @@ namespace EasyHook
         }
 
         public Object ExecuteAsService<TClass>(
-                String InMethodName,
-                Object[] InParams)
+            String InMethodName,
+            Object[] InParams)
         {
-            return typeof(TClass).InvokeMember(InMethodName, BindingFlags.InvokeMethod | BindingFlags.Public |
-                BindingFlags.Static, null, null, InParams);
+            return typeof (TClass).InvokeMember(InMethodName, BindingFlags.InvokeMethod | BindingFlags.Public |
+                                                              BindingFlags.Static, null, null, InParams);
         }
 
         private class InjectionWait
@@ -155,6 +140,8 @@ namespace EasyHook
             WaitInfo.Completion.Set();
         }
 
-        public void Ping() { }
+        public void Ping()
+        {
+        }
     }
 }

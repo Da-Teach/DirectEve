@@ -1,11 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AphackInject
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.InteropServices;
+
     public static class Py
     {
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -92,7 +100,7 @@ namespace AphackInject
                 try
                 {
                     var s = type.ToString();
-                    type = (PyType)Enum.Parse(typeof(PyType), "Derived" + s);
+                    type = (PyType) Enum.Parse(typeof (PyType), "Derived" + s);
                 }
                 catch
                 {
@@ -355,7 +363,7 @@ namespace AphackInject
         }
 
 
-        static void HandlePythonError()
+        private static void HandlePythonError()
         {
             if (PyErr_Occurred() != IntPtr.Zero)
                 PyErr_Clear();

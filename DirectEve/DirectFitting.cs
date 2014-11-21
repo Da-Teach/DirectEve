@@ -7,10 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Collections.Generic;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectFitting : DirectObject
     {
@@ -43,7 +44,7 @@ namespace DirectEve
         public List<DirectItem> Modules { get; private set; }
 
         /// <summary>
-        ///   Try to fit this fitting
+        ///     Try to fit this fitting
         /// </summary>
         /// <returns></returns>
         public bool Fit()

@@ -7,10 +7,11 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System.Linq;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectAgentResponse : DirectObject
     {

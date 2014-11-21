@@ -1,36 +1,25 @@
-﻿/*
-    EasyHook - The reinvention of Windows API hooking
- 
-    Copyright (C) 2009 Christoph Husse
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-    Please visit http://www.codeplex.com/easyhook for more information
-    about the project and latest updates.
-*/
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using System.Runtime.InteropServices;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace EasyHook
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Reflection;
+    using System.Runtime.InteropServices;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
+    using System.Text;
+
 #pragma warning disable 1591
 #pragma warning disable 0618
 #pragma warning disable 0028
@@ -40,7 +29,7 @@ namespace EasyHook
         #region Private Classes
 
         [StructLayout(LayoutKind.Sequential)]
-        class REMOTE_ENTRY_INFO : RemoteHooking.IContext
+        private class REMOTE_ENTRY_INFO : RemoteHooking.IContext
         {
             public Int32 m_HostPID;
             public IntPtr UserData;
@@ -48,17 +37,19 @@ namespace EasyHook
 
             #region IContext Members
 
-            public Int32 HostPID { get { return m_HostPID; } }
+            public Int32 HostPID
+            {
+                get { return m_HostPID; }
+            }
 
             #endregion
         };
 
         /// <summary>
-        /// Wraps the data needed for the connection to the host.
+        ///     Wraps the data needed for the connection to the host.
         /// </summary>
         private class HostConnectionData
         {
-
             #region Enums
 
             public enum ConnectionState
@@ -82,7 +73,7 @@ namespace EasyHook
             #region Properties
 
             /// <summary>
-            /// Gets the state of the current <see cref="HostConnectionData"/>.
+            ///     Gets the state of the current <see cref="HostConnectionData" />.
             /// </summary>
             public ConnectionState State
             {
@@ -90,7 +81,7 @@ namespace EasyHook
             }
 
             /// <summary>
-            /// Gets the unmanaged data containing the pointer to the memory block containing <see cref="RemoteInfo"/>;
+            ///     Gets the unmanaged data containing the pointer to the memory block containing <see cref="RemoteInfo" />;
             /// </summary>
             public REMOTE_ENTRY_INFO UnmanagedInfo
             {
@@ -124,7 +115,7 @@ namespace EasyHook
             #region Public Methods
 
             /// <summary>
-            /// Loads <see cref="HostConnectionData"/> from the <see cref="IntPtr"/> specified.
+            ///     Loads <see cref="HostConnectionData" /> from the <see cref="IntPtr" /> specified.
             /// </summary>
             /// <param name="unmanagedInfoPointer"></param>
             public static HostConnectionData LoadData(IntPtr unmanagedInfoPointer)
@@ -140,14 +131,14 @@ namespace EasyHook
                     Marshal.PtrToStructure(unmanagedInfoPointer, data._unmanagedInfo);
                     using (Stream passThruStream = new MemoryStream())
                     {
-                        byte[] passThruBytes = new byte[data._unmanagedInfo.UserDataSize];
-                        BinaryFormatter format = new BinaryFormatter();
+                        var passThruBytes = new byte[data._unmanagedInfo.UserDataSize];
+                        var format = new BinaryFormatter();
                         // Workaround for deserialization when not using GAC registration
                         format.Binder = new AllowAllAssemblyVersionsDeserializationBinder();
                         Marshal.Copy(data._unmanagedInfo.UserData, passThruBytes, 0, data._unmanagedInfo.UserDataSize);
                         passThruStream.Write(passThruBytes, 0, passThruBytes.Length);
                         passThruStream.Position = 0;
-                        data._remoteInfo = (ManagedRemoteInfo)format.Deserialize(passThruStream);
+                        data._remoteInfo = (ManagedRemoteInfo) format.Deserialize(passThruStream);
                     }
                     // Connect the HelperServiceInterface
                     data._helperInterface = RemoteHooking.IpcConnectClient<HelperServiceInterface>(data._remoteInfo.ChannelName);
@@ -156,13 +147,13 @@ namespace EasyHook
                     if (!_connectedChannels.Contains(data._remoteInfo.ChannelName))
                     {
                         _connectedChannels.Add(data._remoteInfo.ChannelName);
-                        return new HostConnectionData { _state = ConnectionState.NoChannel };
+                        return new HostConnectionData {_state = ConnectionState.NoChannel};
                     }
                 }
                 catch (Exception ExtInfo)
                 {
                     Config.PrintError(ExtInfo.ToString());
-                    return new HostConnectionData { _state = ConnectionState.Invalid };
+                    return new HostConnectionData {_state = ConnectionState.Invalid};
                 }
                 return data;
             }
@@ -171,15 +162,16 @@ namespace EasyHook
         }
 
         /// <summary>
-        /// When not using the GAC, the BinaryFormatter fails to recognise the InParam
-        /// when attempting to deserialise. 
-        /// 
-        /// A custom DeserializationBinder works around this (see http://spazzarama.com/2009/06/25/binary-deserialize-unable-to-find-assembly/)
+        ///     When not using the GAC, the BinaryFormatter fails to recognise the InParam
+        ///     when attempting to deserialise.
+        ///     A custom DeserializationBinder works around this (see
+        ///     http://spazzarama.com/2009/06/25/binary-deserialize-unable-to-find-assembly/)
         /// </summary>
         private sealed class AllowAllAssemblyVersionsDeserializationBinder :
-            System.Runtime.Serialization.SerializationBinder
+            SerializationBinder
         {
             private Assembly _assembly;
+
             public AllowAllAssemblyVersionsDeserializationBinder()
                 : this(Assembly.GetExecutingAssembly())
             {
@@ -218,10 +210,10 @@ namespace EasyHook
         public static int Main(String inParam)
         {
             if (inParam == null) return 0;
-            var ptr = (IntPtr)Int64.Parse(inParam, System.Globalization.NumberStyles.HexNumber);
+            var ptr = (IntPtr) Int64.Parse(inParam, NumberStyles.HexNumber);
             var connection = HostConnectionData.LoadData(ptr);
             if (connection.State != HostConnectionData.ConnectionState.Valid)
-                return (int)connection.State;
+                return (int) connection.State;
 
             // Adjust host PID in case of WOW64 bypass and service help...
             connection.UnmanagedInfo.m_HostPID = connection.RemoteInfo.HostPID;
@@ -232,8 +224,8 @@ namespace EasyHook
                 var paramArray = new object[1 + connection.RemoteInfo.UserParams.Length];
                 // The next type cast is not redundant because the object needs to be an explicit IContext
                 // when passed as a parameter to the IEntryPoint constructor and Run() methods.
-                paramArray[0] = (RemoteHooking.IContext)connection.UnmanagedInfo;
-                for (int i = 0; i < connection.RemoteInfo.UserParams.Length; i++)
+                paramArray[0] = (RemoteHooking.IContext) connection.UnmanagedInfo;
+                for (var i = 0; i < connection.RemoteInfo.UserParams.Length; i++)
                     paramArray[i + 1] = connection.RemoteInfo.UserParams[i];
                 // Note: at this point all but the first parameter are still binary encoded.
                 // Load the user library and initialize the IEntryPoint.
@@ -264,14 +256,20 @@ namespace EasyHook
         }
 
         /// <summary>
-        /// Loads the user library (trying the strong name first, then the file name),
-        /// creates an instance for the <see cref="IEntryPoint"/> specified in the library
-        /// and invokes the Run() method specified in that instance.
+        ///     Loads the user library (trying the strong name first, then the file name),
+        ///     creates an instance for the <see cref="IEntryPoint" /> specified in the library
+        ///     and invokes the Run() method specified in that instance.
         /// </summary>
-        /// <param name="userLibraryStrongName">The assembly strong name provided by the user, located in the global assembly cache.</param>
+        /// <param name="userLibraryStrongName">
+        ///     The assembly strong name provided by the user, located in the global assembly
+        ///     cache.
+        /// </param>
         /// <param name="userLibraryFileName">The assembly file name provided by the user to be loaded.</param>
-        /// <param name="paramArray">Array of parameters to use with the constructor and with the Run() method. Note that all but the first parameter should be binary encoded.</param>
-        /// <param name="helperServiceInterface"><see cref="HelperServiceInterface"/> to use for reporting to the host side.</param>
+        /// <param name="paramArray">
+        ///     Array of parameters to use with the constructor and with the Run() method. Note that all but
+        ///     the first parameter should be binary encoded.
+        /// </param>
+        /// <param name="helperServiceInterface"><see cref="HelperServiceInterface" /> to use for reporting to the host side.</param>
         /// <returns>The exit code to be returned by the main() method.</returns>
         private static int LoadUserLibrary(string userLibraryStrongName, string userLibraryFileName, object[] paramArray, HelperServiceInterface helperServiceInterface)
         {
@@ -287,16 +285,16 @@ namespace EasyHook
 
                 // Only attempt to deserialise parameters after we have loaded the userAssembly
                 // this allows types from the userAssembly to be passed as parameters
-                BinaryFormatter format = new BinaryFormatter();
+                var format = new BinaryFormatter();
                 format.Binder = new AllowAllAssemblyVersionsDeserializationBinder(entryPoint.Assembly);
-                for (int i = 1; i < paramArray.Length; i++)
+                for (var i = 1; i < paramArray.Length; i++)
                 {
-                    using (MemoryStream ms = new MemoryStream((byte[])paramArray[i]))
+                    using (var ms = new MemoryStream((byte[]) paramArray[i]))
                     {
                         paramArray[i] = format.Deserialize(ms);
                     }
                 }
-                
+
                 // Determine if a Run() method is defined with matching parameters, before initializing an instance for the type.
                 runMethod = FindMatchingMethod(entryPoint, "Run", paramArray);
                 if (runMethod == null)
@@ -338,15 +336,19 @@ namespace EasyHook
         }
 
         /// <summary>
-        /// Finds the <see cref="IEntryPoint"/> in the specified <see cref="Assembly"/>.
+        ///     Finds the <see cref="IEntryPoint" /> in the specified <see cref="Assembly" />.
         /// </summary>
         /// <exception cref="EntryPointNotFoundException">
-        /// An <see cref="EntryPointNotFoundException"/> is thrown if the given user library does not export a proper type implementing
-        /// the <see cref="IEntryPoint"/> interface.
+        ///     An <see cref="EntryPointNotFoundException" /> is thrown if the given user library does not export a proper type
+        ///     implementing
+        ///     the <see cref="IEntryPoint" /> interface.
         /// </exception>
         /// <param name="userAssemblyStrongName">The strong name of the assembly provided by the user.</param>
         /// <param name="userAssemblyFileName">The file name of the assembly provided by the user.</param>
-        /// <returns>The <see cref="Type"/> functioning as <see cref="IEntryPoint"/> for the user provided <see cref="Assembly"/>.</returns>
+        /// <returns>
+        ///     The <see cref="Type" /> functioning as <see cref="IEntryPoint" /> for the user provided
+        ///     <see cref="Assembly" />.
+        /// </returns>
         private static Type FindEntryPoint(string userAssemblyStrongName, string userAssemblyFileName)
         {
             Assembly userAssembly = null;
@@ -376,7 +378,7 @@ namespace EasyHook
                 catch (Exception e)
                 {
                     Config.PrintComment("FAIL: Assembly.LoadFrom({0}) - {1}", userAssemblyFileName,
-                                        e.ToString());
+                        e.ToString());
                 }
             }
 
@@ -388,7 +390,7 @@ namespace EasyHook
 
             // Find the first EasyHook.IEntryPoint
             var exportedTypes = userAssembly.GetExportedTypes();
-            for (int i = 0; i < exportedTypes.Length; i++)
+            for (var i = 0; i < exportedTypes.Length; i++)
             {
                 if (exportedTypes[i].GetInterface("EasyHook.IEntryPoint") != null)
                     return exportedTypes[i];
@@ -397,12 +399,13 @@ namespace EasyHook
         }
 
         /// <summary>
-        /// Finds a user defined Run() method in the specified <see cref="Type"/> matching the specified <paramref name="paramArray"/>.
+        ///     Finds a user defined Run() method in the specified <see cref="Type" /> matching the specified
+        ///     <paramref name="paramArray" />.
         /// </summary>
         /// <param name="methodName">Name of the method to search.</param>
-        /// <param name="objectType"><see cref="Type"/> to extract the method from.</param>
+        /// <param name="objectType"><see cref="Type" /> to extract the method from.</param>
         /// <param name="paramArray">Array of parameters to match to the method's defined parameters.</param>
-        /// <returns><see cref="MethodInfo"/> for the matching method, if any.</returns>
+        /// <returns><see cref="MethodInfo" /> for the matching method, if any.</returns>
         private static MethodInfo FindMatchingMethod(Type objectType, string methodName, object[] paramArray)
         {
             var methods = objectType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
@@ -416,7 +419,7 @@ namespace EasyHook
         }
 
         /// <summary>
-        /// Initializes an instance from the specified <see cref="Type"/> using the specified <paramref name="parameters"/>.
+        ///     Initializes an instance from the specified <see cref="Type" /> using the specified <paramref name="parameters" />.
         /// </summary>
         /// <param name="objectType"></param>
         /// <param name="parameters"></param>
@@ -433,7 +436,8 @@ namespace EasyHook
         }
 
         /// <summary>
-        /// Returns whether the specified <paramref name="paramArray"/> can be used as parameters when invoking the specified <paramref name="method"/>.
+        ///     Returns whether the specified <paramref name="paramArray" /> can be used as parameters when invoking the specified
+        ///     <paramref name="method" />.
         /// </summary>
         /// <param name="method"></param>
         /// <param name="paramArray"></param>
@@ -442,7 +446,7 @@ namespace EasyHook
         {
             var parameters = method.GetParameters();
             if (parameters.Length != paramArray.Length) return false;
-            for (int i = 0; i < paramArray.Length; i++)
+            for (var i = 0; i < paramArray.Length; i++)
             {
                 if (!parameters[i].ParameterType.IsInstanceOfType(paramArray[i]))
                     return false;
@@ -451,7 +455,8 @@ namespace EasyHook
         }
 
         /// <summary>
-        /// Constructs a message for a <see cref="MissingMethodException"/> containing more specific information about the expected paramaters.
+        ///     Constructs a message for a <see cref="MissingMethodException" /> containing more specific information about the
+        ///     expected paramaters.
         /// </summary>
         /// <param name="methodName">Name of the missing method.</param>
         /// <param name="paramArray">Array of the expected parameters.</param>
@@ -463,6 +468,7 @@ namespace EasyHook
                 msg.Append(param.GetType() + ", ");
             return msg.ToString(0, msg.Length - 2) + ") method in the 'EasyHook.IEntryPoint' interface.";
         }
+
         #endregion
     }
 }

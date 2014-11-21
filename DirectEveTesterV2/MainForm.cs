@@ -1,28 +1,37 @@
-﻿namespace DirectEveTesterV2
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
+
+namespace DirectEveTesterV2
 {
     using System;
-    using System.Reflection;
     using System.Linq;
-    using DirectEve;
+    using System.Reflection;
     using System.Windows.Forms;
+    using DirectEve;
     using InnerSpaceAPI;
-    using System.Collections.Generic;
 
     public partial class MainForm : Form
     {
         [AttributeUsage(AttributeTargets.All)]
-        public class Test : System.Attribute
+        public class Test : Attribute
         {
             public readonly string _desc;
 
             public Test(string desc)
             {
-                this._desc = desc;
+                _desc = desc;
             }
 
             public Test()
             {
-                this._desc = null;
+                _desc = null;
             }
         }
 
@@ -42,11 +51,11 @@
         {
             InitializeComponent();
 
-            Type t = typeof(MainForm);
-            foreach (MethodInfo mi in t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
+            var t = typeof (MainForm);
+            foreach (var mi in t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
             {
-                object[] attrs = mi.GetCustomAttributes(typeof(Test),false);
-                foreach (object attr in attrs)
+                var attrs = mi.GetCustomAttributes(typeof (Test), false);
+                foreach (var attr in attrs)
                 {
                     TestStatesComboBox.Items.Add(mi.Name);
                 }
@@ -91,12 +100,12 @@
         {
             if (!String.IsNullOrEmpty(_activeTest))
             {
-                Type t = typeof(MainForm);
-                MethodInfo mi = t.GetMethod(_activeTest, BindingFlags.NonPublic | BindingFlags.Instance);
-                object[] attrs = mi.GetCustomAttributes(typeof(Test),false);
-                foreach (object attr in attrs)
+                var t = typeof (MainForm);
+                var mi = t.GetMethod(_activeTest, BindingFlags.NonPublic | BindingFlags.Instance);
+                var attrs = mi.GetCustomAttributes(typeof (Test), false);
+                foreach (var attr in attrs)
                 {
-                    Test ta = (Test)attr;
+                    var ta = (Test) attr;
                     if (String.IsNullOrEmpty(ta._desc))
                     {
                         Log("Running {0} test...", mi.Name);
@@ -123,7 +132,7 @@
                 return;
             }
 
-            for (int i = 0; i < cargo.Items.Count; i++)
+            for (var i = 0; i < cargo.Items.Count; i++)
             {
                 var item = cargo.Items[i];
                 LogItem("cargo[" + i + "].{0}: {1}", item);
@@ -196,7 +205,7 @@
 
             var folder = _directEve.BookmarkFolders.FirstOrDefault(f => f.Name == "Wassup Folder");
 
-            _directEve.BookmarkCurrentLocation("Wassup", "This is the drinking bar", folder != null ? folder.Id : (long?)null);
+            _directEve.BookmarkCurrentLocation("Wassup", "This is the drinking bar", folder != null ? folder.Id : (long?) null);
         }
 
         [Test("Refresh bookmarks")]
@@ -221,8 +230,8 @@
                 Log("BookmarkFolder[{0}].Name: {1}", i, folder.Name);
                 Log("BookmarkFolder[{0}].OwnerId: {1}", i, folder.OwnerId);
                 Log("BookmarkFolder[{0}].CreatorId: {1}", i, folder.CreatorId);
-            }    
-                
+            }
+
             for (var i = 0; i < _directEve.Bookmarks.Count; i++)
             {
                 var bookmark = _directEve.Bookmarks[i];
@@ -286,7 +295,7 @@
                 LogItem("Drone[" + count + "].{0}: {1}", drone);
                 count++;
             }
-            
+
             if (count == 0)
             {
                 Log("Can't launch drones, no drones in ship");
@@ -301,7 +310,7 @@
         {
             _state = TestState.Idle;
 
-            foreach(var entity in _directEve.Entities)
+            foreach (var entity in _directEve.Entities)
                 LogEntity("Entity[" + entity.Id + "].{0}: {1}", entity);
         }
 
@@ -330,7 +339,7 @@
         {
             _state = TestState.Idle;
 
-            for (int i = 0; i < _directEve.Windows.Count; i++)
+            for (var i = 0; i < _directEve.Windows.Count; i++)
             {
                 var window = _directEve.Windows[i];
                 Log("Window[" + i + "].Id: {0}", window.Id);
@@ -510,7 +519,7 @@
             var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
             if (scanner != null && scanner.IsReady)
             {
-                List<DirectSystemScanResult> results = scanner.SystemScanResults;
+                var results = scanner.SystemScanResults;
                 if (results != null)
                 {
                     foreach (var result in scanner.SystemScanResults)
@@ -552,7 +561,7 @@
             var scanner = _directEve.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
             if (scanner != null && scanner.IsReady)
             {
-                scanner.Close();            
+                scanner.Close();
             }
         }
 

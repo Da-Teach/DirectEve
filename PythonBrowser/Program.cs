@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace PythonBrowser
 {
     using System;
@@ -15,7 +16,7 @@ namespace PythonBrowser
     internal static class Program
     {
         /// <summary>
-        ///   The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
         private static void Main()

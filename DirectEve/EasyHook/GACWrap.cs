@@ -1,16 +1,18 @@
-﻿//-------------------------------------------------------------
-// GACWrap.cs
-//
-// This implements managed wrappers to GAC API Interfaces
-// Adapted from: http://blogs.msdn.com/b/junfeng/archive/2004/09/14/229649.aspx
-//-------------------------------------------------------------
-
-using System;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace System.GACManagedAccess
 {
+    using Runtime.InteropServices;
+    using Text;
+
     //-------------------------------------------------------------
     // Interfaces defined by fusion
     //-------------------------------------------------------------
@@ -19,59 +21,57 @@ namespace System.GACManagedAccess
     {
         [PreserveSig()]
         int UninstallAssembly(
-                            int flags,
-                            [MarshalAs(UnmanagedType.LPWStr)]
-                            String assemblyName,
-                            InstallReference refData,
-                            out AssemblyCacheUninstallDisposition disposition);
+            int flags,
+            [MarshalAs(UnmanagedType.LPWStr)] String assemblyName,
+            InstallReference refData,
+            out AssemblyCacheUninstallDisposition disposition);
 
         [PreserveSig()]
         int QueryAssemblyInfo(
-                            int flags,
-                            [MarshalAs(UnmanagedType.LPWStr)]
-                            String assemblyName,
-                            ref AssemblyInfo assemblyInfo);
+            int flags,
+            [MarshalAs(UnmanagedType.LPWStr)] String assemblyName,
+            ref AssemblyInfo assemblyInfo);
+
         [PreserveSig()]
         int Reserved(
-                            int flags,
-                            IntPtr pvReserved,
-                            out Object ppAsmItem,
-                            [MarshalAs(UnmanagedType.LPWStr)]
-                            String assemblyName);
+            int flags,
+            IntPtr pvReserved,
+            out Object ppAsmItem,
+            [MarshalAs(UnmanagedType.LPWStr)] String assemblyName);
+
         [PreserveSig()]
         int Reserved(out Object ppAsmScavenger);
 
         [PreserveSig()]
         int InstallAssembly(
-                            int flags,
-                            [MarshalAs(UnmanagedType.LPWStr)]
-                            String assemblyFilePath,
-                            InstallReference refData);
-    }// IAssemblyCache
+            int flags,
+            [MarshalAs(UnmanagedType.LPWStr)] String assemblyFilePath,
+            InstallReference refData);
+    } // IAssemblyCache
 
     [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("CD193BC0-B4BC-11d2-9833-00C04FC31D2E")]
     internal interface IAssemblyName
     {
         [PreserveSig()]
         int SetProperty(
-                int PropertyId,
-                IntPtr pvProperty,
-                int cbProperty);
+            int PropertyId,
+            IntPtr pvProperty,
+            int cbProperty);
 
         [PreserveSig()]
         int GetProperty(
-                int PropertyId,
-                IntPtr pvProperty,
-                ref int pcbProperty);
+            int PropertyId,
+            IntPtr pvProperty,
+            ref int pcbProperty);
 
         [PreserveSig()]
         int Finalize();
 
         [PreserveSig()]
         int GetDisplayName(
-                StringBuilder pDisplayName,
-                ref int pccDisplayName,
-                int displayFlags);
+            StringBuilder pDisplayName,
+            ref int pccDisplayName,
+            int displayFlags);
 
         [PreserveSig()]
         int Reserved(ref Guid guid,
@@ -85,35 +85,38 @@ namespace System.GACManagedAccess
 
         [PreserveSig()]
         int GetName(
-                ref int pccBuffer,
-                StringBuilder pwzName);
+            ref int pccBuffer,
+            StringBuilder pwzName);
 
         [PreserveSig()]
         int GetVersion(
-                out int versionHi,
-                out int versionLow);
+            out int versionHi,
+            out int versionLow);
+
         [PreserveSig()]
         int IsEqual(
-                IAssemblyName pAsmName,
-                int cmpFlags);
+            IAssemblyName pAsmName,
+            int cmpFlags);
 
         [PreserveSig()]
         int Clone(out IAssemblyName pAsmName);
-    }// IAssemblyName
+    } // IAssemblyName
 
     [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("21b8916c-f28e-11d2-a473-00c04f8ef448")]
     internal interface IAssemblyEnum
     {
         [PreserveSig()]
         int GetNextAssembly(
-                IntPtr pvReserved,
-                out IAssemblyName ppName,
-                int flags);
+            IntPtr pvReserved,
+            out IAssemblyName ppName,
+            int flags);
+
         [PreserveSig()]
         int Reset();
+
         [PreserveSig()]
         int Clone(out IAssemblyEnum ppEnum);
-    }// IAssemblyEnum
+    } // IAssemblyEnum
 
     [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("582dac66-e678-449f-aba6-6faaec8a9394")]
     internal interface IInstallReferenceItem
@@ -127,26 +130,26 @@ namespace System.GACManagedAccess
         // This cannot be marshaled directly - must use IntPtr 
         [PreserveSig()]
         int GetReference(
-                out IntPtr pRefData,
-                int flags,
-                IntPtr pvReserced);
-    }// IInstallReferenceItem
+            out IntPtr pRefData,
+            int flags,
+            IntPtr pvReserced);
+    } // IInstallReferenceItem
 
     [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("56b1a988-7c0c-4aa2-8639-c3eb5a90226f")]
     internal interface IInstallReferenceEnum
     {
         [PreserveSig()]
         int GetNextInstallReferenceItem(
-                out IInstallReferenceItem ppRefItem,
-                int flags,
-                IntPtr pvReserced);
-    }// IInstallReferenceEnum
+            out IInstallReferenceItem ppRefItem,
+            int flags,
+            IntPtr pvReserced);
+    } // IInstallReferenceEnum
 
     public enum AssemblyCommitFlags
     {
         Default = 1,
         Force = 2
-    }// enum AssemblyCommitFlags
+    } // enum AssemblyCommitFlags
 
     public enum AssemblyCacheUninstallDisposition
     {
@@ -182,10 +185,10 @@ namespace System.GACManagedAccess
         // This enum will change in the future to include
         // more attributes.
         ALL = VERSION
-                                    | CULTURE
-                                    | PUBLIC_KEY_TOKEN
-                                    | PROCESSORARCHITECTURE
-                                    | RETARGETABLE
+              | CULTURE
+              | PUBLIC_KEY_TOKEN
+              | PROCESSORARCHITECTURE
+              | RETARGETABLE
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -193,10 +196,12 @@ namespace System.GACManagedAccess
     {
         public InstallReference(Guid guid, String id, String data)
         {
-            cbSize = (int)(2 * IntPtr.Size + 16 + (id.Length + data.Length) * 2);
+            cbSize = (int) (2*IntPtr.Size + 16 + (id.Length + data.Length)*2);
             flags = 0;
             // quiet compiler warning 
-            if (flags == 0) { }
+            if (flags == 0)
+            {
+            }
             guidScheme = guid;
             identifier = id;
             description = data;
@@ -217,13 +222,11 @@ namespace System.GACManagedAccess
             get { return description; }
         }
 
-        int cbSize;
-        int flags;
-        Guid guidScheme;
-        [MarshalAs(UnmanagedType.LPWStr)]
-        String identifier;
-        [MarshalAs(UnmanagedType.LPWStr)]
-        String description;
+        private int cbSize;
+        private int flags;
+        private Guid guidScheme;
+        [MarshalAs(UnmanagedType.LPWStr)] private String identifier;
+        [MarshalAs(UnmanagedType.LPWStr)] private String description;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -232,8 +235,7 @@ namespace System.GACManagedAccess
         public int cbAssemblyInfo; // size of this structure for future expansion
         public int assemblyFlags;
         public long assemblySizeInKB;
-        [MarshalAs(UnmanagedType.LPWStr)]
-        public String currentAssemblyPath;
+        [MarshalAs(UnmanagedType.LPWStr)] public String currentAssemblyPath;
         public int cchBuf; // size of path buf.
     }
 
@@ -248,12 +250,12 @@ namespace System.GACManagedAccess
                     guid.Equals(Guid.Empty));
         }
 
-        public readonly static Guid UninstallSubkeyGuid = new Guid("8cedc215-ac4b-488b-93c0-a50a49cb2fb8");
-        public readonly static Guid FilePathGuid = new Guid("b02f9d65-fb77-4f7a-afa5-b391309f11c9");
-        public readonly static Guid OpaqueGuid = new Guid("2ec93463-b0c3-45e1-8364-327e96aea856");
+        public static readonly Guid UninstallSubkeyGuid = new Guid("8cedc215-ac4b-488b-93c0-a50a49cb2fb8");
+        public static readonly Guid FilePathGuid = new Guid("b02f9d65-fb77-4f7a-afa5-b391309f11c9");
+        public static readonly Guid OpaqueGuid = new Guid("2ec93463-b0c3-45e1-8364-327e96aea856");
         // these GUID cannot be used for installing into GAC.
-        public readonly static Guid MsiGuid = new Guid("25df0fc1-7f97-4070-add7-4b13bbfd7cb8");
-        public readonly static Guid OsInstallGuid = new Guid("d16d444c-56d8-11d5-882d-0080c847b195");
+        public static readonly Guid MsiGuid = new Guid("25df0fc1-7f97-4070-add7-4b13bbfd7cb8");
+        public static readonly Guid OsInstallGuid = new Guid("d16d444c-56d8-11d5-882d-0080c847b195");
     }
 
     [ComVisible(false)]
@@ -269,12 +271,12 @@ namespace System.GACManagedAccess
 
             IAssemblyCache ac = null;
 
-            int hr = 0;
+            var hr = 0;
 
             hr = Utils.CreateAssemblyCache(out ac, 0);
             if (hr >= 0)
             {
-                hr = ac.InstallAssembly((int)flags, assemblyPath, reference);
+                hr = ac.InstallAssembly((int) flags, assemblyPath, reference);
             }
 
             if (hr < 0)
@@ -284,7 +286,7 @@ namespace System.GACManagedAccess
         }
 
         /// <summary>
-        /// Install the provided assemblies to GAC
+        ///     Install the provided assemblies to GAC
         /// </summary>
         /// <param name="assemblyPaths"></param>
         /// <param name="reference"></param>
@@ -299,14 +301,14 @@ namespace System.GACManagedAccess
 
             IAssemblyCache ac = null;
 
-            int hr = 0;
+            var hr = 0;
 
             hr = Utils.CreateAssemblyCache(out ac, 0);
             if (hr >= 0)
             {
                 foreach (var assemblyPath in assemblyPaths)
                 {
-                    hr = ac.InstallAssembly((int)flags, assemblyPath, reference);
+                    hr = ac.InstallAssembly((int) flags, assemblyPath, reference);
                     if (hr < 0)
                     {
                         Marshal.ThrowExceptionForHR(hr);
@@ -321,7 +323,7 @@ namespace System.GACManagedAccess
         // If assemblyName is not fully specified, a random matching assembly will be uninstalled. 
         public static void UninstallAssembly(String assemblyName, InstallReference reference, out AssemblyCacheUninstallDisposition disp)
         {
-            AssemblyCacheUninstallDisposition dispResult = AssemblyCacheUninstallDisposition.Uninstalled;
+            var dispResult = AssemblyCacheUninstallDisposition.Uninstalled;
             if (reference != null)
             {
                 if (!InstallReferenceGuid.IsValidGuidScheme(reference.GuidScheme))
@@ -330,7 +332,7 @@ namespace System.GACManagedAccess
 
             IAssemblyCache ac = null;
 
-            int hr = Utils.CreateAssemblyCache(out ac, 0);
+            var hr = Utils.CreateAssemblyCache(out ac, 0);
             if (hr >= 0)
             {
                 hr = ac.UninstallAssembly(0, assemblyName, reference, out dispResult);
@@ -345,14 +347,14 @@ namespace System.GACManagedAccess
         }
 
         /// <summary>
-        /// Uninstal the provided assembly names from the GAC
+        ///     Uninstal the provided assembly names from the GAC
         /// </summary>
         /// <param name="assemblyNames"></param>
         /// <param name="reference"></param>
         /// <param name="disp"></param>
         public static void UninstallAssemblies(String[] assemblyNames, InstallReference reference, out AssemblyCacheUninstallDisposition[] disp)
         {
-            AssemblyCacheUninstallDisposition dispResult = AssemblyCacheUninstallDisposition.Uninstalled;
+            var dispResult = AssemblyCacheUninstallDisposition.Uninstalled;
             if (reference != null)
             {
                 if (!InstallReferenceGuid.IsValidGuidScheme(reference.GuidScheme))
@@ -362,7 +364,7 @@ namespace System.GACManagedAccess
             IAssemblyCache ac = null;
 
             disp = new AssemblyCacheUninstallDisposition[assemblyNames.Length];
-            int hr = Utils.CreateAssemblyCache(out ac, 0);
+            var hr = Utils.CreateAssemblyCache(out ac, 0);
             if (hr >= 0)
             {
                 for (var i = 0; i < assemblyNames.Length; i++)
@@ -386,14 +388,14 @@ namespace System.GACManagedAccess
                 throw new ArgumentException("Invalid name", "assemblyName");
             }
 
-            AssemblyInfo aInfo = new AssemblyInfo();
+            var aInfo = new AssemblyInfo();
 
             aInfo.cchBuf = 1024;
             // Get a string with the desired length
             aInfo.currentAssemblyPath = new String('\0', aInfo.cchBuf);
 
             IAssemblyCache ac = null;
-            int hr = Utils.CreateAssemblyCache(out ac, 0);
+            var hr = Utils.CreateAssemblyCache(out ac, 0);
             if (hr >= 0)
             {
                 hr = ac.QueryAssemblyInfo(0, assemblyName, ref aInfo);
@@ -414,25 +416,25 @@ namespace System.GACManagedAccess
         public AssemblyCacheEnum(String assemblyName)
         {
             IAssemblyName fusionName = null;
-            int hr = 0;
+            var hr = 0;
 
             if (assemblyName != null)
             {
                 hr = Utils.CreateAssemblyNameObject(
-                        out fusionName,
-                        assemblyName,
-                        CreateAssemblyNameObjectFlags.CANOF_PARSE_DISPLAY_NAME,
-                        IntPtr.Zero);
+                    out fusionName,
+                    assemblyName,
+                    CreateAssemblyNameObjectFlags.CANOF_PARSE_DISPLAY_NAME,
+                    IntPtr.Zero);
             }
 
             if (hr >= 0)
             {
                 hr = Utils.CreateAssemblyEnum(
-                        out m_AssemblyEnum,
-                        IntPtr.Zero,
-                        fusionName,
-                        AssemblyCacheFlags.GAC,
-                        IntPtr.Zero);
+                    out m_AssemblyEnum,
+                    IntPtr.Zero,
+                    fusionName,
+                    AssemblyCacheFlags.GAC,
+                    IntPtr.Zero);
             }
 
             if (hr < 0)
@@ -443,7 +445,7 @@ namespace System.GACManagedAccess
 
         public String GetNextAssembly()
         {
-            int hr = 0;
+            var hr = 0;
             IAssemblyName fusionName = null;
 
             if (done)
@@ -452,7 +454,7 @@ namespace System.GACManagedAccess
             }
 
             // Now get next IAssemblyName from m_AssemblyEnum
-            hr = m_AssemblyEnum.GetNextAssembly((IntPtr)0, out fusionName, 0);
+            hr = m_AssemblyEnum.GetNextAssembly((IntPtr) 0, out fusionName, 0);
 
             if (hr < 0)
             {
@@ -472,10 +474,10 @@ namespace System.GACManagedAccess
 
         private String GetFullName(IAssemblyName fusionAsmName)
         {
-            StringBuilder sDisplayName = new StringBuilder(1024);
-            int iLen = 1024;
+            var sDisplayName = new StringBuilder(1024);
+            var iLen = 1024;
 
-            int hr = fusionAsmName.GetDisplayName(sDisplayName, ref iLen, (int)AssemblyNameDisplayFlags.ALL);
+            var hr = fusionAsmName.GetDisplayName(sDisplayName, ref iLen, (int) AssemblyNameDisplayFlags.ALL);
             if (hr < 0)
             {
                 Marshal.ThrowExceptionForHR(hr);
@@ -486,7 +488,7 @@ namespace System.GACManagedAccess
 
         private IAssemblyEnum m_AssemblyEnum = null;
         private bool done;
-    }// class AssemblyCacheEnum
+    } // class AssemblyCacheEnum
 
     public class AssemblyCacheInstallReferenceEnum
     {
@@ -494,11 +496,11 @@ namespace System.GACManagedAccess
         {
             IAssemblyName fusionName = null;
 
-            int hr = Utils.CreateAssemblyNameObject(
-                        out fusionName,
-                        assemblyName,
-                        CreateAssemblyNameObjectFlags.CANOF_PARSE_DISPLAY_NAME,
-                        IntPtr.Zero);
+            var hr = Utils.CreateAssemblyNameObject(
+                out fusionName,
+                assemblyName,
+                CreateAssemblyNameObjectFlags.CANOF_PARSE_DISPLAY_NAME,
+                IntPtr.Zero);
 
             if (hr >= 0)
             {
@@ -514,9 +516,10 @@ namespace System.GACManagedAccess
         public InstallReference GetNextReference()
         {
             IInstallReferenceItem item = null;
-            int hr = refEnum.GetNextInstallReferenceItem(out item, 0, IntPtr.Zero);
-            if ((uint)hr == 0x80070103)
-            {   // ERROR_NO_MORE_ITEMS
+            var hr = refEnum.GetNextInstallReferenceItem(out item, 0, IntPtr.Zero);
+            if ((uint) hr == 0x80070103)
+            {
+                // ERROR_NO_MORE_ITEMS
                 return null;
             }
 
@@ -526,7 +529,7 @@ namespace System.GACManagedAccess
             }
 
             IntPtr refData;
-            InstallReference instRef = new InstallReference(Guid.Empty, String.Empty, String.Empty);
+            var instRef = new InstallReference(Guid.Empty, String.Empty, String.Empty);
 
             hr = item.GetReference(out refData, 0, IntPtr.Zero);
             if (hr < 0)
@@ -545,30 +548,29 @@ namespace System.GACManagedAccess
     {
         [DllImport("fusion.dll")]
         internal static extern int CreateAssemblyEnum(
-                out IAssemblyEnum ppEnum,
-                IntPtr pUnkReserved,
-                IAssemblyName pName,
-                AssemblyCacheFlags flags,
-                IntPtr pvReserved);
+            out IAssemblyEnum ppEnum,
+            IntPtr pUnkReserved,
+            IAssemblyName pName,
+            AssemblyCacheFlags flags,
+            IntPtr pvReserved);
 
         [DllImport("fusion.dll")]
         internal static extern int CreateAssemblyNameObject(
-                out IAssemblyName ppAssemblyNameObj,
-                [MarshalAs(UnmanagedType.LPWStr)]
-                String szAssemblyName,
-                CreateAssemblyNameObjectFlags flags,
-                IntPtr pvReserved);
+            out IAssemblyName ppAssemblyNameObj,
+            [MarshalAs(UnmanagedType.LPWStr)] String szAssemblyName,
+            CreateAssemblyNameObjectFlags flags,
+            IntPtr pvReserved);
 
         [DllImport("fusion.dll")]
         internal static extern int CreateAssemblyCache(
-                out IAssemblyCache ppAsmCache,
-                int reserved);
+            out IAssemblyCache ppAsmCache,
+            int reserved);
 
         [DllImport("fusion.dll")]
         internal static extern int CreateInstallReferenceEnum(
-                out IInstallReferenceEnum ppRefEnum,
-                IAssemblyName pName,
-                int dwFlags,
-                IntPtr pvReserved);
+            out IInstallReferenceEnum ppRefEnum,
+            IAssemblyName pName,
+            int dwFlags,
+            IntPtr pvReserved);
     }
 }

@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AdapteveDLL
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+
     public class Settings
     {
         public ulong TotalPhysRam { get; set; }
@@ -19,27 +26,27 @@ namespace AdapteveDLL
         public string ProcessorIdent { get; set; }
         public string ProcessorRev { get; set; }
         public string ProcessorCoreAmount { get; set; }
-        public string ProcessorLevel { get; set; }        
-        public string GpuDescription { get; set; }        
+        public string ProcessorLevel { get; set; }
+        public string GpuDescription { get; set; }
         public uint GpuDeviceId { get; set; }
-        public uint GpuVendorId { get; set; }          
+        public uint GpuVendorId { get; set; }
         public uint GpuRevision { get; set; }
-               
+
 
         public Settings(string iniFile)
         {
             if (!File.Exists(iniFile))
                 throw new FileNotFoundException("Couldn't find " + iniFile);
 
-            int index = 0;
-            foreach(var line in File.ReadAllLines(iniFile))
+            var index = 0;
+            foreach (var line in File.ReadAllLines(iniFile))
             {
                 index++;
-                var sLine = line.Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+                var sLine = line.Split(new string[] {"="}, StringSplitOptions.RemoveEmptyEntries);
                 if (sLine.Count() != 2)
                     throw new ArgumentException("IniFile not right format at line: " + index);
 
-                switch(sLine[0])
+                switch (sLine[0])
                 {
                     case "TotalPhysRam":
                         TotalPhysRam = Convert.ToUInt64(sLine[1]);
@@ -103,17 +110,17 @@ namespace AdapteveDLL
                 }
             }
 
-            if (this.TotalPhysRam == null ||
-                this.WindowsKey == null ||
-                this.WindowsUserLogin == null ||
-                this.MacAddress == null ||
-                this.NetworkAdapterGuid == null ||
-                this.NetworkAddress == null ||
-                this.Computername == null)
+            if (TotalPhysRam == null ||
+                WindowsKey == null ||
+                WindowsUserLogin == null ||
+                MacAddress == null ||
+                NetworkAdapterGuid == null ||
+                NetworkAddress == null ||
+                Computername == null)
                 throw new ArgumentException("Not all settings are set in the ini file");
 
-            if (!Directory.Exists("c:/users/" + this.WindowsUserLogin))
-                throw new ArgumentException("Please create the folder: c:/users/" + this.WindowsUserLogin);
+            if (!Directory.Exists("c:/users/" + WindowsUserLogin))
+                throw new ArgumentException("Please create the folder: c:/users/" + WindowsUserLogin);
         }
     }
 }

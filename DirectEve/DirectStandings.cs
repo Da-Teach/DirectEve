@@ -7,9 +7,10 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectStandings : DirectObject
     {
@@ -63,9 +64,12 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Return the effective standing between you and something else.
+        ///     Return the effective standing between you and something else.
         /// </summary>
-        /// <param name="fromID">The ID of the thing you are checking standings with.  If this thing is an NPC the result is modified by skills.</param>
+        /// <param name="fromID">
+        ///     The ID of the thing you are checking standings with.  If this thing is an NPC the result is
+        ///     modified by skills.
+        /// </param>
         /// <param name="toID">The ID of the thing you are checking standings to.  This is typically DirectEve.Session.CharacterId.</param>
         /// <returns>The standing between toID and fromID.</returns>
         public float EffectiveStanding(long fromID, long toID)
@@ -74,10 +78,10 @@ namespace DirectEve
 
             if (result.IsValid)
             {
-                return (float)result.Item(0);
+                return (float) result.Item(0);
             }
 
-            return (float)0.0;
+            return (float) 0.0;
         }
     }
 }

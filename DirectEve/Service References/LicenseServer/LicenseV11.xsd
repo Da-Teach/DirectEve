@@ -1,6 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="http://license.thehackerwithin.com" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:49772/LicenseV1.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified"
+           targetNamespace="http://license.thehackerwithin.com" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:49772/LicenseV1.svc?xsd=xsd1"
+             namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
   <xs:element name="Startup">
     <xs:complexType>
       <xs:sequence>
@@ -15,7 +18,8 @@
   <xs:element name="StartupResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q1="http://license.thehackerwithin.com" minOccurs="0" name="StartupResult" nillable="true" type="q1:StartupResponseV1" />
+        <xs:element xmlns:q1="http://license.thehackerwithin.com" minOccurs="0" name="StartupResult" nillable="true"
+                    type="q1:StartupResponseV1" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -30,7 +34,8 @@
       <xs:element minOccurs="0" name="SupportInstances" type="xs:int" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element xmlns:q2="http://license.thehackerwithin.com" name="StartupResponseV1" nillable="true" type="q2:StartupResponseV1" />
+  <xs:element xmlns:q2="http://license.thehackerwithin.com" name="StartupResponseV1" nillable="true"
+              type="q2:StartupResponseV1" />
   <xs:complexType name="LicenseFault">
     <xs:sequence>
       <xs:element minOccurs="0" name="Fault" nillable="true" type="xs:string" />
@@ -51,7 +56,8 @@
   <xs:element name="KeepAliveResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://license.thehackerwithin.com" minOccurs="0" name="KeepAliveResult" nillable="true" type="q4:UpdateResponseV1" />
+        <xs:element xmlns:q4="http://license.thehackerwithin.com" minOccurs="0" name="KeepAliveResult" nillable="true"
+                    type="q4:UpdateResponseV1" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -62,7 +68,8 @@
       <xs:element minOccurs="0" name="Signature" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element xmlns:q5="http://license.thehackerwithin.com" name="UpdateResponseV1" nillable="true" type="q5:UpdateResponseV1" />
+  <xs:element xmlns:q5="http://license.thehackerwithin.com" name="UpdateResponseV1" nillable="true"
+              type="q5:UpdateResponseV1" />
   <xs:element name="Shutdown">
     <xs:complexType>
       <xs:sequence>
@@ -77,7 +84,8 @@
   <xs:element name="ShutdownResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://license.thehackerwithin.com" minOccurs="0" name="ShutdownResult" nillable="true" type="q6:UpdateResponseV1" />
+        <xs:element xmlns:q6="http://license.thehackerwithin.com" minOccurs="0" name="ShutdownResult" nillable="true"
+                    type="q6:UpdateResponseV1" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

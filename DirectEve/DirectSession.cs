@@ -7,15 +7,16 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
     using System;
-    using global::DirectEve.PySharp;
+    using PySharp;
 
     public class DirectSession : DirectObject
     {
         /// <summary>
-        ///   Now cache
+        ///     Now cache
         /// </summary>
         private DateTime? _now;
 

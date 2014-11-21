@@ -1,13 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using EasyHook;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AdapteveDLL
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using EasyHook;
+
     public class RegistryHook : IDisposable
     {
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
@@ -20,13 +26,14 @@ namespace AdapteveDLL
         public static extern int RegQueryValueExA(UIntPtr hKey, IntPtr lpValueName, int lpReserved, IntPtr lpType, IntPtr lpData, IntPtr lpcbData);
 
         private string _prodKey;
+
         public RegistryHook(IntPtr address, string prodKey)
         {
             _prodKey = prodKey;
 
             _name = string.Format("RegQueryValueExAHook_{0:X}", address.ToInt32());
             _hook = LocalHook.Create(address, new RegQueryValueExADelegate(RegQueryValueExADetour), this);
-            _hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            _hook.ThreadACL.SetExclusiveACL(new Int32[] {0});
         }
 
         private int RegQueryValueExADetour(UIntPtr hKey, IntPtr lpValueName, int lpReserved, IntPtr lpType, IntPtr lpData, IntPtr lpcbData)
@@ -38,12 +45,12 @@ namespace AdapteveDLL
             if (keyValue == "ProductId")
             {
                 var returnValue = Marshal.PtrToStringAnsi(lpData);
-                IntPtr newValue = IntPtr.Zero;
+                var newValue = IntPtr.Zero;
                 try
                 {
                     newValue = Marshal.StringToHGlobalAnsi(_prodKey);
                     var size = Marshal.ReadInt32(lpcbData);
-                    Utility.CopyMemory(lpData, newValue, (uint)size);
+                    Utility.CopyMemory(lpData, newValue, (uint) size);
                 }
                 finally
                 {

@@ -1,42 +1,27 @@
-﻿/*
-    EasyHook - The reinvention of Windows API hooking
- 
-    Copyright (C) 2009 Christoph Husse
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-    Please visit http://www.codeplex.com/easyhook for more information
-    about the project and latest updates.
-*/
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Runtime.ConstrainedExecution;
-using System.Diagnostics;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace EasyHook
 {
+    using System;
+    using System.Runtime.ConstrainedExecution;
+    using System.Runtime.InteropServices;
+
     public partial class LocalHook
     {
         /// <summary>
-        /// RIP relocation is disabled by default. If you want to enable it,
-        /// just call this method which will attach a debugger to the current
-        /// process. There may be circumstances under which this might fail
-        /// and this is why it is not done by default. On 32-Bit system this
-        /// method will always succeed and do nothing...
+        ///     RIP relocation is disabled by default. If you want to enable it,
+        ///     just call this method which will attach a debugger to the current
+        ///     process. There may be circumstances under which this might fail
+        ///     and this is why it is not done by default. On 32-Bit system this
+        ///     method will always succeed and do nothing...
         /// </summary>
         public static void EnableRIPRelocation()
         {
@@ -44,22 +29,23 @@ namespace EasyHook
         }
 
         /// <summary>
-        /// Tries to get the underlying thread ID for a given handle.
+        ///     Tries to get the underlying thread ID for a given handle.
         /// </summary>
         /// <remarks>
-        /// This is not always possible. The handle has to be opened with <c>THREAD_QUERY_INFORMATION</c>
-        /// access. 
+        ///     This is not always possible. The handle has to be opened with <c>THREAD_QUERY_INFORMATION</c>
+        ///     access.
         /// </remarks>
         /// <param name="InThreadHandle">A valid thread handle.</param>
         /// <returns>A valid thread ID associated with the given thread handle.</returns>
         /// <exception cref="AccessViolationException">
-        /// The given handle was not opened with <c>THREAD_QUERY_INFORMATION</c> access.</exception>
+        ///     The given handle was not opened with <c>THREAD_QUERY_INFORMATION</c> access.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// The handle is invalid. 
+        ///     The handle is invalid.
         /// </exception>
         /// <exception cref="NotSupportedException">
-        /// Should never occur and just notifies you that a handle to thread ID conversion is not
-        /// available on the current platform.
+        ///     Should never occur and just notifies you that a handle to thread ID conversion is not
+        ///     available on the current platform.
         /// </exception>
         public static Int32 GetThreadIdByHandle(IntPtr InThreadHandle)
         {
@@ -71,22 +57,23 @@ namespace EasyHook
         }
 
         /// <summary>
-        /// Tries to get the underlying process ID for a given handle.
+        ///     Tries to get the underlying process ID for a given handle.
         /// </summary>
         /// <remarks>
-        /// This is not always possible. The handle has to be opened with <c>PROCESS_QUERY_INFORMATION</c>
-        /// access. 
+        ///     This is not always possible. The handle has to be opened with <c>PROCESS_QUERY_INFORMATION</c>
+        ///     access.
         /// </remarks>
         /// <param name="InProcessHandle">A valid process handle.</param>
         /// <returns>A valid process ID associated with the given process handle.</returns>
         /// <exception cref="AccessViolationException">
-        /// The given handle was not opened with <c>PROCESS_QUERY_INFORMATION</c> access.</exception>
+        ///     The given handle was not opened with <c>PROCESS_QUERY_INFORMATION</c> access.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// The handle is invalid. 
+        ///     The handle is invalid.
         /// </exception>
         /// <exception cref="NotSupportedException">
-        /// Should never occur and just notifies you that a handle to thread ID conversion is not
-        /// available on the current platform.
+        ///     Should never occur and just notifies you that a handle to thread ID conversion is not
+        ///     available on the current platform.
         /// </exception>
         public static Int32 GetProcessIdByHandle(IntPtr InProcessHandle)
         {
@@ -97,7 +84,7 @@ namespace EasyHook
             return Result;
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         private class UNICODE_STRING
         {
             public Int16 Length;
@@ -132,33 +119,35 @@ namespace EasyHook
 
             ~NameBuffer()
             {
-                if(Buffer != IntPtr.Zero)
+                if (Buffer != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(Buffer);
 
                 Buffer = IntPtr.Zero;
             }
         }
+
         private static NameBuffer Buffer = new NameBuffer();
 
         /// <summary>
-        /// Reads the kernel object name for a given windows usermode handle.
-        /// Executes in approx. 100 micro secounds.
+        ///     Reads the kernel object name for a given windows usermode handle.
+        ///     Executes in approx. 100 micro secounds.
         /// </summary>
-        /// <remarks><para>
-        /// This allows you to translate a handle back to the associated filename for example.
-        /// But keep in mind that such names are only valid for kernel service routines, like
-        /// <c>NtCreateFile</c>. You won't have success when calling <c>CreateFile</c> on such
-        /// object names! The regular windows user mode API has some methods that will allow
-        /// you to convert such kernelmode names back into usermode names. I know this because I did it
-        /// some years ago but I've already forgotten how it has to be done! I can only give you
-        /// some hints: <c>FindFirstVolume()</c>, <c>FindFirstVolumeMountPoint()</c>,
-        /// <c>QueryDosDevice()</c>, <c>GetVolumePathNamesForVolumeName()</c>
-        /// </para>
-        /// <param name="InHandle">A valid usermode handle.</param>
+        /// <remarks>
+        ///     <para>
+        ///         This allows you to translate a handle back to the associated filename for example.
+        ///         But keep in mind that such names are only valid for kernel service routines, like
+        ///         <c>NtCreateFile</c>. You won't have success when calling <c>CreateFile</c> on such
+        ///         object names! The regular windows user mode API has some methods that will allow
+        ///         you to convert such kernelmode names back into usermode names. I know this because I did it
+        ///         some years ago but I've already forgotten how it has to be done! I can only give you
+        ///         some hints: <c>FindFirstVolume()</c>, <c>FindFirstVolumeMountPoint()</c>,
+        ///         <c>QueryDosDevice()</c>, <c>GetVolumePathNamesForVolumeName()</c>
+        ///     </para>
+        ///     <param name="InHandle">A valid usermode handle.</param>
         /// </remarks>
         /// <returns>The kernel object name associated with the given handle.</returns>
         /// <exception cref="ArgumentException">
-        /// The given handle is invalid or could not be accessed for unknown reasons.
+        ///     The given handle is invalid or could not be accessed for unknown reasons.
         /// </exception>
         public static String GetNameByHandle(IntPtr InHandle)
         {
@@ -181,7 +170,7 @@ namespace EasyHook
                     RequiredSize,
                     out RequiredSize);
 
-                UNICODE_STRING Result = new UNICODE_STRING();
+                var Result = new UNICODE_STRING();
 
                 Marshal.PtrToStructure(Buffer.Buffer, Result);
 

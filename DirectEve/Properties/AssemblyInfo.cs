@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -48,5 +49,3 @@ using System.Runtime.InteropServices;
 
 // use fixed version when debugging without a license
 //[assembly: AssemblyVersion("1.330.4619.38451")]
-
-

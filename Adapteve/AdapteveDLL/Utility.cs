@@ -1,13 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AdapteveDLL
 {
-    class Utility
+    using System;
+    using System.Runtime.InteropServices;
+
+    internal class Utility
     {
         public static IntPtr GetImportAddress(string module, string importedModule, string function)
         {
@@ -24,6 +30,7 @@ namespace AdapteveDLL
 
             return address;
         }
+
         private static IntPtr GetProcAddresFunc(string module, string function)
         {
             return GetProcAddress(GetModuleHandle(module), function);
@@ -34,8 +41,7 @@ namespace AdapteveDLL
         [StructLayout(LayoutKind.Sequential)]
         public struct IMAGE_DOS_HEADER
         {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
-            public char[] e_magic; // Magic number
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)] public char[] e_magic; // Magic number
             public UInt16 e_cblp; // Bytes on last page of file
             public UInt16 e_cp; // Pages in file
             public UInt16 e_crlc; // Relocations
@@ -49,12 +55,10 @@ namespace AdapteveDLL
             public UInt16 e_cs; // Initial (relative) CS value
             public UInt16 e_lfarlc; // File address of relocation table
             public UInt16 e_ovno; // Overlay number
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            public UInt16[] e_res1; // Reserved words
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public UInt16[] e_res1; // Reserved words
             public UInt16 e_oemid; // OEM identifier (for e_oeminfo)
             public UInt16 e_oeminfo; // OEM information; e_oemid specific
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
-            public UInt16[] e_res2; // Reserved words
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)] public UInt16[] e_res2; // Reserved words
             public Int32 e_lfanew; // File address of new exe header
 
             private string _e_magic
@@ -136,158 +140,108 @@ namespace AdapteveDLL
         [StructLayout(LayoutKind.Explicit)]
         public struct IMAGE_OPTIONAL_HEADER32
         {
-            [FieldOffset(0)]
-            public MagicType Magic;
+            [FieldOffset(0)] public MagicType Magic;
 
-            [FieldOffset(2)]
-            public byte MajorLinkerVersion;
+            [FieldOffset(2)] public byte MajorLinkerVersion;
 
-            [FieldOffset(3)]
-            public byte MinorLinkerVersion;
+            [FieldOffset(3)] public byte MinorLinkerVersion;
 
-            [FieldOffset(4)]
-            public uint SizeOfCode;
+            [FieldOffset(4)] public uint SizeOfCode;
 
-            [FieldOffset(8)]
-            public uint SizeOfInitializedData;
+            [FieldOffset(8)] public uint SizeOfInitializedData;
 
-            [FieldOffset(12)]
-            public uint SizeOfUninitializedData;
+            [FieldOffset(12)] public uint SizeOfUninitializedData;
 
-            [FieldOffset(16)]
-            public uint AddressOfEntryPoint;
+            [FieldOffset(16)] public uint AddressOfEntryPoint;
 
-            [FieldOffset(20)]
-            public uint BaseOfCode;
+            [FieldOffset(20)] public uint BaseOfCode;
 
             // PE32 contains this additional field
-            [FieldOffset(24)]
-            public uint BaseOfData;
+            [FieldOffset(24)] public uint BaseOfData;
 
-            [FieldOffset(28)]
-            public uint ImageBase;
+            [FieldOffset(28)] public uint ImageBase;
 
-            [FieldOffset(32)]
-            public uint SectionAlignment;
+            [FieldOffset(32)] public uint SectionAlignment;
 
-            [FieldOffset(36)]
-            public uint FileAlignment;
+            [FieldOffset(36)] public uint FileAlignment;
 
-            [FieldOffset(40)]
-            public ushort MajorOperatingSystemVersion;
+            [FieldOffset(40)] public ushort MajorOperatingSystemVersion;
 
-            [FieldOffset(42)]
-            public ushort MinorOperatingSystemVersion;
+            [FieldOffset(42)] public ushort MinorOperatingSystemVersion;
 
-            [FieldOffset(44)]
-            public ushort MajorImageVersion;
+            [FieldOffset(44)] public ushort MajorImageVersion;
 
-            [FieldOffset(46)]
-            public ushort MinorImageVersion;
+            [FieldOffset(46)] public ushort MinorImageVersion;
 
-            [FieldOffset(48)]
-            public ushort MajorSubsystemVersion;
+            [FieldOffset(48)] public ushort MajorSubsystemVersion;
 
-            [FieldOffset(50)]
-            public ushort MinorSubsystemVersion;
+            [FieldOffset(50)] public ushort MinorSubsystemVersion;
 
-            [FieldOffset(52)]
-            public uint Win32VersionValue;
+            [FieldOffset(52)] public uint Win32VersionValue;
 
-            [FieldOffset(56)]
-            public uint SizeOfImage;
+            [FieldOffset(56)] public uint SizeOfImage;
 
-            [FieldOffset(60)]
-            public uint SizeOfHeaders;
+            [FieldOffset(60)] public uint SizeOfHeaders;
 
-            [FieldOffset(64)]
-            public uint CheckSum;
+            [FieldOffset(64)] public uint CheckSum;
 
-            [FieldOffset(68)]
-            public SubSystemType Subsystem;
+            [FieldOffset(68)] public SubSystemType Subsystem;
 
-            [FieldOffset(70)]
-            public DllCharacteristicsType DllCharacteristics;
+            [FieldOffset(70)] public DllCharacteristicsType DllCharacteristics;
 
-            [FieldOffset(72)]
-            public uint SizeOfStackReserve;
+            [FieldOffset(72)] public uint SizeOfStackReserve;
 
-            [FieldOffset(76)]
-            public uint SizeOfStackCommit;
+            [FieldOffset(76)] public uint SizeOfStackCommit;
 
-            [FieldOffset(80)]
-            public uint SizeOfHeapReserve;
+            [FieldOffset(80)] public uint SizeOfHeapReserve;
 
-            [FieldOffset(84)]
-            public uint SizeOfHeapCommit;
+            [FieldOffset(84)] public uint SizeOfHeapCommit;
 
-            [FieldOffset(88)]
-            public uint LoaderFlags;
+            [FieldOffset(88)] public uint LoaderFlags;
 
-            [FieldOffset(92)]
-            public uint NumberOfRvaAndSizes;
+            [FieldOffset(92)] public uint NumberOfRvaAndSizes;
 
-            [FieldOffset(96)]
-            public IMAGE_DATA_DIRECTORY ExportTable;
+            [FieldOffset(96)] public IMAGE_DATA_DIRECTORY ExportTable;
 
-            [FieldOffset(104)]
-            public IMAGE_DATA_DIRECTORY ImportTable;
+            [FieldOffset(104)] public IMAGE_DATA_DIRECTORY ImportTable;
 
-            [FieldOffset(112)]
-            public IMAGE_DATA_DIRECTORY ResourceTable;
+            [FieldOffset(112)] public IMAGE_DATA_DIRECTORY ResourceTable;
 
-            [FieldOffset(120)]
-            public IMAGE_DATA_DIRECTORY ExceptionTable;
+            [FieldOffset(120)] public IMAGE_DATA_DIRECTORY ExceptionTable;
 
-            [FieldOffset(128)]
-            public IMAGE_DATA_DIRECTORY CertificateTable;
+            [FieldOffset(128)] public IMAGE_DATA_DIRECTORY CertificateTable;
 
-            [FieldOffset(136)]
-            public IMAGE_DATA_DIRECTORY BaseRelocationTable;
+            [FieldOffset(136)] public IMAGE_DATA_DIRECTORY BaseRelocationTable;
 
-            [FieldOffset(144)]
-            public IMAGE_DATA_DIRECTORY Debug;
+            [FieldOffset(144)] public IMAGE_DATA_DIRECTORY Debug;
 
-            [FieldOffset(152)]
-            public IMAGE_DATA_DIRECTORY Architecture;
+            [FieldOffset(152)] public IMAGE_DATA_DIRECTORY Architecture;
 
-            [FieldOffset(160)]
-            public IMAGE_DATA_DIRECTORY GlobalPtr;
+            [FieldOffset(160)] public IMAGE_DATA_DIRECTORY GlobalPtr;
 
-            [FieldOffset(168)]
-            public IMAGE_DATA_DIRECTORY TLSTable;
+            [FieldOffset(168)] public IMAGE_DATA_DIRECTORY TLSTable;
 
-            [FieldOffset(176)]
-            public IMAGE_DATA_DIRECTORY LoadConfigTable;
+            [FieldOffset(176)] public IMAGE_DATA_DIRECTORY LoadConfigTable;
 
-            [FieldOffset(184)]
-            public IMAGE_DATA_DIRECTORY BoundImport;
+            [FieldOffset(184)] public IMAGE_DATA_DIRECTORY BoundImport;
 
-            [FieldOffset(192)]
-            public IMAGE_DATA_DIRECTORY IAT;
+            [FieldOffset(192)] public IMAGE_DATA_DIRECTORY IAT;
 
-            [FieldOffset(200)]
-            public IMAGE_DATA_DIRECTORY DelayImportDescriptor;
+            [FieldOffset(200)] public IMAGE_DATA_DIRECTORY DelayImportDescriptor;
 
-            [FieldOffset(208)]
-            public IMAGE_DATA_DIRECTORY CLRRuntimeHeader;
+            [FieldOffset(208)] public IMAGE_DATA_DIRECTORY CLRRuntimeHeader;
 
-            [FieldOffset(216)]
-            public IMAGE_DATA_DIRECTORY Reserved;
+            [FieldOffset(216)] public IMAGE_DATA_DIRECTORY Reserved;
         }
 
         [StructLayout(LayoutKind.Explicit)]
         public struct IMAGE_NT_HEADERS32
         {
-            [FieldOffset(0)]
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            public char[] Signature;
+            [FieldOffset(0)] [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public char[] Signature;
 
-            [FieldOffset(4)]
-            public IMAGE_FILE_HEADER FileHeader;
+            [FieldOffset(4)] public IMAGE_FILE_HEADER FileHeader;
 
-            [FieldOffset(24)]
-            public IMAGE_OPTIONAL_HEADER32 OptionalHeader;
+            [FieldOffset(24)] public IMAGE_OPTIONAL_HEADER32 OptionalHeader;
 
             private string _Signature
             {
@@ -315,87 +269,75 @@ namespace AdapteveDLL
             /// <summary>
             ///     C# doesn't really support unions, but they can be emulated by a field offset 0
             /// </summary>
-            [FieldOffset(0)]
-            public uint Characteristics; // 0 for terminating null import descriptor
+            [FieldOffset(0)] public uint Characteristics; // 0 for terminating null import descriptor
 
-            [FieldOffset(0)]
-            public uint OriginalFirstThunk; // RVA to original unbound IAT (PIMAGE_THUNK_DATA)
+            [FieldOffset(0)] public uint OriginalFirstThunk; // RVA to original unbound IAT (PIMAGE_THUNK_DATA)
 
             #endregion
 
-            [FieldOffset(4)]
-            public uint TimeDateStamp;
-            [FieldOffset(8)]
-            public uint ForwarderChain;
-            [FieldOffset(12)]
-            public uint Name;
-            [FieldOffset(16)]
-            public uint FirstThunk;
+            [FieldOffset(4)] public uint TimeDateStamp;
+            [FieldOffset(8)] public uint ForwarderChain;
+            [FieldOffset(12)] public uint Name;
+            [FieldOffset(16)] public uint FirstThunk;
         }
 
         [StructLayout(LayoutKind.Explicit)]
         public struct IMAGE_THUNK_DATA
         {
-            [FieldOffset(0)]
-            public uint ForwarderString; // PBYTE 
-            [FieldOffset(0)]
-            public uint Function; // PDWORD
-            [FieldOffset(0)]
-            public uint Ordinal;
-            [FieldOffset(0)]
-            public uint AddressOfData; // PIMAGE_IMPORT_BY_NAME
+            [FieldOffset(0)] public uint ForwarderString; // PBYTE 
+            [FieldOffset(0)] public uint Function; // PDWORD
+            [FieldOffset(0)] public uint Ordinal;
+            [FieldOffset(0)] public uint AddressOfData; // PIMAGE_IMPORT_BY_NAME
         }
 
         #endregion
 
-
-
         public static IntPtr GetThunk(IntPtr moduleHandle, string intermodName, string funcName)
         {
-            var idh = (IMAGE_DOS_HEADER)Marshal.PtrToStructure(moduleHandle, typeof(IMAGE_DOS_HEADER));
+            var idh = (IMAGE_DOS_HEADER) Marshal.PtrToStructure(moduleHandle, typeof (IMAGE_DOS_HEADER));
             if (!idh.isValid)
                 return IntPtr.Zero;
 
-            var inh32 = (IMAGE_NT_HEADERS32)Marshal.PtrToStructure(IntPtr.Add(moduleHandle, idh.e_lfanew), typeof(IMAGE_NT_HEADERS32));
+            var inh32 = (IMAGE_NT_HEADERS32) Marshal.PtrToStructure(IntPtr.Add(moduleHandle, idh.e_lfanew), typeof (IMAGE_NT_HEADERS32));
             if (!inh32.isValid || inh32.OptionalHeader.ImportTable.VirtualAddress == 0)
                 return IntPtr.Zero;
 
-            var iidPtr = IntPtr.Add(moduleHandle, (int)inh32.OptionalHeader.ImportTable.VirtualAddress);
+            var iidPtr = IntPtr.Add(moduleHandle, (int) inh32.OptionalHeader.ImportTable.VirtualAddress);
             if (iidPtr == IntPtr.Zero)
                 return IntPtr.Zero;
 
-            var iid = (IMAGE_IMPORT_DESCRIPTOR)Marshal.PtrToStructure(iidPtr, typeof(IMAGE_IMPORT_DESCRIPTOR));
+            var iid = (IMAGE_IMPORT_DESCRIPTOR) Marshal.PtrToStructure(iidPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
             while (iid.Name != 0)
             {
-                var iidName = Marshal.PtrToStringAnsi(IntPtr.Add(moduleHandle, (int)iid.Name));
-                if (string.Compare(iidName, intermodName, System.StringComparison.OrdinalIgnoreCase) != 0)
+                var iidName = Marshal.PtrToStringAnsi(IntPtr.Add(moduleHandle, (int) iid.Name));
+                if (string.Compare(iidName, intermodName, StringComparison.OrdinalIgnoreCase) != 0)
                 {
-                    iidPtr = IntPtr.Add(iidPtr, Marshal.SizeOf(typeof(IMAGE_IMPORT_DESCRIPTOR)));
-                    iid = (IMAGE_IMPORT_DESCRIPTOR)Marshal.PtrToStructure(iidPtr, typeof(IMAGE_IMPORT_DESCRIPTOR));
+                    iidPtr = IntPtr.Add(iidPtr, Marshal.SizeOf(typeof (IMAGE_IMPORT_DESCRIPTOR)));
+                    iid = (IMAGE_IMPORT_DESCRIPTOR) Marshal.PtrToStructure(iidPtr, typeof (IMAGE_IMPORT_DESCRIPTOR));
 
                     continue;
                 }
 
                 // this probably won't work for 64-bit processes as the thunk data structure is different
-                var itdPtr = IntPtr.Add(moduleHandle, (int)iid.FirstThunk);
-                var oitdPtr = IntPtr.Add(moduleHandle, (int)iid.OriginalFirstThunk);
+                var itdPtr = IntPtr.Add(moduleHandle, (int) iid.FirstThunk);
+                var oitdPtr = IntPtr.Add(moduleHandle, (int) iid.OriginalFirstThunk);
                 while (itdPtr != IntPtr.Zero && oitdPtr != IntPtr.Zero)
                 {
-                    var itd = (IMAGE_THUNK_DATA)Marshal.PtrToStructure(itdPtr, typeof(IMAGE_THUNK_DATA));
-                    var oitd = (IMAGE_THUNK_DATA)Marshal.PtrToStructure(oitdPtr, typeof(IMAGE_THUNK_DATA));
+                    var itd = (IMAGE_THUNK_DATA) Marshal.PtrToStructure(itdPtr, typeof (IMAGE_THUNK_DATA));
+                    var oitd = (IMAGE_THUNK_DATA) Marshal.PtrToStructure(oitdPtr, typeof (IMAGE_THUNK_DATA));
 
-                    var iibnPtr = IntPtr.Add(moduleHandle, (int)oitd.AddressOfData);
-                    var iibnName = Marshal.PtrToStringAnsi(IntPtr.Add(iibnPtr, Marshal.OffsetOf(typeof(IMAGE_IMPORT_BY_NAME), "Name").ToInt32()));
+                    var iibnPtr = IntPtr.Add(moduleHandle, (int) oitd.AddressOfData);
+                    var iibnName = Marshal.PtrToStringAnsi(IntPtr.Add(iibnPtr, Marshal.OffsetOf(typeof (IMAGE_IMPORT_BY_NAME), "Name").ToInt32()));
                     if (itd.Function == 0)
                         return IntPtr.Zero;
 
-                    if (string.Compare(iibnName, funcName, System.StringComparison.OrdinalIgnoreCase) == 0)
+                    if (string.Compare(iibnName, funcName, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         return new IntPtr(itd.Function);
                     }
 
-                    itdPtr = IntPtr.Add(itdPtr, Marshal.SizeOf(typeof(IMAGE_THUNK_DATA)));
-                    oitdPtr = IntPtr.Add(oitdPtr, Marshal.SizeOf(typeof(IMAGE_THUNK_DATA)));
+                    itdPtr = IntPtr.Add(itdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
+                    oitdPtr = IntPtr.Add(oitdPtr, Marshal.SizeOf(typeof (IMAGE_THUNK_DATA)));
                 }
 
                 return IntPtr.Zero;
@@ -420,7 +362,6 @@ namespace AdapteveDLL
             }
         }
 
-
         #region Native functions
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
@@ -441,8 +382,6 @@ namespace AdapteveDLL
         [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
         public static extern IntPtr LoadLibraryA(IntPtr lpModuleName);
 
-
         #endregion
-
     }
 }

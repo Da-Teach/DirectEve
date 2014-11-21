@@ -7,16 +7,17 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace DirectEve
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-	using global::DirectEve.PySharp;
 
     public class DirectActiveShip : DirectItem
     {
         /// <summary>
-        ///   Entity cache
+        ///     Entity cache
         /// </summary>
         private DirectEntity _entity;
 
@@ -33,7 +34,7 @@ namespace DirectEve
             get
             {
                 if (!_itemId.HasValue)
-                    _itemId = (long)DirectEve.Session.ShipId;
+                    _itemId = (long) DirectEve.Session.ShipId;
 
                 return _itemId.Value;
             }
@@ -41,10 +42,10 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Maximum locked targets
+        ///     Maximum locked targets
         /// </summary>
         /// <remarks>
-        ///   Skills may cause you to lock less targets!
+        ///     Skills may cause you to lock less targets!
         /// </remarks>
         public int MaxLockedTargets
         {
@@ -52,7 +53,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The maximum target range
+        ///     The maximum target range
         /// </summary>
         public double MaxTargetRange
         {
@@ -60,7 +61,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Your current amount of shields
+        ///     Your current amount of shields
         /// </summary>
         public double Shield
         {
@@ -68,7 +69,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The maxmimum amount of shields
+        ///     The maxmimum amount of shields
         /// </summary>
         public double MaxShield
         {
@@ -76,7 +77,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Shield percentage
+        ///     Shield percentage
         /// </summary>
         public double ShieldPercentage
         {
@@ -84,7 +85,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Your current amount of armor
+        ///     Your current amount of armor
         /// </summary>
         public double Armor
         {
@@ -92,7 +93,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The maximum amount of armor
+        ///     The maximum amount of armor
         /// </summary>
         public double MaxArmor
         {
@@ -100,7 +101,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Armor percentage
+        ///     Armor percentage
         /// </summary>
         public double ArmorPercentage
         {
@@ -108,7 +109,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Your current amount of structure
+        ///     Your current amount of structure
         /// </summary>
         public double Structure
         {
@@ -116,7 +117,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The maximum amount of structure
+        ///     The maximum amount of structure
         /// </summary>
         public double MaxStructure
         {
@@ -124,7 +125,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Structure percentage
+        ///     Structure percentage
         /// </summary>
         public double StructurePercentage
         {
@@ -132,7 +133,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Your current amount of capacitor
+        ///     Your current amount of capacitor
         /// </summary>
         public double Capacitor
         {
@@ -140,7 +141,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   The maximum amount of capacitor
+        ///     The maximum amount of capacitor
         /// </summary>
         public double MaxCapacitor
         {
@@ -148,7 +149,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Capacitor percentage
+        ///     Capacitor percentage
         /// </summary>
         public double CapacitorPercentage
         {
@@ -156,7 +157,7 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Maximum velocity
+        ///     Maximum velocity
         /// </summary>
         public double MaxVelocity
         {
@@ -164,18 +165,18 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Inertia Modifier (also called agility)
+        ///     Inertia Modifier (also called agility)
         /// </summary>
-        public double InertiaModifier 
+        public double InertiaModifier
         {
             get { return Attributes.TryGet<double>("agility"); }
         }
 
         /// <summary>
-        ///   The entity associated with your ship
+        ///     The entity associated with your ship
         /// </summary>
         /// <remarks>
-        ///   Only works in space, return's null if no entity can be found
+        ///     Only works in space, return's null if no entity can be found
         /// </remarks>
         public DirectEntity Entity
         {
@@ -183,11 +184,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Launch all drones
+        ///     Launch all drones
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   Only works in space
+        ///     Only works in space
         /// </remarks>
         public bool LaunchAllDrones()
         {
@@ -199,11 +200,11 @@ namespace DirectEve
         }
 
         /// <summary>
-        ///   Launch a specific list of drones
+        ///     Launch a specific list of drones
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        ///   Only works in space
+        ///     Only works in space
         /// </remarks>
         public bool LaunchDrones(IEnumerable<DirectItem> drones)
         {
@@ -212,14 +213,14 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Groups all weapons if possible
+        ///     Groups all weapons if possible
         /// </summary>
         /// <returns>Fails if it's not allowed to group (because there is nothing to group)</returns>
         /// <remarks>Only works in space</remarks>
         public bool GroupAllWeapons()
         {
             var dogmaLocation = DirectEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation");
-            var canGroupAll = (bool)dogmaLocation.Call("CanGroupAll", DirectEve.Session.ShipId);
+            var canGroupAll = (bool) dogmaLocation.Call("CanGroupAll", DirectEve.Session.ShipId);
             if (!canGroupAll)
                 return false;
 
@@ -227,14 +228,17 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Ungroups all weapons
+        ///     Ungroups all weapons
         /// </summary>
-        /// <returns>Fails if anything can still be grouped. Execute GroupAllWeapons first if not everything is grouped, this is done to mimic client behavior.</returns>
+        /// <returns>
+        ///     Fails if anything can still be grouped. Execute GroupAllWeapons first if not everything is grouped, this is
+        ///     done to mimic client behavior.
+        /// </returns>
         /// <remarks>Only works in space</remarks>
         public bool UngroupAllWeapons()
         {
             var dogmaLocation = DirectEve.GetLocalSvc("clientDogmaIM").Attribute("dogmaLocation");
-            var canGroupAll = (bool)dogmaLocation.Call("CanGroupAll", DirectEve.Session.ShipId.Value);
+            var canGroupAll = (bool) dogmaLocation.Call("CanGroupAll", DirectEve.Session.ShipId.Value);
             if (canGroupAll)
                 return false;
 
@@ -242,17 +246,17 @@ namespace DirectEve
         }
 
         /// <summary>
-        /// Eject from your current ship
+        ///     Eject from your current ship
         /// </summary>
         /// <returns></returns>
         public bool EjectFromShip()
         {
-			PyObject Eject = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("Eject");
-			return DirectEve.ThreadedCall(Eject);
+            var Eject = PySharp.Import("eve.client.script.ui.services.menuSvcExtras.menuFunctions").Attribute("Eject");
+            return DirectEve.ThreadedCall(Eject);
         }
 
         /// <summary>
-        /// Strips active ship, use only in station!
+        ///     Strips active ship, use only in station!
         /// </summary>
         /// <returns></returns>
         public bool StripFitting()
@@ -263,13 +267,13 @@ namespace DirectEve
         public bool MoveTo(double x, double y, double z)
         {
             ////Create unit length
-            var length = System.Math.Sqrt(x * x + y * y + z * z);
+            var length = Math.Sqrt(x*x + y*y + z*z);
             if (length == 0)
                 return false;
 
-            x = x / length;
-            y = y / length;
-            z = z / length;
+            x = x/length;
+            y = y/length;
+            z = z/length;
 
             return DirectEve.ThreadedCall(DirectEve.GetLocalSvc("michelle").Call("GetRemotePark").Attribute("CmdGotoDirection"), x, y, z);
         }

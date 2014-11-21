@@ -1,26 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Runtime.InteropServices;
-using EasyHook;
-using Aphack;
+﻿// ------------------------------------------------------------------------------
+//   <copyright from='2010' to='2015' company='THEHACKERWITHIN.COM'>
+//     Copyright (c) TheHackerWithin.COM. All Rights Reserved.
+// 
+//     Please look in the accompanying license.htm file for the license that 
+//     applies to this source code. (a copy can also be found at: 
+//     http://www.thehackerwithin.com/license.htm)
+//   </copyright>
+// -------------------------------------------------------------------------------
 
 namespace AphackInject
 {
-    public class Main : EasyHook.IEntryPoint
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Runtime.InteropServices;
+    using System.Threading;
+    using Aphack;
+    using EasyHook;
+
+    public class Main : IEntryPoint
     {
-        Aphack.AphackInterface Interface;
-        LocalHook CreateKeywordHook;
-        LocalHook CreateGetModuleHandleAHook;
-        Stack<String> Queue = new Stack<String>();
+        private AphackInterface Interface;
+        private LocalHook CreateKeywordHook;
+        private LocalHook CreateGetModuleHandleAHook;
+        private Stack<String> Queue = new Stack<String>();
 
         public Main(
             RemoteHooking.IContext InContext,
             String InChannelName)
         {
             // connect to host...
-            Interface = RemoteHooking.IpcConnectClient<Aphack.AphackInterface>(InChannelName);
+            Interface = RemoteHooking.IpcConnectClient<AphackInterface>(InChannelName);
 
             Interface.Ping();
         }
@@ -32,18 +42,16 @@ namespace AphackInject
             // install hook...
             try
             {
-
                 CreateKeywordHook = LocalHook.Create(
                     LocalHook.GetProcAddress("python27.dll", "PyEval_CallObjectWithKeywords"),
                     new DCallKeywords(CallKeywords_Hooked),
                     this);
 
-                CreateKeywordHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                CreateKeywordHook.ThreadACL.SetExclusiveACL(new Int32[] {0});
 
                 CreateGetModuleHandleAHook = LocalHook.Create(LocalHook.GetProcAddress("kernel32", "GetModuleHandleA"), new DGetModuleHandleA(GetModuleHandleHooked), this);
 
-                CreateGetModuleHandleAHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
-
+                CreateGetModuleHandleAHook.ThreadACL.SetExclusiveACL(new Int32[] {0});
             }
             catch (Exception ExtInfo)
             {
@@ -74,7 +82,6 @@ namespace AphackInject
 
                             Queue.Clear();
                         }
-
                     }
                     else
                         Interface.Ping();
@@ -87,23 +94,24 @@ namespace AphackInject
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        delegate IntPtr DCallKeywords(IntPtr op, IntPtr args, IntPtr kw);
+        private delegate IntPtr DCallKeywords(IntPtr op, IntPtr args, IntPtr kw);
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = true)]
-        delegate IntPtr DGetModuleHandleA(IntPtr lpModuleName);
+        private delegate IntPtr DGetModuleHandleA(IntPtr lpModuleName);
 
         // just use a P-Invoke implementation to get native API access from C# (this step is not necessary for C++.NET)
         [DllImport("python27.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr PyEval_CallObjectWithKeywords(IntPtr op, IntPtr args, IntPtr kw);
+        private static extern IntPtr PyEval_CallObjectWithKeywords(IntPtr op, IntPtr args, IntPtr kw);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
         public static extern IntPtr GetModuleHandleA(IntPtr lpModuleName);
 
         // this is where we are intercepting all file accesses!
-        static bool foundpos = false;
-        static IntPtr CallKeywords_Hooked(IntPtr op, IntPtr args, IntPtr kw)
+        private static bool foundpos = false;
+
+        private static IntPtr CallKeywords_Hooked(IntPtr op, IntPtr args, IntPtr kw)
         {
-            System.Diagnostics.Debugger.Launch();
+            Debugger.Launch();
 
             var pyOp = new PyObject(op);
             var pyArgs = new PyObject(args);
@@ -111,7 +119,7 @@ namespace AphackInject
             {
                 if (pyArgs.Size > 0)
                 {
-                    int i = 0;
+                    var i = 0;
                     foreach (var item in pyArgs.Tuple)
                     {
                         if (item.String != null && item.String.ToString().ToLower().Contains("cmdwarptostuffautopilot"))
@@ -121,7 +129,7 @@ namespace AphackInject
                         else if (foundpos && item.Type == Py.PyType.LongType)
                         {
                             foundpos = false;
-                            IntPtr dest = Py.PyTuple_GetItem(args, i);
+                            var dest = Py.PyTuple_GetItem(args, i);
                             var call = Py.PyObject_GetAttrString(Py.PyDict_GetItem(Py.PyObject_GetAttrString(Py.PyObject_GetAttrString(Py.PyImport_ImportModule("__builtin__"), "sm"), "services"), Py.PyString_FromString("menu")), "WarpToItem");
                             var param = Py.Py_BuildValue("(" + "O" + ")", dest);
 
@@ -136,8 +144,6 @@ namespace AphackInject
                         }
                         i++;
                     }
-
-
                 }
             }
 
@@ -145,23 +151,22 @@ namespace AphackInject
             return result;
         }
 
-        static IntPtr GetModuleHandleHooked(IntPtr lpModuleName)
+        private static IntPtr GetModuleHandleHooked(IntPtr lpModuleName)
         {
             if (lpModuleName != IntPtr.Zero)
             {
-                string fileName = Marshal.PtrToStringAnsi(lpModuleName);
+                var fileName = Marshal.PtrToStringAnsi(lpModuleName);
                 if (fileName.ToLower().Contains("easyhook") || fileName.ToLower().Contains("aphack"))
                 {
-                    IntPtr trash = Marshal.StringToHGlobalAnsi("ajhartyjshsg.dll");
+                    var trash = Marshal.StringToHGlobalAnsi("ajhartyjshsg.dll");
                     return GetModuleHandleA(trash);
                 }
             }
             var result = GetModuleHandleA(lpModuleName);
             return result;
         }
-        
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
         private delegate IntPtr DPyEval_CallObjectWithKeywords(IntPtr op, IntPtr args, IntPtr kw);
-
     }
 }
