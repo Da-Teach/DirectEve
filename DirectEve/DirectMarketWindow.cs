@@ -63,11 +63,11 @@ namespace DirectEve
 
         public IEnumerable<DirectOrder> GetMyOrders(bool bid = false)
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return null;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return null;
+            //}
 
             var mq = DirectEve.GetLocalSvc("marketQuote");
             var mu = DirectEve.GetLocalSvc("marketutils");
@@ -84,11 +84,11 @@ namespace DirectEve
 
         public bool LoadOrders()
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return false;
+            //}
 
             var mu = DirectEve.GetLocalSvc("marketutils");
             var mq = DirectEve.GetLocalSvc("marketQuote");

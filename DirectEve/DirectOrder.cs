@@ -74,11 +74,11 @@ namespace DirectEve
         // def CancelOrder(self, orderID, regionID):
         public bool CancelOrder()
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return false;
+            //}
             if (OrderId == -1 || !PyOrder.IsValid)
             {
                 DirectEve.Log("Trying to cancel a invalid order");
@@ -90,11 +90,11 @@ namespace DirectEve
         //def ModifyOrder(self, order, newPrice):
         public bool ModifyOrder(double newPrice)
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return false;
+            //}
 
             if (OrderId == -1 || !PyOrder.IsValid)
             {

@@ -23,32 +23,32 @@ namespace DirectEve
 
         public bool RepairItems(List<DirectItem> items)
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return false;
+            //}
             var PyItems = items.Select(i => i.PyItem);
             return DirectEve.ThreadedCall(PyWindow.Attribute("DisplayRepairQuote"), PyItems);
         }
 
         public bool RepairAll()
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return false;
+            //}
             return DirectEve.ThreadedCall(PyWindow.Attribute("RepairAll"));
         }
 
         public string AvgDamage()
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return null;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return null;
+            //}
 
             try
             {

@@ -23,10 +23,10 @@ namespace DirectEve
         {
             var charId = DirectEve.Session.CharacterId;
             var obj = PyWindow.Attribute("busy");
-            var analyseBtnEnabled = (bool) pyWindow.Attribute("sr").Attribute("analyzeBtn").Attribute("enabled");
+            var analyseBtnEnabled = (bool)pyWindow.Attribute("sr").Attribute("analyzeBtn").Attribute("enabled");
             //Log("obj type = " + obj.GetPyType().ToString());
             //Log("obj value = " + ((bool) obj).ToString());
-            IsReady = charId != null && obj.IsValid && (bool) obj == false && analyseBtnEnabled;
+            IsReady = charId != null && obj.IsValid && (bool)obj == false && analyseBtnEnabled;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace DirectEve
         /// </summary>
         public int Range
         {
-            get { return (int) PyWindow.Attribute("dir_rangeinput").Call("GetValue"); }
+            get { return (int)PyWindow.Attribute("dir_rangeinput").Call("GetValue"); }
             set { PyWindow.Attribute("dir_rangeinput").Call("SetValue", value.ToString()); }
         }
 
@@ -76,7 +76,7 @@ namespace DirectEve
         {
             get
             {
-                if (DirectEve.HasSupportInstances() && _systemScanResults == null)
+                if (_systemScanResults == null)
                 {
                     _systemScanResults = new List<DirectSystemScanResult>();
                     var pyResults = DirectEve.GetLocalSvc("scanSvc").Attribute("lastResults").ToList();
@@ -155,7 +155,7 @@ namespace DirectEve
         /// <returns>the tab index</returns>
         public int GetSelectedIdx()
         {
-            return (int) PyWindow.Attribute("sr").Attribute("tabs").Call("GetSelectedIdx");
+            return (int)PyWindow.Attribute("sr").Attribute("tabs").Call("GetSelectedIdx");
         }
 
         /// <summary>
@@ -174,18 +174,17 @@ namespace DirectEve
         /// <returns>false if scan already running.  true if new scan was started</returns>
         public bool Analyze()
         {
-            if (DirectEve.HasSupportInstances())
-            {
-                // only perform a scan for paid users
-                var scanningProbes = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("scanSvc").Attribute("scanHandler").Attribute("scanningProbes");
 
-                // Check for an active scan.  If we call Analyze while a scan is running Eve will throw an exception
-                if (scanningProbes.IsValid == false)
-                {
-                    _systemScanResults = null; // free old results
-                    return DirectEve.ThreadedCall(PyWindow.Attribute("Analyze"));
-                }
+            // only perform a scan for paid users
+            var scanningProbes = PySharp.Import("__builtin__").Attribute("sm").Attribute("services").DictionaryItem("scanSvc").Attribute("scanHandler").Attribute("scanningProbes");
+
+            // Check for an active scan.  If we call Analyze while a scan is running Eve will throw an exception
+            if (scanningProbes.IsValid == false)
+            {
+                _systemScanResults = null; // free old results
+                return DirectEve.ThreadedCall(PyWindow.Attribute("Analyze"));
             }
+
 
             return false;
         }

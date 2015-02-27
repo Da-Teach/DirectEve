@@ -21,8 +21,8 @@ namespace DirectEve
 
     public class DirectEve : IDisposable
     {
-        private DirectEveSecurity _security;
-        private bool _securityCheckFailed;
+        //private DirectEveSecurity _security;
+        //private bool _securityCheckFailed;
 
         /// <summary>
         ///     ActiveShip cache
@@ -198,31 +198,31 @@ namespace DirectEve
             {
                 _framework = new InnerSpaceFramework();
             }
-#if !NO_DIRECTEVE_SECURITY
-            try
-            {
-                _security = new DirectEveSecurity(this);
+//#if !NO_DIRECTEVE_SECURITY
+//            try
+//            {
+//                _security = new DirectEveSecurity(this);
 
-                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
-                Log("Starting DirectEve v" + _security.Version);
-                if (_security.Email != "anonymous")
-                {
-                    Log("Registered to " + _security.Email);
-                    if (_security.ActiveInstances != -1 && _security.SupportInstances != -1)
-                        Log("You are currently using " + _security.ActiveInstances + " of " + _security.SupportInstances + " support instances");
-                }
-                else
-                    Log("You are using the anonymous license, please consider upgrading to a support license (http://support.thehackerwithin.com)");
-                Log("Copyright (c) 2012 - TheHackerWithin");
-                Log("http://www.thehackerwithin.com");
-                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
-            }
-            catch (Exception ex)
-            {
-                Log("DirectEve: Exception during license check: " + ex.Message);
-                throw ex;
-            }
-#endif
+//                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+//                Log("Starting DirectEve v" + _security.Version);
+//                if (_security.Email != "anonymous")
+//                {
+//                    Log("Registered to " + _security.Email);
+//                    if (_security.ActiveInstances != -1 && _security.SupportInstances != -1)
+//                        Log("You are currently using " + _security.ActiveInstances + " of " + _security.SupportInstances + " support instances");
+//                }
+//                else
+//                    Log("You are using the anonymous license, please consider upgrading to a support license (http://support.thehackerwithin.com)");
+//                Log("Copyright (c) 2012 - TheHackerWithin");
+//                Log("http://www.thehackerwithin.com");
+//                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+//            }
+//            catch (Exception ex)
+//            {
+//                Log("DirectEve: Exception during license check: " + ex.Message);
+//                throw ex;
+//            }
+//#endif
             try
             {
                 _localSvcCache = new Dictionary<string, PyObject>();
@@ -536,10 +536,10 @@ namespace DirectEve
             if (_framework != null)
                 _framework.Dispose();
 
-            if (_security != null)
-                _security.QuitDirectEve();
+            //if (_security != null)
+            //    _security.QuitDirectEve();
 
-            _security = null;
+            //_security = null;
             _framework = null;
         }
 
@@ -582,24 +582,24 @@ namespace DirectEve
                 // Make the link to the instance
                 PySharp = pySharp;
 
-#if !NO_DIRECTEVE_SECURITY
-                // Pulse security
-                if (_security == null || !_security.Pulse())
-                {
-                    if (!_securityCheckFailed)
-                    {
-                        _securityCheckFailed = true;
-                        Log("DirectEve supported instance check failed!");
-                    }
-                    return;
-                }
+//#if !NO_DIRECTEVE_SECURITY
+//                // Pulse security
+//                if (_security == null || !_security.Pulse())
+//                {
+//                    if (!_securityCheckFailed)
+//                    {
+//                        _securityCheckFailed = true;
+//                        Log("DirectEve supported instance check failed!");
+//                    }
+//                    return;
+//                }
 
-                if (_securityCheckFailed)
-                {
-                    _securityCheckFailed = false;
-                    Log("DirectEve supported instance check succeeded, continuing...");
-                }
-#endif
+//                if (_securityCheckFailed)
+//                {
+//                    _securityCheckFailed = false;
+//                    Log("DirectEve supported instance check succeeded, continuing...");
+//                }
+//#endif
                 // Get current target list
                 dynamic ps = pySharp;
                 // targetsByID and targeting are now dictionaries
@@ -1282,9 +1282,9 @@ namespace DirectEve
         /// <returns>True if the user has support instances.</returns>
         public bool HasSupportInstances()
         {
-#if !NO_DIRECTEVE_SECURITY
-            return _security.Email != "anonymous" && _security.SupportInstances >= 0 && _security.ActiveInstances <= _security.SupportInstances;
-#endif
+//#if !NO_DIRECTEVE_SECURITY
+//            return _security.Email != "anonymous" && _security.SupportInstances >= 0 && _security.ActiveInstances <= _security.SupportInstances;
+//#endif
             return true;
         }
 
@@ -1292,11 +1292,11 @@ namespace DirectEve
         {
             if (!item.PyItem.IsValid)
                 return false;
-            if (!HasSupportInstances())
-            {
-                Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
+            //if (!HasSupportInstances())
+            //{
+            //    Log("DirectEve: Error: This method requires a support instance.");
+            //    return false;
+            //}
             //var pyRange = GetRange(range);
             //def SellStuff(self, stationID, typeID, itemID, price, quantity, duration = 0, useCorp = False, located = None):
             return ThreadedLocalSvcCall("marketQuote", "SellStuff", StationId, item.TypeId, item.ItemId, price, quantity, duration, useCorp); //pyRange);
@@ -1319,11 +1319,11 @@ namespace DirectEve
 
         public bool Buy(int StationId, int TypeId, double Price, int quantity, DirectOrderRange range, int minVolume, int duration) //, bool useCorp)
         {
-            if (!HasSupportInstances())
-            {
-                Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
+            //if (!HasSupportInstances())
+            //{
+            //    Log("DirectEve: Error: This method requires a support instance.");
+            //    return false;
+            //}
             var pyRange = GetRange(range);
             //def BuyStuff(self, stationID, typeID, price, quantity, orderRange = None, minVolume = 1, duration = 0, useCorp = False):
             return ThreadedLocalSvcCall("marketQuote", "BuyStuff", StationId, TypeId, Price, quantity, pyRange, minVolume, duration); //, useCorp);

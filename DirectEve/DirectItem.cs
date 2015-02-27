@@ -184,11 +184,11 @@ namespace DirectEve
 
         public double AveragePrice()
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return -1;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return -1;
+            //}
 
             return (double) PySharp.Import("util").Call("GetAveragePrice", PyItem);
         }
@@ -240,11 +240,11 @@ namespace DirectEve
         /// <returns></returns>
         public bool QuickSell()
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return false;
+            //}
             return DirectEve.ThreadedLocalSvcCall("marketutils", "Sell", TypeId, PyItem);
         }
 
@@ -254,11 +254,11 @@ namespace DirectEve
         /// <returns></returns>
         public bool QuickBuy()
         {
-            if (!DirectEve.HasSupportInstances())
-            {
-                DirectEve.Log("DirectEve: Error: This method requires a support instance.");
-                return false;
-            }
+            //if (!DirectEve.HasSupportInstances())
+            //{
+            //    DirectEve.Log("DirectEve: Error: This method requires a support instance.");
+            //    return false;
+            //}
             return DirectEve.ThreadedLocalSvcCall("marketutils", "Buy", TypeId, PyItem);
         }
 
