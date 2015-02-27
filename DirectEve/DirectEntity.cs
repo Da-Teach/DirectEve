@@ -422,7 +422,7 @@ namespace DirectEve
 
             // Get damage state properties
             var damageState = _ballpark.Call("GetDamageState", Id).ToList();
-            if (damageState.Count == 3)
+            if (damageState.Count == 3 ^ damageState.Count == 5)
             {
                 _shieldPct = (double) damageState[0];
                 _armorPct = (double) damageState[1];
